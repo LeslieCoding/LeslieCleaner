@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.Privacy</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine">
+            <summary>
+            Privacy Guard 引擎。覆盖圣经清单八类：最近文件、剪贴板历史、搜索历史、
+            运行历史、Office 历史、浏览器隐私数据（经 <see cref="T:LeslieCleaner.Core.Abstractions.IBrowserPrivacyCleaner"/> 接口复用）、
+            地理位置缓存、语音输入缓存。每项先存在性探测，不存在自动跳过；
+            注册表目标复用 <see cref="T:LeslieCleaner.Core.Abstractions.ICleanEngine"/> 的"备份后删键/删值"管线，文件进隔离区。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine.RegistryCategoryMarker">
+            <summary>隐私目标在 <see cref="T:LeslieCleaner.Core.Abstractions.ICleanEngine"/> 中使用的注册表类别标记。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine.#ctor(LeslieCleaner.Core.Abstractions.IRegistryEngine,LeslieCleaner.Core.Abstractions.ICleanEngine,LeslieCleaner.Core.Abstractions.IBrowserPrivacyCleaner,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以注册表引擎、清理引擎与日志服务创建隐私引擎。</summary>
+            <param name="registryEngine">注册表引擎。</param>
+            <param name="cleanEngine">清理引擎（复用备份/隔离/回滚管线）。</param>
+            <param name="browserPrivacyCleaner">浏览器隐私清理（可为 <see langword="null"/>，此时浏览器类跳过）。</param>
+            <param name="logService">日志服务。</param>
+            <param name="securityOperationGate">Blocks destructive privacy cleaning when integrity validation fails.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine.ScanAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            扫描全部隐私类别（存在性探测，不存在自动跳过）。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine.CleanAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Privacy.PrivacyItem},System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            清理指定隐私项：注册表目标经 CleanEngine 备份后删除，文件进隔离区，
+            浏览器隐私委托 <see cref="T:LeslieCleaner.Core.Abstractions.IBrowserPrivacyCleaner"/>。
+            </summary>
+            <param name="items">待清理项。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>清理结果（含回滚凭据 OperationId）。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyGuardEngine.RollbackAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            回滚一次隐私清理（委托 <see cref="M:LeslieCleaner.Core.Abstractions.ICleanEngine.RollbackAsync(System.String,System.Threading.CancellationToken)"/>）。
+            </summary>
+            <param name="operationId">清理操作标识。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Privacy.PrivacyCategory">
+            <summary>隐私数据类别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.RecentFiles">
+            <summary>最近文件（RecentDocs + Recent 文件夹）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.ClipboardHistory">
+            <summary>剪贴板历史缓存。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.SearchHistory">
+            <summary>搜索历史（WordWheelQuery）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.RunHistory">
+            <summary>运行历史（RunMRU）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.OfficeHistory">
+            <summary>Office 文件历史（File MRU）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.BrowserPrivacy">
+            <summary>浏览器隐私数据（经 IBrowserPrivacyCleaner）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.LocationCache">
+            <summary>地理位置访问记录。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Privacy.PrivacyCategory.SpeechCache">
+            <summary>语音输入缓存。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Privacy.PrivacyItem">
+            <summary>一条隐私扫描命中项。</summary>
+            <param name="Category">类别。</param>
+            <param name="Description">描述。</param>
+            <param name="Target">清理目标（文件路径 / 注册表键 / "键|值" 编码）。</param>
+            <param name="IsRegistryTarget">是否注册表目标（删除前强制备份）。</param>
+            <param name="SizeBytes">占用字节（注册表项为 0）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyItem.#ctor(LeslieCleaner.Modules.Privacy.PrivacyCategory,System.String,System.String,System.Boolean,System.Int64)">
+            <summary>一条隐私扫描命中项。</summary>
+            <param name="Category">类别。</param>
+            <param name="Description">描述。</param>
+            <param name="Target">清理目标（文件路径 / 注册表键 / "键|值" 编码）。</param>
+            <param name="IsRegistryTarget">是否注册表目标（删除前强制备份）。</param>
+            <param name="SizeBytes">占用字节（注册表项为 0）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyItem.Category">
+            <summary>类别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyItem.Description">
+            <summary>描述。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyItem.Target">
+            <summary>清理目标（文件路径 / 注册表键 / "键|值" 编码）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyItem.IsRegistryTarget">
+            <summary>是否注册表目标（删除前强制备份）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyItem.SizeBytes">
+            <summary>占用字节（注册表项为 0）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Privacy.PrivacyModule">
+            <summary>Privacy Guard 模块（圣经第一节功能清单第 6 条）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Privacy.PrivacyModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.PrivacyModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Privacy.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.Privacy 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Privacy.ServiceCollectionExtensions.AddLeslieCleanerPrivacyModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 Privacy Guard 模块。依赖 ICleanEngine（Cleaner 模块）与 IRegistryEngine 已注册。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,24 @@
+using LeslieCleaner.Core.Models;
+
+namespace LeslieCleaner.Infrastructure.Security;
+
+/// <summary>Compatibility bridge for security facade instances created before the composed manager is registered.</summary>
+public static class SecurityManagerAuditExtensions
+{
+    /// <summary>Appends to the supplied unified security audit store.</summary>
+    public static Task AppendSecurityAuditAsync(this SecurityManager manager, SecurityAuditEvent securityEvent,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(manager);
+        ArgumentNullException.ThrowIfNull(securityEvent);
+        throw new InvalidOperationException("Use AuditedSecurityManager with its injected SecurityAuditStore.");
+    }
+
+    /// <summary>Rejects access through an uncomposed legacy manager.</summary>
+    public static Task<IReadOnlyList<SecurityAuditEvent>> GetSecurityAuditEventsAsync(this SecurityManager manager,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(manager);
+        throw new InvalidOperationException("Use AuditedSecurityManager with its injected SecurityAuditStore.");
+    }
+}

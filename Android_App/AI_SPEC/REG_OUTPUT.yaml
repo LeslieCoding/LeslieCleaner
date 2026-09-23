@@ -1,0 +1,28 @@
+version: "4.1.0"
+request_id: "REQ-3.0.0-MAINTENANCE-CENTER"
+input_level: "PRODUCT_REQUIREMENT"
+original_statement: "这个软件设计的初衷是清理垃圾、缓存和系统维护。手机端需要补齐垃圾管理、安全/病毒检查、自启动可见性、系统加速、应用管理、历史和云端规则更新等常用手机管家模块；请搜索 Android、苹果、华为、小米、vivo、OPPO/OnePlus 等常用模块，严格按照 LAEP 重新开发一个大版本。设备测试只用一加手机。"
+intent: "把当前单一应用扫描工具升级为研究有依据、Android 边界诚实、可持续扩展的中文手机维护中心。"
+functional_requirements: [R3-001, R3-002, R3-003, R3-004, R3-005, R3-006, R3-007, R3-008, R3-101, R3-102, R3-103, R3-104, R3-105]
+non_functional_requirements: [R3-N01, R3-N02, R3-N03, R3-N04, R3-N05]
+constraints: ["Android API 29+", "ProjectRoot Android_App", "PromptSource PROMPT", "OnePlusOnly 92f73a16", "No unauthorized cloud endpoint", "No silent deletion"]
+assumptions: [ASM-3-001, ASM-3-002, ASM-3-003, ASM-3-004]
+decisions: [DEC-3-001, DEC-3-002, DEC-3-003, DEC-3-004]
+dependencies: ["Gradle 8.10.2", "JDK 17", "Android public APIs", "OnePlus PKG110/API 36", "future endpoint/keys only after approval"]
+risks: [RISK-3-001, RISK-3-002, RISK-3-003, RISK-3-004]
+invariants: [INV-3-001, INV-3-002, INV-3-003, INV-3-004, INV-2-004]
+scope: ["junk preview", "security center", "startup visibility", "system acceleration", "app management", "history", "offline-first rule updates", "Chinese functional module shell"]
+non_goals: ["full antivirus replacement", "universal autostart control", "silent deletion", "unapproved cloud upload", "Root/hidden APIs", "other devices"]
+change_impact: [CIA-3-001]
+traceability: [RT-3-001, RT-3-002, RT-3-003, RT-3-004, RT-3-005, RT-3-006]
+definition_of_ready:
+  result: "READY_WITH_LIMITATIONS"
+  checks: ["market research recorded", "platform boundaries recorded", "scope/non-goals explicit", "cloud stop boundary explicit", "acceptance and rollback present"]
+engineering_baseline:
+  id: "EB-3.0.0-001"
+  status: "READY_WITH_LIMITATIONS"
+  version: "3.0.0"
+acceptance_criteria: [AC-011, AC-012, AC-013, AC-014, AC-015, AC-016]
+evidence_plan: ["official-source research", "unit tests", "assembleDebug", "assembleAndroidTest", "OnePlus UI dump", "FileProvider instrumentation", "LAEP audit"]
+status: "READY_WITH_LIMITATIONS"
+next_phase: "ARCHITECTURE"

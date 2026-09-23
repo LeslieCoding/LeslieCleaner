@@ -1,0 +1,815 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.AI</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.AI.AiAggregateContext">
+            <summary>AI 助手只允许使用的聚合上下文；该模型不包含文件名、文档内容、账号或消息。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAggregateContext.#ctor(System.String,System.Double,System.Double,System.Double,System.TimeSpan,System.Int32,System.Int32,System.Int32,System.Int32,System.Int64,System.Int32)">
+            <summary>AI 助手只允许使用的聚合上下文；该模型不包含文件名、文档内容、账号或消息。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAggregateContext.Normalize">
+            <summary>返回经过边界限制的安全副本，防止异常数据污染 Prompt。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiQuestion">
+            <summary>发送给 AI 助手的自然语言问题。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiQuestion.#ctor(System.String,LeslieCleaner.Modules.AI.AiAggregateContext)">
+            <summary>发送给 AI 助手的自然语言问题。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiProviderRequest">
+            <summary>模型无关的 Provider 请求。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderRequest.#ctor(System.String,System.String,System.Double)">
+            <summary>模型无关的 Provider 请求。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiProviderResult">
+            <summary>模型无关的 Provider 结果。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderResult.#ctor(System.Boolean,System.String,System.String,System.String,System.TimeSpan,System.String)">
+            <summary>模型无关的 Provider 结果。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiProviderOptions">
+            <summary>AI Provider 的非敏感配置；只保存凭据引用，不保存 Token。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderOptions.#ctor(System.String,System.String,System.Uri,System.Double,System.TimeSpan,System.String)">
+            <summary>AI Provider 的非敏感配置；只保存凭据引用，不保存 Token。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiProviderOptions.OfflineDefault">
+            <summary>默认使用完全离线的本地规则知识库。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiSafetyDecision">
+            <summary>AI 安全过滤结论。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiSafetyDecision.#ctor(System.Boolean,System.Boolean,System.String,System.String,System.String)">
+            <summary>AI 安全过滤结论。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiAssistantResponse">
+            <summary>最终交付给 UI 的安全响应。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAssistantResponse.#ctor(System.String,System.String,System.String,System.Boolean,LeslieCleaner.Modules.AI.AiSafetyDecision,System.TimeSpan)">
+            <summary>最终交付给 UI 的安全响应。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiConversationEntry">
+            <summary>经过脱敏、可用于本机历史展示的会话条目。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiConversationEntry.#ctor(System.Guid,System.DateTimeOffset,System.String,System.String,System.String,System.String,System.String)">
+            <summary>经过脱敏、可用于本机历史展示的会话条目。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiRecommendationPriority">
+            <summary>建议优先级。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.AiRecommendationPriority.Low">
+            <summary>可选改进。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.AiRecommendationPriority.Medium">
+            <summary>一般优化建议。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.AiRecommendationPriority.High">
+            <summary>建议尽快处理。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.AiRecommendationPriority.Critical">
+            <summary>需要立即关注。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiRecommendation">
+            <summary>结构化 AI 建议。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiRecommendation.#ctor(System.String,System.String,System.String,System.String,LeslieCleaner.Modules.AI.AiRecommendationPriority,System.Int32)">
+            <summary>结构化 AI 建议。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.IAiProvider">
+            <summary>AI Provider 抽象，用于隔离本地模型与 OpenAI-compatible API。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.IAiProvider.Id">
+            <summary>稳定 Provider 标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.IAiProvider.IsLocal">
+            <summary>是否完全在本机处理。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiProvider.GenerateAsync(LeslieCleaner.Modules.AI.AiProviderRequest,System.Threading.CancellationToken)">
+            <summary>生成回答；失败以结果返回，取消仍抛出取消异常。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.IAiProviderOptionsAccessor">
+            <summary>向 Provider 提供经过规范化的非敏感配置。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiProviderOptionsAccessor.Get">
+            <summary>读取当前 Provider 配置。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.IAiSecretStore">
+            <summary>敏感凭据存储抽象；Provider 配置只持有引用。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiSecretStore.StoreAsync(System.String,System.Threading.CancellationToken)">
+            <summary>保存凭据并返回不含秘密的引用。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiSecretStore.RetrieveAsync(System.String,System.Threading.CancellationToken)">
+            <summary>按引用读取凭据。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiSecretStore.DeleteAsync(System.String,System.Threading.CancellationToken)">
+            <summary>删除凭据。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.IAiConversationHistoryStore">
+            <summary>AI 历史存储抽象；调用者必须仅传入脱敏条目。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiConversationHistoryStore.AppendAsync(LeslieCleaner.Modules.AI.AiConversationEntry,System.Threading.CancellationToken)">
+            <summary>追加脱敏历史。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiConversationHistoryStore.GetRecentAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>读取最近的脱敏历史。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.IAiConversationHistoryStore.ClearAsync(System.Threading.CancellationToken)">
+            <summary>清空历史。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.ProcessAiSecretStore">
+            <summary>仅进程内保存秘密的默认实现；不会把 Token 写入配置或磁盘。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.ProcessAiSecretStore.StoreAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.ProcessAiSecretStore.RetrieveAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.ProcessAiSecretStore.DeleteAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.InMemoryAiConversationHistoryStore">
+            <summary>线程安全的本机内存历史；只接收已经脱敏的条目。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.InMemoryAiConversationHistoryStore.AppendAsync(LeslieCleaner.Modules.AI.AiConversationEntry,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.InMemoryAiConversationHistoryStore.GetRecentAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.InMemoryAiConversationHistoryStore.ClearAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiAssistantService">
+            <summary>AI 请求总控：最小上下文、Prompt、Provider、降级、安全过滤、历史与审计闭环。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAssistantService.#ctor(System.Collections.Generic.IEnumerable{LeslieCleaner.Modules.AI.IAiProvider},LeslieCleaner.Modules.AI.LocalRuleKnowledgeProvider,LeslieCleaner.Modules.AI.AiProviderConfigurationService,LeslieCleaner.Modules.AI.AiPromptBuilder,LeslieCleaner.Modules.AI.AiSafetyFilter,LeslieCleaner.Modules.AI.IAiConversationHistoryStore,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>创建 AI 助手服务。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAssistantService.AskAsync(LeslieCleaner.Modules.AI.AiQuestion,System.Threading.CancellationToken)">
+            <summary>回答自然语言问题；远程失败、超时或无网络时自动安全降级到离线规则。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiContextCollector">
+            <summary>把现有真实扫描指标转换为最小化聚合 AI 上下文。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiContextCollector.Collect(LeslieCleaner.Modules.AI.SystemMetrics,System.Double,System.Double,System.TimeSpan,System.Int32,System.Int32,System.Int32)">
+            <summary>从已有指标与非个人系统汇总创建上下文，不读取文件或浏览器数据库。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiPromptBuilder">
+            <summary>构造稳定的 Role/Context/Task/Restrictions/Output 五段式 Prompt。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiPromptBuilder.Build(System.String,LeslieCleaner.Modules.AI.AiAggregateContext)">
+            <summary>构造不含个人内容的结构化 Prompt。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiRecommendationEngine">
+            <summary>把现有健康指标转换为可解释的结构化建议。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiRecommendationEngine.Analyze(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>生成存储、启动、隐私和性能建议。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.SystemMetrics">
+            <summary>
+            系统健康指标（全部来自真实扫描/系统数据，禁止伪数据）。
+            </summary>
+            <param name="JunkBytes">Smart Scan 可清理垃圾总量（字节）。</param>
+            <param name="HighImpactStartupCount">高影响启动项数量。</param>
+            <param name="RegistryIssueCount">注册表问题项数量。</param>
+            <param name="DiskFreePercent">系统盘剩余空间百分比（0-100）。</param>
+            <param name="PrivacyItemCount">隐私项数量。</param>
+            <param name="TopLargeFileBytes">最大单文件字节数。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.SystemMetrics.#ctor(System.Int64,System.Int32,System.Int32,System.Double,System.Int32,System.Int64)">
+            <summary>
+            系统健康指标（全部来自真实扫描/系统数据，禁止伪数据）。
+            </summary>
+            <param name="JunkBytes">Smart Scan 可清理垃圾总量（字节）。</param>
+            <param name="HighImpactStartupCount">高影响启动项数量。</param>
+            <param name="RegistryIssueCount">注册表问题项数量。</param>
+            <param name="DiskFreePercent">系统盘剩余空间百分比（0-100）。</param>
+            <param name="PrivacyItemCount">隐私项数量。</param>
+            <param name="TopLargeFileBytes">最大单文件字节数。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.JunkBytes">
+            <summary>Smart Scan 可清理垃圾总量（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.HighImpactStartupCount">
+            <summary>高影响启动项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.RegistryIssueCount">
+            <summary>注册表问题项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.DiskFreePercent">
+            <summary>系统盘剩余空间百分比（0-100）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.PrivacyItemCount">
+            <summary>隐私项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.TopLargeFileBytes">
+            <summary>最大单文件字节数。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.MaintenancePlan">
+            <summary>自动维护计划（配置驱动）。</summary>
+            <param name="Name">计划名。</param>
+            <param name="IntervalDays">间隔天数。</param>
+            <param name="ModuleIds">执行的模块标识集合。</param>
+            <param name="Enabled">是否启用。</param>
+            <param name="LastRunUtc">上次执行时间；从未执行为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlan.#ctor(System.String,System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Boolean,System.Nullable{System.DateTimeOffset})">
+            <summary>自动维护计划（配置驱动）。</summary>
+            <param name="Name">计划名。</param>
+            <param name="IntervalDays">间隔天数。</param>
+            <param name="ModuleIds">执行的模块标识集合。</param>
+            <param name="Enabled">是否启用。</param>
+            <param name="LastRunUtc">上次执行时间；从未执行为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.Name">
+            <summary>计划名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.IntervalDays">
+            <summary>间隔天数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.ModuleIds">
+            <summary>执行的模块标识集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.Enabled">
+            <summary>是否启用。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.LastRunUtc">
+            <summary>上次执行时间；从未执行为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiAnalysisReport">
+            <summary>AI 分析报告。</summary>
+            <param name="Score">健康评分（0-100）。</param>
+            <param name="StartupSuggestions">启动优化建议。</param>
+            <param name="PrivacySuggestions">隐私风险分析。</param>
+            <param name="StorageSuggestions">存储优化建议。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAnalysisReport.#ctor(System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>AI 分析报告。</summary>
+            <param name="Score">健康评分（0-100）。</param>
+            <param name="StartupSuggestions">启动优化建议。</param>
+            <param name="PrivacySuggestions">隐私风险分析。</param>
+            <param name="StorageSuggestions">存储优化建议。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.Score">
+            <summary>健康评分（0-100）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.StartupSuggestions">
+            <summary>启动优化建议。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.PrivacySuggestions">
+            <summary>隐私风险分析。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.StorageSuggestions">
+            <summary>存储优化建议。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiModule">
+            <summary>AI Optimizer 模块（圣经第一节功能清单第 10 条）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.AI 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.ServiceCollectionExtensions.AddLeslieCleanerAiModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 AI Optimizer 模块。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiProviderConfigurationService">
+            <summary>AI Provider 配置服务；持久化数据只包含凭据引用。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.AiProviderConfigurationService.ConfigKey">
+            <summary>非敏感 Provider 配置键。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderConfigurationService.#ctor(LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Modules.AI.IAiSecretStore)">
+            <summary>创建配置服务。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderConfigurationService.Get">
+            <summary>读取并规范化配置。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiProviderConfigurationService.SaveAsync(LeslieCleaner.Modules.AI.AiProviderOptions,System.String,System.Threading.CancellationToken)">
+            <summary>保存配置；Token 单独进入凭据存储，绝不进入 JSON 配置对象。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiSafetyFilter">
+            <summary>阻止 AI 提供危险操作指令，并为高风险建议强制附加备份与确认要求。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiSafetyFilter.Apply(System.String,System.String)">
+            <summary>过滤模型输出；发现执行指令时用安全拒绝文本替换。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.HealthScoreEngine">
+            <summary>
+            系统健康评分引擎（加权真实指标，公式见 docs/05-ai.md 与 DEVLOG）：
+            垃圾量（GB × 5，封顶 25）+ 高影响启动项（× 4，封顶 20）+ 注册表问题（每 10 项 1 分，封顶 15）
+            + 磁盘剩余（&lt;20% 时每 1% 扣 1，封顶 25）+ 隐私项（每 20 项扣 1，封顶 15）。
+            纯函数，建议必须引用具体数据。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.ComputeScore(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>
+            计算健康评分（0-100）。
+            </summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.Analyze(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>
+            生成完整分析报告（评分 + 三类建议，全部引用具体数据）。
+            </summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildStartupSuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>启动优化建议。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildPrivacySuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>隐私风险分析。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildStorageSuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>存储优化建议。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.LocalRuleKnowledgeProvider">
+            <summary>无需网络和模型文件的真实本地知识 Provider，按聚合指标生成确定性自然语言建议。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.LocalRuleKnowledgeProvider.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.LocalRuleKnowledgeProvider.IsLocal">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.LocalRuleKnowledgeProvider.GenerateAsync(LeslieCleaner.Modules.AI.AiProviderRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.MaintenancePlanner">
+            <summary>
+            自动维护计划器。配置驱动的计划（间隔天数 + 模块集合），到期判定为纯函数；
+            可选注册为系统计划任务（schtasks，权限不足时降级为仅配置存储并记日志）。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.MaintenancePlanner.PlansConfigKey">
+            <summary>维护计划配置键（MaintenancePlan 数组，LastRunUtc 由计划器回写）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.#ctor(LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以配置与日志服务创建计划器。</summary>
+            <param name="configService">配置服务。</param>
+            <param name="logService">日志服务。</param>
+            <param name="securityOperationGate">Blocks creation of scheduled maintenance when integrity validation fails.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.IsPlanDue(LeslieCleaner.Modules.AI.MaintenancePlan,System.DateTimeOffset)">
+            <summary>
+            计划到期判定（纯函数）：启用且（从未执行 或 距上次执行 ≥ 间隔天数）。
+            </summary>
+            <param name="plan">维护计划。</param>
+            <param name="nowUtc">当前时间。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.SavePlansAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.AI.MaintenancePlan},System.Threading.CancellationToken)">
+            <summary>
+            保存计划列表。
+            </summary>
+            <param name="plans">计划集合。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.GetPlans">
+            <summary>
+            读取计划列表。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.GetDuePlans(System.DateTimeOffset)">
+            <summary>
+            获取当前到期的计划。
+            </summary>
+            <param name="nowUtc">当前时间。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.MarkExecutedAsync(System.String,System.DateTimeOffset,System.Threading.CancellationToken)">
+            <summary>
+            标记计划已执行（回写 LastRunUtc）。
+            </summary>
+            <param name="planName">计划名。</param>
+            <param name="runUtc">执行时间。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.RegisterScheduledTaskAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            将维护计划注册为系统计划任务（每日触发 LeslieCleaner.App --maintenance）。
+            权限不足/失败时记日志并降级返回 <see langword="false"/>（配置侧计划仍然有效）。
+            </summary>
+            <param name="executablePath">应用可执行文件路径。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.UnregisterScheduledTaskAsync(System.Threading.CancellationToken)">
+            <summary>
+            删除系统维护计划任务（不存在/权限不足返回 <see langword="false"/>）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider">
+            <summary>OpenAI-compatible Chat Completions Provider，支持远程 HTTPS 与本机回环 API。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider.#ctor(System.Net.Http.HttpClient,LeslieCleaner.Modules.AI.IAiSecretStore,LeslieCleaner.Core.Abstractions.ILogService,System.Func{LeslieCleaner.Modules.AI.AiProviderOptions})">
+            <summary>创建 Provider；HttpClient 和配置访问器均可替换以进行离线测试。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider.#ctor(System.Net.Http.HttpClient,LeslieCleaner.Modules.AI.IAiSecretStore,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Modules.AI.IAiProviderOptionsAccessor)">
+            <summary>使用可注入的配置访问器创建 Provider。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider.IsLocal">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.OpenAiCompatibleProvider.GenerateAsync(LeslieCleaner.Modules.AI.AiProviderRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.PrivacyRedactor">
+            <summary>AI 边界统一隐私检测与脱敏器。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.ContainsForbiddenContent(System.String)">
+            <summary>判断文本是否疑似包含禁止收集的密码、Token、私信或个人文档内容。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.Redact(System.String)">
+            <summary>脱敏凭据、电子邮件、Windows 用户路径、私信/文档内容标记。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.SanitizeCategory(System.String,System.String)">
+            <summary>将分类字符串限制为不含路径和秘密的短值。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.SecretPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)(password|passwd|pwd|token|api[_ -]?key|secret)\\s*[:=]\\s*([^\\s,;]+)</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 4 alternative expressions.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match with 2 alternative expressions.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Aa].<br/>
+                                ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                                ○ Match a character in the set [Ww].<br/>
+                                ○ Match with 2 alternative expressions.<br/>
+                                    ○ Match a sequence of expressions.<br/>
+                                        ○ Match a character in the set [Oo].<br/>
+                                        ○ Match a character in the set [Rr].<br/>
+                                        ○ Match a character in the set [Dd].<br/>
+                                    ○ Match a character in the set [Dd].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Ww].<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [ -_] atomically, optionally.<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Yy].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Ss].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+            ○ Match a whitespace character atomically any number of times.<br/>
+            ○ Match a character in the set [:=].<br/>
+            ○ Match a whitespace character greedily any number of times.<br/>
+            ○ 2nd capture group.<br/>
+                ○ Match a character in the set [^,;\s] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.BearerPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)Bearer\\s+[A-Za-z0-9._~+/=-]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Bb].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match a character in the set [+--9=A-Z_a-z~\u212A] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.EmailPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at a word boundary.<br/>
+            ○ Match a character in the set [%+-.0-9A-Z_a-z\u212A] atomically at least once.<br/>
+            ○ Match '@'.<br/>
+            ○ Match a character in the set [-.0-9A-Za-z\u212A] greedily at least once.<br/>
+            ○ Match '.'.<br/>
+            ○ Match a character in the set [A-Za-z\u212A] greedily at least twice.<br/>
+            ○ Match if at a word boundary.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.UserPathPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)C:\\\\Users\\\\[^\\\\\\s]+\\\\</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Cc].<br/>
+            ○ Match the string ":\\".<br/>
+            ○ Match a character in the set [Uu].<br/>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match '\\'.<br/>
+            ○ Match a character in the set [^\\\s] atomically at least once.<br/>
+            ○ Match '\\'.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.PrivacyRedactor.PrivateContentPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)(private\\s*message|私信|聊天记录|document\\s*content|文档内容|browser\\s*password|浏览器密码)\\s*[:：]?[^\\r\\n]*</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 7 alternative expressions.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [Vv].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a whitespace character atomically any number of times.<br/>
+                        ○ Match a character in the set [Mm].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Gg].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                    ○ Match the string "私信".<br/>
+                    ○ Match the string "聊天记录".<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Dd].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Uu].<br/>
+                        ○ Match a character in the set [Mm].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a whitespace character atomically any number of times.<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                    ○ Match the string "文档内容".<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Bb].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Ww].<br/>
+                        ○ Match a character in the set [Ss].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a whitespace character atomically any number of times.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                        ○ Match a character in the set [Ww].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Dd].<br/>
+                    ○ Match the string "浏览器密码".<br/>
+            ○ Match a whitespace character greedily any number of times.<br/>
+            ○ Match a character in the set [:\uFF1A] greedily, optionally.<br/>
+            ○ Match a character in the set [^\n\r] atomically any number of times.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretPattern_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the SecretPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.SecretPattern_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretPattern_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretPattern_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerPattern_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the BearerPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.BearerPattern_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerPattern_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerPattern_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailPattern_2">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the EmailPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.EmailPattern_2.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailPattern_2.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailPattern_2.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_3">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the UserPathPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.UserPathPattern_3.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_3.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PrivateContentPattern_4">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the PrivateContentPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PrivateContentPattern_4.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IsBoundary(System.ReadOnlySpan{System.Char},System.Int32)">
+            <summary>Determines whether the specified index is a boundary.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IsWordChar(System.Char)">
+            <summary>Determines whether the character is part of the [\w] set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_0E755531778FF92E81D059CC96BC3937381C30889385EF885E06D42D71951B8C">
+            <summary>Supports searching for characters in or not in "BDPbdp文浏私聊".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_9D887F42D4125FF97C50D1A7C38CA6681E5E3C194771F207692B4B4A87144C7A">
+            <summary>Supports searching for characters in or not in "%+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyzK".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_D1CFD9CB466EA765B10868ED3A6456B3E92A7BCC1BE74811EC48B1C1B86CC5FA">
+            <summary>Supports searching for characters in or not in "CDIKScdiksK".</summary>
+        </member>
+    </members>
+</doc>

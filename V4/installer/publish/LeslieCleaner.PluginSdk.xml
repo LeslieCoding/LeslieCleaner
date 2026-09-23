@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.PluginSdk</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.PluginSdk.PluginApi">
+            <summary>Identifies the stable plugin API implemented by this assembly.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginApi.Version">
+            <summary>The exact contract version implemented by this SDK.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.IPlugin">
+            <summary>The only contract a LeslieCleaner plugin must implement.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.IPlugin.InitializeAsync(LeslieCleaner.PluginSdk.IPluginContext,System.Threading.CancellationToken)">
+            <summary>Initializes the plugin once inside the isolated host process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.IPlugin.ExecuteAsync(LeslieCleaner.PluginSdk.PluginExecutionRequest,System.Threading.CancellationToken)">
+            <summary>Executes one named plugin operation.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.IPlugin.StopAsync(System.Threading.CancellationToken)">
+            <summary>Stops background work and releases plugin-owned resources.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.IPluginContext">
+            <summary>Host-controlled services exposed to a plugin.</summary>
+        </member>
+        <member name="P:LeslieCleaner.PluginSdk.IPluginContext.PermissionToken">
+            <summary>Opaque, short-lived permission grant created by the main process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.IPluginContext.RequestCapabilityAsync(LeslieCleaner.PluginSdk.PluginCapabilityRequest,System.Threading.CancellationToken)">
+            <summary>Requests a capability through the host permission boundary.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginExecutionRequest">
+            <summary>A command passed to a plugin.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginExecutionRequest.#ctor(System.String,System.Text.Json.JsonElement)">
+            <summary>A command passed to a plugin.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginExecutionResponse">
+            <summary>A command result returned by a plugin.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginExecutionResponse.#ctor(System.Boolean,System.Text.Json.JsonElement,System.String,System.String)">
+            <summary>A command result returned by a plugin.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginCapabilityRequest">
+            <summary>A privileged operation requested through the host rather than performed by the main process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginCapabilityRequest.#ctor(System.String,System.String,System.String,System.Text.Json.JsonElement)">
+            <summary>A privileged operation requested through the host rather than performed by the main process.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginCapabilityResponse">
+            <summary>Result of a host-mediated capability request.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginCapabilityResponse.#ctor(System.Boolean,System.Text.Json.JsonElement,System.String,System.String)">
+            <summary>Result of a host-mediated capability request.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginPermissionToken">
+            <summary>An opaque grant and its effective least-privilege permission set.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginPermissionToken.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset)">
+            <summary>An opaque grant and its effective least-privilege permission set.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginProtocol">
+            <summary>Versioned JSON command protocol transported over a local named pipe.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginProtocol.Version">
+            <summary>Current wire-protocol version.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginProtocol.MaxFrameCharacters">
+            <summary>Maximum accepted newline-delimited JSON frame.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginProtocol.Initialize">
+            <summary>Initialization command.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginProtocol.Execute">
+            <summary>Execution command.</summary>
+        </member>
+        <member name="F:LeslieCleaner.PluginSdk.PluginProtocol.Stop">
+            <summary>Graceful stop command.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginHostCommand">
+            <summary>A single authenticated request frame.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginHostCommand.#ctor(System.String,System.Guid,System.String,System.String,System.Text.Json.JsonElement)">
+            <summary>A single authenticated request frame.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginHostResponse">
+            <summary>A single response frame.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginHostResponse.#ctor(System.String,System.Guid,System.Boolean,System.Text.Json.JsonElement,System.String,System.String)">
+            <summary>A single response frame.</summary>
+        </member>
+        <member name="T:LeslieCleaner.PluginSdk.PluginInitializePayload">
+            <summary>Payload used to create and initialize one isolated plugin instance.</summary>
+        </member>
+        <member name="M:LeslieCleaner.PluginSdk.PluginInitializePayload.#ctor(System.String,System.String,System.String,LeslieCleaner.PluginSdk.PluginPermissionToken)">
+            <summary>Payload used to create and initialize one isolated plugin instance.</summary>
+        </member>
+    </members>
+</doc>

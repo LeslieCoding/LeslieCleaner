@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.Modules.Registry</RootNamespace>
+    <AssemblyName>LeslieCleaner.Modules.Registry</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+  </ItemGroup>
+
+</Project>

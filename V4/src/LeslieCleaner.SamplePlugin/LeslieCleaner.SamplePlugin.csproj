@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.SamplePlugin</RootNamespace>
+    <AssemblyName>LeslieCleaner.SamplePlugin</AssemblyName>
+    <Description>Executable integration-test plugin for the isolated LeslieCleaner runtime.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeslieCleaner.PluginSdk\LeslieCleaner.PluginSdk.csproj" />
+  </ItemGroup>
+
+</Project>

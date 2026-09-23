@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.PluginSdk</RootNamespace>
+    <AssemblyName>LeslieCleaner.PluginSdk</AssemblyName>
+    <Description>Versioned, minimal contracts for out-of-process LeslieCleaner plugins.</Description>
+  </PropertyGroup>
+
+</Project>

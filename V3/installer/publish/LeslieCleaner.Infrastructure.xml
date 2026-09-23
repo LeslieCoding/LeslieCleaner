@@ -1,0 +1,953 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Infrastructure.Configuration.JsonConfigService">
+            <summary>
+            JSON 配置服务实现。特性：System.Text.Json 存储、FileSystemWatcher 热更新（300ms 防抖）、
+            变更通知事件、ReaderWriterLockSlim 线程安全读写、默认值自举、自身写入回环抑制。
+            变更事件在线程池线程触发，订阅方如需更新 UI 请自行封送。
+            </summary>
+        </member>
+        <member name="E:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.Changed">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.#ctor(System.String,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.IEncryptionService)">
+            <summary>
+            创建配置服务并加载（或自举）配置文件。
+            </summary>
+            <param name="configFilePath">配置文件完整路径；目录不存在时自动创建。</param>
+            <param name="logService">日志服务。</param>
+            <param name="encryptionService">Optional authenticated encryption for persisted configuration data.</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.GetValue``1(System.String,``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.SetValueAsync``1(System.String,``0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.ReloadAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Configuration.JsonConfigService.Dispose">
+            <summary>释放文件监听与计时器资源。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService">
+            <summary>
+            诊断报告服务：一键生成 zip（近 7 天日志 + error-summary.json 聚合统计 +
+            system-info.json + 脱敏配置快照）。供"导出诊断报告"与更新诊断共用错误汇总。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.LogDaysIncluded">
+            <summary>日志覆盖天数（报告内含最近 7 天日志文件）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.SummaryDays">
+            <summary>错误汇总覆盖天数。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以路径、配置与日志服务创建诊断服务。</summary>
+            <param name="pathService">路径服务。</param>
+            <param name="configService">配置服务。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.BuildErrorSummaryAsync(System.Threading.CancellationToken)">
+            <summary>
+            生成错误汇总（近 30 天，不含隐私内容）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.GenerateReportAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            生成诊断报告 zip 到指定目录。
+            </summary>
+            <param name="outputDirectory">输出目录（不存在自动创建）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>zip 文件完整路径。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService.BuildSanitizedConfigJson">
+            <summary>
+            生成脱敏配置快照 JSON（敏感键值替换为 "***"）。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.EventKindCount">
+            <summary>事件种类计数。</summary>
+            <param name="EventKind">事件种类（ScanStart/DeleteFinish/Exception 等）。</param>
+            <param name="Count">次数。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.EventKindCount.#ctor(System.String,System.Int32)">
+            <summary>事件种类计数。</summary>
+            <param name="EventKind">事件种类（ScanStart/DeleteFinish/Exception 等）。</param>
+            <param name="Count">次数。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.EventKindCount.EventKind">
+            <summary>事件种类（ScanStart/DeleteFinish/Exception 等）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.EventKindCount.Count">
+            <summary>次数。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount">
+            <summary>异常类型计数。</summary>
+            <param name="TypeName">异常类型名（不含消息与堆栈，无隐私内容）。</param>
+            <param name="Count">次数。</param>
+            <param name="LastSeenUtc">最近发生时间。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount.#ctor(System.String,System.Int32,System.DateTimeOffset)">
+            <summary>异常类型计数。</summary>
+            <param name="TypeName">异常类型名（不含消息与堆栈，无隐私内容）。</param>
+            <param name="Count">次数。</param>
+            <param name="LastSeenUtc">最近发生时间。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount.TypeName">
+            <summary>异常类型名（不含消息与堆栈，无隐私内容）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount.Count">
+            <summary>次数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount.LastSeenUtc">
+            <summary>最近发生时间。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary">
+            <summary>错误汇总（近 N 天，仅结构化元数据，不含路径/用户名等隐私）。</summary>
+            <param name="GeneratedUtc">生成时间。</param>
+            <param name="DaysCovered">覆盖天数。</param>
+            <param name="TotalWarnings">Warning 总数。</param>
+            <param name="TotalErrors">Error 总数。</param>
+            <param name="ByEventKind">按事件种类计数。</param>
+            <param name="TopExceptions">Top 异常类型（按次数降序）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.#ctor(System.DateTimeOffset,System.Int32,System.Int32,System.Int32,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Infrastructure.Diagnostics.EventKindCount},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Infrastructure.Diagnostics.ExceptionTypeCount})">
+            <summary>错误汇总（近 N 天，仅结构化元数据，不含路径/用户名等隐私）。</summary>
+            <param name="GeneratedUtc">生成时间。</param>
+            <param name="DaysCovered">覆盖天数。</param>
+            <param name="TotalWarnings">Warning 总数。</param>
+            <param name="TotalErrors">Error 总数。</param>
+            <param name="ByEventKind">按事件种类计数。</param>
+            <param name="TopExceptions">Top 异常类型（按次数降序）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.GeneratedUtc">
+            <summary>生成时间。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.DaysCovered">
+            <summary>覆盖天数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.TotalWarnings">
+            <summary>Warning 总数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.TotalErrors">
+            <summary>Error 总数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.ByEventKind">
+            <summary>按事件种类计数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary.TopExceptions">
+            <summary>Top 异常类型（按次数降序）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.LogSummaryBuilder">
+            <summary>
+            日志文件解析与错误汇总（Serilog 文本格式：
+            "时间戳 [级别] [事件种类] 消息" + 异常行）。供诊断报告与更新诊断共用。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.LogSummaryBuilder.BuildAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            解析指定目录下近 <paramref name="days"/> 天的日志，生成错误汇总。
+            </summary>
+            <param name="logDirectory">日志目录。</param>
+            <param name="days">覆盖天数。</param>
+            <param name="topExceptions">异常类型保留条数。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.LogSummaryBuilder.ToJson(LeslieCleaner.Infrastructure.Diagnostics.ErrorSummary)">
+            <summary>将汇总序列化为 JSON。</summary>
+            <param name="summary">错误汇总。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Diagnostics.PerformanceBenchmark">
+            <summary>
+            性能度量工具。对操作计时并产出 <see cref="T:LeslieCleaner.Core.Models.BenchmarkResult"/>，
+            结果由调用方以 PerformanceMetrics 事件写入日志。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Diagnostics.PerformanceBenchmark.MeasureAsync(System.String,System.Int64,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+            <summary>
+            度量一个异步操作。计时覆盖 <paramref name="action"/> 的完整执行；
+            <paramref name="iterations"/> 仅声明该操作内部处理的工作量，用于计算均值。
+            </summary>
+            <param name="name">度量名称。</param>
+            <param name="iterations">操作内部处理的工作量（如文件数、行数）。</param>
+            <param name="action">被度量的操作。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>度量结果。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine">
+            <summary>
+            文件索引引擎（卸载残留 Stage 4 的基础设施）。
+            特性：增量索引（modified 时间戳比对）、FileSystemWatcher 变更监控、
+            NTFS USN/MFT 加速（无权限自动降级普通枚举）、CPU*2 并行目录爬取（Channel 背压）、
+            Pause/Resume/Cancel、MMF 外存路径去重（陈旧记录差异归并）。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.PreferUsnConfigKey">
+            <summary>USN 加速开关配置键（默认 true，热更新生效）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.DirectoryEnumerationTimeout">
+            <summary>单目录枚举超时（防止特殊目录/云同步目录 IO 阻塞拖死整体）。</summary>
+        </member>
+        <member name="E:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.IndexChanged">
+            <summary>索引被文件系统监控增量更新后触发。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.#ctor(LeslieCleaner.Core.Abstractions.IDatabase,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.IConfigService,System.Nullable{System.TimeSpan})">
+            <summary>以数据库与日志服务创建引擎。</summary>
+            <param name="database">已注册的数据库（初始化由引擎幂等触发）。</param>
+            <param name="logService">日志服务。</param>
+            <param name="configService">配置服务（读取 USN 开关），可为 <see langword="null"/>。</param>
+            <param name="directoryEnumerationTimeout">单目录枚举超时覆盖（测试注入）；为 <see langword="null"/> 时用默认值。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.IsPaused">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.Pause">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.Resume">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.Cancel">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.IndexAsync(System.Collections.Generic.IReadOnlyList{System.String},System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.QueryByPublisherAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.QueryByProductAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.StartWatching(System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>
+            启动文件系统监控：允许根下的创建/修改/删除/重命名事件经 2s 防抖后触发增量更新。
+            </summary>
+            <param name="roots">监控根目录集合。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.StopWatching">
+            <summary>停止文件系统监控。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.Dispose">
+            <summary>释放监控与计时器资源。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.EnumerateDirectoryEntries(System.String,LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.ScanState,System.Threading.CancellationToken)">
+            <summary>
+            单目录枚举（带超时）：枚举超过 <see cref="F:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.DirectoryEnumerationTimeout"/> 自动放弃该目录
+            并记录（防特殊目录/网络重定向/云同步目录 IO 阻塞拖死整体扫描）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.FileIndexEngine.RemoveStaleRecords(System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.Dictionary{System.String,System.Int64},System.Collections.Generic.HashSet{System.String},System.Threading.CancellationToken)">
+            <summary>
+            陈旧记录清理：快照键与本次扫描所见路径（HashSet，O(n) 无排序）求差，
+            批量删除索引中已消失的文件。替代原 MMF 全量外排归并（增量场景慢于全量）。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Indexing.MmfStringStore">
+            <summary>
+            基于 Memory-Mapped File 的字符串外存存储。用于百万级路径清单的
+            内存外排序/去重：字符串以 [int32 字节长度 + UTF8 载荷] 顺序追加到映射文件，
+            排序阶段仅将 (offset, length) 索引载入内存，比较直接在映射视图上按字节进行。
+            容量不足时按 2 倍扩容（新建映射并拷贝）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.MmfStringStore.#ctor">
+            <summary>创建存储（临时支撑文件位于系统临时目录，Dispose 时删除）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.MmfStringStore.Count">
+            <summary>已追加的条目数。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.MmfStringStore.Add(System.ReadOnlySpan{System.Char})">
+            <summary>
+            追加一个字符串。超长字符串（UTF8 超过 4KB）将被截断到限制内。
+            </summary>
+            <param name="value">待追加内容。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.MmfStringStore.SortedDistinct">
+            <summary>
+            对全部条目按序号字典序（UTF8 字节序）排序并去重，返回去重后的字符串列表。
+            比较直接在映射视图上进行，不将字符串物化进托管堆。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.MmfStringStore.Dispose">
+            <summary>释放映射与支撑流并删除临时支撑文件。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Indexing.ScanScope">
+            <summary>
+            索引扫描范围定义。允许区：Program Files / Program Files (x86) / AppData /
+            ProgramData / Documents / Desktop；禁区：Windows / WinSxS / System32 /
+            DriverStore / pagefile / hiberfil / swapfile。
+            排除规则本身固定（圣经规定），但全部路径经环境变量与
+            <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/> 解析，不硬编码盘符与系统目录。
+            匹配走 <see cref="T:System.MemoryExtensions"/> Span API，向量化友好、零分配。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.ScanScope.GetAllowedRoots">
+            <summary>
+            解析允许索引的根目录集合（仅返回实际存在的目录）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.ScanScope.IsForbidden(System.ReadOnlySpan{System.Char})">
+            <summary>
+            判断路径是否位于禁区（Windows/WinSxS/System32/DriverStore 及交换文件）。
+            </summary>
+            <param name="path">完整路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.ScanScope.IsForbiddenDirectory(System.ReadOnlySpan{System.Char})">
+            <summary>
+            判断目录是否应被剪枝（禁区或重解析点之外的系统目录）。
+            </summary>
+            <param name="directoryPath">目录完整路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator">
+            <summary>
+            NTFS USN/MFT 加速读取器。经 DeviceIoControl(FSCTL_ENUM_USN_DATA) 直接枚举
+            主文件表，绕过逐文件 Win32 API，实现秒级全卷文件清单。
+            打开卷句柄需要管理员权限：<see cref="M:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.TryCreate(System.String)"/> 在无权限/非 NTFS/任何失败时
+            返回 <see langword="null"/>，调用方自动降级为普通目录枚举。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry">
+            <summary>USN 枚举出的单条文件记录。</summary>
+            <param name="Path">重建的完整路径。</param>
+            <param name="Name">文件名。</param>
+            <param name="IsDirectory">是否目录。</param>
+            <param name="LastChangeUtcTicks">MFT 记录最后变更时间（UTC ticks，FILETIME 与 DateTime 同纪元）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry.#ctor(System.String,System.String,System.Boolean,System.Int64)">
+            <summary>USN 枚举出的单条文件记录。</summary>
+            <param name="Path">重建的完整路径。</param>
+            <param name="Name">文件名。</param>
+            <param name="IsDirectory">是否目录。</param>
+            <param name="LastChangeUtcTicks">MFT 记录最后变更时间（UTC ticks，FILETIME 与 DateTime 同纪元）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry.Path">
+            <summary>重建的完整路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry.Name">
+            <summary>文件名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry.IsDirectory">
+            <summary>是否目录。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.UsnFileEntry.LastChangeUtcTicks">
+            <summary>MFT 记录最后变更时间（UTC ticks，FILETIME 与 DateTime 同纪元）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.TryCreate(System.String)">
+            <summary>
+            尝试为指定卷创建枚举器。无管理员权限、非 NTFS 卷或任何底层失败时返回
+            <see langword="null"/>（优雅降级信号），不抛出。
+            </summary>
+            <param name="volumeRoot">卷根，如 "C:\"。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.EnumerateAll(System.Threading.CancellationToken)">
+            <summary>
+            枚举全卷文件记录（含目录）。调用方负责按允许根过滤。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Indexing.UsnMftEnumerator.Dispose">
+            <summary>释放卷句柄。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler">
+            <summary>
+            全局异常处理工具。App 启动时调用 <see cref="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.Attach(LeslieCleaner.Core.Abstractions.ILogService)"/> 挂钩
+            未处理异常与未观察任务异常，统一记录日志，避免静默崩溃。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.Attach(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>
+            挂钩进程级未处理异常（AppDomain）与未观察任务异常（TaskScheduler）。
+            幂等：重复调用不会重复挂钩。
+            </summary>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.Handle(System.Exception,System.String,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>
+            记录一个异常（事件类别 Exception）。供 catch 块统一调用。
+            </summary>
+            <param name="exception">异常实例。</param>
+            <param name="context">上下文描述。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.Observe(System.Threading.Tasks.Task,System.String,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>
+            观察一个 "即发即弃" 任务：任何异常都会被记录而不是被吞掉。
+            </summary>
+            <param name="task">待观察任务。</param>
+            <param name="context">上下文描述。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.UserActionProperties(System.String,System.String)">
+            <summary>
+            构造用于日志的 UserAction 事件属性字典。
+            </summary>
+            <param name="action">用户操作名称。</param>
+            <param name="target">操作目标，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.GlobalExceptionHandler.LogUserAction(LeslieCleaner.Core.Abstractions.ILogService,System.String,System.String)">
+            <summary>
+            快捷记录一次用户操作（事件类别 UserAction）。
+            </summary>
+            <param name="logService">日志服务。</param>
+            <param name="action">用户操作名称。</param>
+            <param name="target">操作目标，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Logging.SerilogLoggingBootstrapper">
+            <summary>
+            Serilog 集中配置引导。按天滚动文件 + 异步 Sink，
+            输出目录 %LocalAppData%\LeslieCleaner\Logs，保留 31 天。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.SerilogLoggingBootstrapper.#ctor(LeslieCleaner.Core.Abstractions.IPathService)">
+            <summary>以路径服务创建引导器。</summary>
+            <param name="pathService">路径服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.SerilogLoggingBootstrapper.Bootstrap">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Logging.SerilogLogService">
+            <summary>
+            基于 Serilog 的 <see cref="T:LeslieCleaner.Core.Abstractions.ILogService"/> 实现。
+            事件类别以结构化属性 EventKind 写入，便于检索与聚合。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.SerilogLogService.#ctor(Serilog.ILogger)">
+            <summary>以 Serilog 日志器创建服务。</summary>
+            <param name="logger">已配置的 Serilog 日志器。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.SerilogLogService.LogEvent(LeslieCleaner.Core.Models.LogEventKind,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Logging.SerilogLogService.LogException(System.Exception,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Plugins.PluginManager">
+            <summary>
+            本地插件发现器。插件必须位于 ProgramData 根目录下的独立子目录，并在加载前通过清单和 SHA-256 校验。
+            本版本不反射加载第三方程序集，避免将“列出插件”变成代码执行入口。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Plugins.PluginManager.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>使用应用路径、配置和结构化日志服务创建插件管理器。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Plugins.PluginManager.DiscoverAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Plugins.PluginManager.SetEnabledAsync(System.String,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Registry.RegistryEngine">
+            <summary>
+            Provides verified registry access in the requested 32-bit or 64-bit view.
+            Every destructive operation requires a matching pre-existing backup.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.#ctor(LeslieCleaner.Core.Abstractions.IBackupService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>Initializes the registry engine.</summary>
+            <param name="backupService">Backup service used to validate destructive operations.</param>
+            <param name="logService">Structured logging service.</param>
+            <param name="securityOperationGate">Runtime gate that blocks destructive registry changes after a failed security check.</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.EnumerateSubKeysAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.EnumerateValuesAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.ReadValueAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.KeyExistsAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.DeleteKeyAsync(System.String,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.DeleteValueAsync(System.String,System.String,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryEngine.ParseKeyPath(System.String)">
+            <summary>
+            Opens the requested registry root and returns the path below that root.
+            Plain roots select the 64-bit view; suffix <c>32</c> selects the 32-bit view.
+            </summary>
+            <param name="keyPath">Full registry path.</param>
+            <returns>The root key and subkey path. The caller must dispose the root key.</returns>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Registry.RegistryKeyProbe">
+            <summary>
+            注册表键存在性轻量探针（只读，64 位视图）。
+            供规则库等需要高频存在性检查的场景使用，避免完整引擎往返。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryKeyProbe.Exists(System.String)">
+            <summary>
+            判断键是否存在。解析失败或访问被拒返回 <see langword="false"/>。
+            </summary>
+            <param name="keyPath">完整注册表路径（HKLM\/HKCU\/HKCR\/HKU\/HKCC\ 前缀）。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Registry.RegistryRiskScorer">
+            <summary>
+            注册表项风险评分。规则：指向用户目录缺失文件 = Safe（默认勾选）；
+            指向系统路径（Program Files / Windows）= Moderate；无法判定 = Risky（默认不勾选）。
+            纯函数，路径经环境变量解析比对，可独立单元测试。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRiskScorer.Score(System.String)">
+            <summary>
+            对失效目标路径评分。
+            </summary>
+            <param name="brokenTarget">缺失的目标路径；为 <see langword="null"/> 时评为 <see cref="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Risky"/>。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Registry.RegistryRules">
+            <summary>
+            注册表无效项检测规则集。全部为纯函数：输入键值数据与存在性判定委托，
+            输出命中项或 <see langword="null"/>；不触碰注册表与文件系统，可独立单元测试。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.EvaluateUninstallEntry(System.String,System.String,System.String,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            无效卸载项：InstallLocation 或 DisplayIcon 指向不存在的路径。
+            </summary>
+            <param name="keyPath">卸载项键路径。</param>
+            <param name="displayName">DisplayName 值。</param>
+            <param name="installLocation">InstallLocation 值，可为 <see langword="null"/>。</param>
+            <param name="displayIcon">DisplayIcon 值（可能带 ,0 后缀），可为 <see langword="null"/>。</param>
+            <param name="pathExists">路径存在性判定（文件或目录）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.EvaluateFileExtension(System.String,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            无效扩展名：扩展名默认 ProgID 在 HKCR 下不存在。
+            </summary>
+            <param name="extensionKeyPath">扩展名键路径，如 HKCR\.xyz。</param>
+            <param name="progId">默认值（ProgID），可为 <see langword="null"/>。</param>
+            <param name="progIdExists">ProgID 键存在性判定。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.EvaluateInprocServer(System.String,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            无效 COM/CLSID：InprocServer32 默认值指向不存在的文件。
+            </summary>
+            <param name="clsidKeyPath">CLSID 键路径。</param>
+            <param name="serverPath">InprocServer32 默认值，可为 <see langword="null"/>。</param>
+            <param name="fileExists">文件存在性判定。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.EvaluateFont(System.String,System.String,System.String,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            失效字体引用：字体文件名在字体目录下不存在。
+            </summary>
+            <param name="keyPath">Fonts 键路径。</param>
+            <param name="valueName">字体值名（显示名）。</param>
+            <param name="fontFileName">字体文件名（可能为相对文件名）。</param>
+            <param name="fontsDirectory">系统字体目录。</param>
+            <param name="fileExists">文件存在性判定。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.EvaluatePathValue(System.String,System.String,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            失效路径值：值内容解析后指向不存在的路径（用于 Run 键等命令行值）。
+            </summary>
+            <param name="keyPath">键路径。</param>
+            <param name="valueName">值名。</param>
+            <param name="valueContent">值内容（可能为带参数的命令行）。</param>
+            <param name="pathExists">路径存在性判定。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.ExtractExecutablePath(System.String)">
+            <summary>
+            从命令行文本提取可执行文件路径（处理引号与参数、环境变量展开）。
+            无法可靠提取时返回 <see langword="null"/>。
+            </summary>
+            <param name="commandLine">命令行文本。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.StripIconIndex(System.String)">
+            <summary>剥离 DisplayIcon 的 ",N" 图标索引后缀并规范化。</summary>
+            <param name="iconValue">DisplayIcon 原始值。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryRules.NormalizePath(System.String)">
+            <summary>规范化路径值：展开环境变量、去引号；为空返回 <see langword="null"/>。</summary>
+            <param name="path">原始路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Registry.RegistryScanner">
+            <summary>
+            Read-only registry rule scanner. It evaluates every applicable 64-bit and 32-bit view
+            and never shares a <see cref="T:Microsoft.Win32.RegistryKey"/> instance between parallel workers.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryScanner.#ctor(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>Initializes the scanner.</summary>
+            <param name="logService">Structured logging service.</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryScanner.ScanAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Registry.RegistryScanner.IsSystemProtectedKey(Microsoft.Win32.RegistryKey)">
+            <summary>Returns whether the key is protected from administrator deletion by Windows Resource Protection.</summary>
+            <param name="key">Opened registry key.</param>
+            <returns><see langword="true"/> when the key should not be offered for cleanup.</returns>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService">
+            <summary>以 DPAPI 保护 AES-256 密钥环的本地数据加密服务。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以应用数据路径和日志服务创建加密服务。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService.Encrypt(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService.Decrypt(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService.RotateKeyAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.AesGcmEncryptionService.RetireKeyAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Security.SecurityManager">
+            <summary>应用文件完整性基线、插件信任汇总和本地审计哈希链实现。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.SecurityManager.#ctor(LeslieCleaner.Core.Abstractions.IPluginManager,LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.IEncryptionService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate,LeslieCleaner.Core.Abstractions.IDatabase,System.String)">
+            <summary>使用插件管理、路径和日志服务创建安全管理器。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.SecurityManager.AssessAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.SecurityManager.VerifyAuditAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Security.SecurityOperationGate">
+            <summary>基于最近安全评估限制不可逆或破坏性操作的线程安全闸门。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Security.SecurityOperationGate.IsSensitiveOperationAllowed">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.SecurityOperationGate.Apply(LeslieCleaner.Core.Models.SecurityAssessment)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Security.SecurityOperationGate.EnsureSensitiveOperationAllowed(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Infrastructure 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.ServiceCollectionExtensions.AddLeslieCleanerInfrastructure(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册 Infrastructure 层全部服务：日志（Serilog）、路径、隔离区、注册表备份、
+            系统还原点、配置热更新。
+            </summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Services.PathService">
+            <summary>
+            路径服务实现。全部特殊文件夹经 <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>
+            解析，不硬编码任何系统路径；应用子目录名固定为产品名 LeslieCleaner。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.ProgramDataRoot">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.QuarantineDirectory">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.BackupDirectory">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.DataDirectory">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.LogDirectory">
+            <inheritdoc />
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Services.PathService.ConfigDirectory">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.PathService.#ctor">
+            <summary>创建路径服务实例并解析全部目录。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.PathService.EnsureDirectory(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Services.QuarantineService">
+            <summary>
+            隔离区服务实现。文件删除默认移入 %ProgramData%\LeslieCleaner\Quarantine，
+            每条目一个目录（payload + metadata.json），默认保留 30 天，支持完整还原。
+            全部 IO 异步化并支持取消；跨卷移动自动降级为异步复制 + 删除。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Services.QuarantineService.RetentionDaysConfigKey">
+            <summary>保留天数配置键（默认值 30）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Services.QuarantineService.DefaultRetentionDays">
+            <summary>默认保留天数。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以路径、配置与日志服务创建隔离区服务。</summary>
+            <param name="pathService">路径服务。</param>
+            <param name="configService">配置服务（读取保留天数）。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.QuarantineFileAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.QuarantineFilesAsync(System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.RestoreAsync(System.Guid,LeslieCleaner.Core.Models.RestoreConflictPolicy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.ListEntriesAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.QuarantineService.PurgeExpiredAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Services.RegistryBackupService">
+            <summary>
+            Creates durable registry backups. Key backups use the registry tool matching the selected view;
+            value backups store a typed snapshot so restoration never overwrites sibling values.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>Initializes the registry backup service.</summary>
+            <param name="pathService">Application storage locations.</param>
+            <param name="logService">Structured logging service.</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.GetBackupDirectory(System.Guid)">
+            <summary>Gets the storage directory for a backup.</summary>
+            <param name="backupId">Backup identifier.</param>
+            <returns>Absolute backup directory.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.GetBackupFilePath(System.String,System.Guid)">
+            <summary>Gets the .reg file path for a key backup.</summary>
+            <param name="registryKeyPath">Registry key path.</param>
+            <param name="backupId">Backup identifier.</param>
+            <returns>Absolute .reg file path.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.GetMetadataFilePath(System.Guid)">
+            <summary>Gets the metadata path for a backup.</summary>
+            <param name="backupId">Backup identifier.</param>
+            <returns>Absolute metadata path.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.BackupRegistryKeyAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.BackupRegistryValueAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.RestoreAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.RegistryBackupService.ListBackupsAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Services.SystemRecycleBinService">
+            <summary>
+            基于 Windows Shell API 的回收站服务。使用 Shell 维护的逻辑项目统计，
+            不枚举或删除受保护的 <c>$Recycle.Bin</c> 文件系统条目。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.SystemRecycleBinService.#ctor(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>使用日志服务创建回收站 Shell 适配器。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.SystemRecycleBinService.GetSnapshotAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.SystemRecycleBinService.EmptyAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Services.SystemRestorePointService">
+            <summary>
+            系统还原点服务实现。经 WMI SystemRestore 类（root\default）创建还原点，
+            供危险操作前自动调用。需要管理员权限；系统保护未启用时安全降级返回
+            <see langword="false"/>，不阻断主流程。仅支持 Windows。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.SystemRestorePointService.#ctor(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以日志服务创建还原点服务。</summary>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Services.SystemRestorePointService.CreateRestorePointAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Updating.UpdateManager">
+            <summary>将文件哈希校验更新服务适配为 UI 可消费的 Core 契约。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateManager.#ctor(LeslieCleaner.Infrastructure.Updating.UpdateService)">
+            <summary>使用底层更新服务创建更新管理器。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateManager.CheckAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry">
+            <summary>更新清单中的单个文件。</summary>
+            <param name="Path">相对安装目录的文件路径。</param>
+            <param name="Sha256">SHA256 校验（hex 小写）。</param>
+            <param name="Size">文件大小（字节）。</param>
+            <param name="Url">相对服务器的下载地址。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry.#ctor(System.String,System.String,System.Int64,System.String)">
+            <summary>更新清单中的单个文件。</summary>
+            <param name="Path">相对安装目录的文件路径。</param>
+            <param name="Sha256">SHA256 校验（hex 小写）。</param>
+            <param name="Size">文件大小（字节）。</param>
+            <param name="Url">相对服务器的下载地址。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry.Path">
+            <summary>相对安装目录的文件路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry.Sha256">
+            <summary>SHA256 校验（hex 小写）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry.Size">
+            <summary>文件大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateFileEntry.Url">
+            <summary>相对服务器的下载地址。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Updating.UpdateManifest">
+            <summary>版本更新清单（服务器 manifest.json）。</summary>
+            <param name="Version">版本号（语义化 x.y.z）。</param>
+            <param name="Files">本版本全量文件清单（文件级增量：客户端只下载本地缺失/哈希不同的文件）。</param>
+            <param name="ReleaseNotes">更新说明。</param>
+            <param name="Signature">Base64 ECDSA signature over the canonical manifest payload.</param>
+            <param name="SigningKeyId">Identifier of the public key used to verify the signature.</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateManifest.#ctor(System.String,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Infrastructure.Updating.UpdateFileEntry},System.String,System.String,System.String)">
+            <summary>版本更新清单（服务器 manifest.json）。</summary>
+            <param name="Version">版本号（语义化 x.y.z）。</param>
+            <param name="Files">本版本全量文件清单（文件级增量：客户端只下载本地缺失/哈希不同的文件）。</param>
+            <param name="ReleaseNotes">更新说明。</param>
+            <param name="Signature">Base64 ECDSA signature over the canonical manifest payload.</param>
+            <param name="SigningKeyId">Identifier of the public key used to verify the signature.</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateManifest.Version">
+            <summary>版本号（语义化 x.y.z）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateManifest.Files">
+            <summary>本版本全量文件清单（文件级增量：客户端只下载本地缺失/哈希不同的文件）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateManifest.ReleaseNotes">
+            <summary>更新说明。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateManifest.Signature">
+            <summary>Base64 ECDSA signature over the canonical manifest payload.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateManifest.SigningKeyId">
+            <summary>Identifier of the public key used to verify the signature.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult">
+            <summary>更新检查结果。</summary>
+            <param name="UpdateAvailable">是否有新版本。</param>
+            <param name="CurrentVersion">当前版本。</param>
+            <param name="Manifest">服务器清单（无更新时为 <see langword="null"/>）。</param>
+            <param name="FilesToDownload">需要下载的变更文件（本地缺失或哈希不同）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult.#ctor(System.Boolean,System.String,LeslieCleaner.Infrastructure.Updating.UpdateManifest,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Infrastructure.Updating.UpdateFileEntry})">
+            <summary>更新检查结果。</summary>
+            <param name="UpdateAvailable">是否有新版本。</param>
+            <param name="CurrentVersion">当前版本。</param>
+            <param name="Manifest">服务器清单（无更新时为 <see langword="null"/>）。</param>
+            <param name="FilesToDownload">需要下载的变更文件（本地缺失或哈希不同）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult.UpdateAvailable">
+            <summary>是否有新版本。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult.CurrentVersion">
+            <summary>当前版本。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult.Manifest">
+            <summary>服务器清单（无更新时为 <see langword="null"/>）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Infrastructure.Updating.UpdateCheckResult.FilesToDownload">
+            <summary>需要下载的变更文件（本地缺失或哈希不同）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Infrastructure.Updating.UpdateService">
+            <summary>
+            自定义增量更新服务。流程：版本清单 JSON 拉取 → 语义化版本比较 →
+            文件级增量（只下载本地缺失/SHA256 不同的文件）→ 逐文件校验 → 暂存目录 →
+            交由 Updater 辅助进程（主程序退出后替换再重启）。
+            任何校验失败清理暂存目录并抛错（回滚到未更新状态）。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Updating.UpdateService.ServerUrlConfigKey">
+            <summary>更新服务器地址配置键。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Updating.UpdateService.CurrentVersionConfigKey">
+            <summary>当前版本配置键。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Updating.UpdateService.RequireSignedManifestConfigKey">
+            <summary>Manifest signature enforcement configuration key.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Infrastructure.Updating.UpdateService.SigningPublicKeyConfigKey">
+            <summary>Base64 SubjectPublicKeyInfo ECDSA P-256 update-signing public key configuration key.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.#ctor(LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService,System.Net.Http.HttpClient,LeslieCleaner.Infrastructure.Diagnostics.DiagnosticsService)">
+            <summary>以配置、路径与日志服务创建更新服务。</summary>
+            <param name="configService">配置服务。</param>
+            <param name="pathService">路径服务。</param>
+            <param name="logService">日志服务。</param>
+            <param name="httpClient">HTTP 客户端（测试可注入）。</param>
+            <param name="diagnosticsService">诊断服务（错误汇总上送），可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.CompareVersions(System.String,System.String)">
+            <summary>
+            语义化版本比较（x.y[.z[.w]]，缺段补 0）。a&gt;b 返回正数。
+            </summary>
+            <param name="a">版本 a。</param>
+            <param name="b">版本 b。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.CheckForUpdateAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            检查更新：拉取服务器清单，版本比较 + 计算文件级增量。
+            </summary>
+            <param name="installDirectory">当前安装目录（用于本地哈希比对）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.EmitDiagnosticsAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            生成更新诊断上下文：错误汇总（仅事件种类/异常类型/次数，不含任何路径与用户名）
+            写入本地 update-diagnostics.json；服务器已配置时随请求上送（失败静默降级不影响更新）。
+            </summary>
+            <param name="currentVersion">当前版本。</param>
+            <param name="latestVersion">服务器最新版本（无更新时为 <see langword="null"/>）。</param>
+            <param name="serverUrl">更新服务器地址（空字符串表示未配置）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(LeslieCleaner.Infrastructure.Updating.UpdateManifest,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Infrastructure.Updating.UpdateFileEntry},System.Threading.CancellationToken)">
+            <summary>
+            下载变更文件到暂存目录并逐文件校验 SHA256。失败清理暂存目录（回滚）。
+            </summary>
+            <param name="manifest">更新清单。</param>
+            <param name="filesToDownload">待下载文件。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>暂存目录路径。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.ApplyUpdate(System.String,System.String,System.String,System.String)">
+            <summary>
+            应用更新：启动 Updater 辅助进程（等待主程序退出 → 替换 → 重启）。
+            调用方应在返回后立即退出主程序。
+            </summary>
+            <param name="stagingDirectory">暂存目录。</param>
+            <param name="installDirectory">安装目录。</param>
+            <param name="mainExecutable">主程序路径（更新完成后重启）。</param>
+            <param name="updaterExecutable">Updater 辅助程序路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.VerifyHashAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            校验文件 SHA256。
+            </summary>
+            <param name="filePath">文件路径。</param>
+            <param name="expectedSha256Hex">期望哈希（hex）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Infrastructure.Updating.UpdateService.GetManifestSigningPayload(LeslieCleaner.Infrastructure.Updating.UpdateManifest)">
+            <summary>Builds the deterministic payload covered by an update-manifest signature.</summary>
+        </member>
+    </members>
+</doc>

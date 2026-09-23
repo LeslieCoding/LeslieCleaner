@@ -1,0 +1,40 @@
+<Application x:Class="LeslieCleaner.App.Program"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:LeslieCleaner.UI.Converters;assembly=LeslieCleaner.UI"
+             xmlns:vm="clr-namespace:LeslieCleaner.UI.ViewModels;assembly=LeslieCleaner.UI"
+             xmlns:vw="clr-namespace:LeslieCleaner.UI.Views;assembly=LeslieCleaner.UI">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LeslieCleaner.UI;component/Themes/Colors.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/LeslieCleaner.UI;component/Themes/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+            <conv:BoolToVisibilityConverter x:Key="InverseBoolToVisibility" Invert="True" />
+            <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibility" />
+            <conv:ZeroToVisibilityConverter x:Key="ZeroToVisibility" />
+            <conv:BytesToStringConverter x:Key="BytesToString" />
+            <conv:EqualityToVisibilityConverter x:Key="EqualityToVisibility" />
+            <conv:RiskToBrushConverter x:Key="RiskToBrush" />
+            <conv:ImpactToStarsConverter x:Key="ImpactToStars" />
+
+            <!-- 页面视图模型 → 视图 映射 -->
+            <DataTemplate DataType="{x:Type vm:DashboardViewModel}"><vw:DashboardPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SmartScanViewModel}"><vw:SmartScanPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:RegistryViewModel}"><vw:RegistryPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:UninstallerViewModel}"><vw:UninstallerPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:StartupViewModel}"><vw:StartupPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:PrivacyViewModel}"><vw:PrivacyPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ShredderViewModel}"><vw:ShredderPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:DuplicatesViewModel}"><vw:DuplicatesPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:LargeFilesViewModel}"><vw:LargeFilesPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ToolboxViewModel}"><vw:ToolboxPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:PlatformCenterViewModel}"><vw:PlatformCenterPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:LogsViewModel}"><vw:LogsPage /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}"><vw:SettingsPage /></DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

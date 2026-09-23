@@ -1,0 +1,17 @@
+version: "1.0"
+project: "LeslieCleaner Android"
+captured_at: "2026-09-09"
+matrix:
+  - environment_id: "ENV-ANDROID-PKG110-API36"
+    os: "Android"
+    os_version: "16 / API 36"
+    architecture: "arm64"
+    device_or_runtime: "OnePlus PKG110 / serial 92f73a16"
+    app_version: "2.0.0"
+    capabilities: ["shell-owned install", "PackageManager", "FileProvider"]
+    verification_scope: ["build", "scan", "history", "settings", "privacy", "instrumentation"]
+    status: "VERIFIED_WITH_LIMITATION"
+    evidence_ids: ["E-BUILD-2.0.0", "E-UNIT-2.0.0", "E-DEVICE-2.0.0", "E-INSTRUMENT-2.0.0"]
+    limitations: ["External share chooser depends on installed share handlers"]
+    verified_at: "2026-09-09"
+    verified_by: "Codex"

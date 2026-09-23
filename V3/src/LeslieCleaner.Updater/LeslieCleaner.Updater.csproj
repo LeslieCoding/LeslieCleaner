@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LeslieCleaner.Updater</RootNamespace>
+    <AssemblyName>LeslieCleaner.Updater</AssemblyName>
+  </PropertyGroup>
+
+  <!-- Release 发布：关闭调试符号与 Trace -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>$(DefineConstants.Replace(';TRACE', ''))</DefineConstants>
+  </PropertyGroup>
+
+</Project>

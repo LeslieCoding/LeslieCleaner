@@ -1,0 +1,384 @@
+LESLIECLEANER ANDROID DEVELOPMENT LOG
+======================================
+
+[2026-09-08 00:00 +08:00] REQUEST
+User requested an Android adaptation of every existing Development Bible/Prompt document, with the
+same detailed standard, an orderly project layout, subsequent Android app implementation, self-test,
+USB debugging preparation for a OnePlus device, and detailed version/problem/evidence logging.
+
+[2026-09-08 00:05 +08:00] INVENTORY
+Source: D:\SoftWare\LeslieCleaner\PROMPT\LeslieCleaner_Development_Bible
+Authoritative source Markdown count: 83.
+The source tree contains 00_Execution_Contract plus Main, Modules, Prompt_Library, UI, UX and AI
+subtrees. The Android adaptation must preserve every relative path and filename.
+
+[2026-09-08 00:10 +08:00] LAYOUT DECISION
+Android_Prompt was first generated under V4 during the initial implementation attempt. The user then
+requested a project-root layout. The directory was moved, not copied, to:
+D:\SoftWare\LeslieCleaner\Android_Prompt
+V4\Android_Prompt no longer exists. Windows V4 source files were not moved or overwritten.
+
+[2026-09-08 00:15 +08:00] PROMPT GENERATION
+Generated one Android-adapted Markdown document for each of the 83 source documents. Each document
+contains Android objective translation, Kotlin/Compose architecture, public-API permission matrix,
+typed identity and accuracy rules, backup/read-back/rollback contract, lifecycle/cancellation,
+structured logging, testing/device matrix, performance, acceptance checklist, AI execution prompt,
+and the original source content for traceability.
+Evidence: Android_Prompt/PROMPT_MANIFEST.json (83 entries).
+
+[2026-09-08 00:20 +08:00] MASTER CONTRACT
+Added ANDROID_MASTER_CONTRACT.txt defining product boundaries, ordered layout, safety rules,
+permission/data contracts, verification, test matrix, change process and delivery gate.
+
+[2026-09-08 00:25 +08:00] TOOLCHAIN CHECK
+Host checks found no adb, fastboot, Gradle, or ANDROID_* SDK environment variable. No Android SDK
+directory was found in the checked standard locations. No phone or USB debug channel was accessed.
+State: ToolchainMissing / DeviceEvidencePending. No device mutation was attempted.
+
+[NEXT] Create Android_App in a separate root-level directory, keep modules ordered, implement the
+read-only inventory/logging foundation first, then add reversible features one at a time. Record
+every build/test/device result here with timestamps and artifact paths.
+
+[2026-09-08 00:40 +08:00] ANDROID APP FOUNDATION
+Created D:\SoftWare\LeslieCleaner\Android_App as a separate ordered Kotlin/Compose project with
+`:app` and `:core` modules. The first implementation slice contains no dangerous permissions and no
+destructive operations: a Compose startup/status page, typed OperationResult/FailureKind contracts,
+and an app-private synchronous JSONL audit logger with redaction and fd.sync() for startup events.
+Added one deterministic JVM contract test for non-verified failures.
+
+[2026-09-08 00:45 +08:00] TOOLCHAIN LIMITATION
+The host still has no Gradle executable, Android SDK, adb, fastboot, or ANDROID_* environment
+variable. Android_App cannot be compiled or installed on a device in this environment yet. This is
+recorded as ToolchainMissing, not as a false passing test. No OnePlus device was touched.
+
+[2026-09-08 00:55 +08:00] GENERATOR REPAIR AND REGENERATION
+The first generator revision was corrected to use a literal PowerShell here-string. This prevents
+Markdown backticks from being interpreted as PowerShell escape sequences and prevents template
+placeholders from leaking into generated files. The template was kept ASCII-safe for Windows
+PowerShell encoding behavior. All 83 Android Markdown documents were regenerated in place.
+Validation: MarkdownCount=83, ManifestEntries=83, ControlChars=0, LiteralRelativePlaceholder=false,
+AsciiTitle=true, and required Markdown code spans are present in a representative registry document.
+
+[2026-09-08 01:00 +08:00] STATIC ANDROID SAFETY AUDIT
+Audited Android_App source and manifests. SourceFiles=12, total project files=15,
+uses-permission declarations=0, dangerous storage permissions=0, hidden-API references=0,
+root/su command references=0. The current slice remains read-only and uses only public Android
+boundaries. This is a static audit; it does not replace Gradle, emulator, or OnePlus device tests.
+
+[2026-09-08 01:05 +08:00] CURRENT DELIVERY STATE
+Documentation baseline is complete for all 83 source prompts at the requested root location.
+Android_App foundation and safety audit are complete. Build/install/device evidence remains
+PendingEvidence until Android SDK/Gradle and an authorized OnePlus USB-debug session are available.
+Next autonomous slice: add the traceability validator and then implement a read-only PackageManager
+inventory feature with permission/profile-aware typed results before any mutation capability.
+
+[2026-09-08 01:10 +08:00] REPEATABLE BASELINE VALIDATOR
+Added Android_App/tools/Validate-AndroidBaseline.ps1. It enforces the 83-document count, 83-entry
+manifest, and the current public-API safety baseline. Execution result:
+{"MarkdownCount":83,"ManifestEntries":83,"SourceFiles":12,"UsesPermissionDeclarations":0,
+"DangerousStoragePermissions":0,"HiddenApiReferences":0,"RootCommandReferences":0}.
+
+[2026-09-08 01:15 +08:00] ENCODING CLEANUP
+The initial Compose screen contained mojibake caused by a legacy Windows PowerShell encoding path.
+MainActivity.kt was replaced with an explicit UTF-8-safe ASCII presentation baseline. The validator
+was rerun successfully and the source contains no control characters. This prevents misleading UI
+text before localization resources are introduced.
+
+[2026-09-08 05:00 +08:00] DEVICE TOOLCHAIN FOUND
+The previously reported toolchain limitation was rechecked after the user connected the phone. ADB
+was found at D:\SoftWare\LeslieMusic\_dev\android-sdk\platform-tools\adb.exe, Android SDK at the
+same development tree, JDK 17 at D:\SoftWare\LeslieMusic\_dev\jdk17, and Gradle 8.10.2 in the
+local Gradle distribution. The fixed test target is the authorized OnePlus device serial
+92f73a16 (model PKG110, Android 16, API 36). Other attached devices are ignored.
+
+[2026-09-08 05:04 +08:00] FIRST BUILD BUG AND FIX
+The first real Gradle build exposed a compile error in JsonlAuditLogger: the logger attempted to
+redact a nonexistent AuditEvent.message property. Removed that invalid field access; target redaction
+remains active. This was a genuine compiler failure, not suppressed.
+
+[2026-09-08 05:08 +08:00] BUILD AND UNIT TEST
+Executed Gradle 8.10.2 with JDK 17 and the discovered SDK: `test assembleDebug` completed
+BUILD SUCCESSFUL. The build produced Android_App/app/build/outputs/apk/debug/app-debug.apk
+(24,207,559 bytes). There are two non-fatal Kotlin warnings in the existing test assertion and one
+native-symbol packaging warning from an AndroidX library; no compilation errors remain.
+
+[2026-09-08 05:12 +08:00] ONEPLUS SILENT INSTALL AND SMOKE TEST
+The APK was pushed to the fixed OnePlus target and installed through `cmd package install -r --user 0`
+after the high-level install command stalled on this OEM build. Installation returned Success.
+The package was launched with `monkey`; dumpsys confirmed MainActivity resumed and visible. No
+AndroidRuntime/FATAL EXCEPTION entries were found in the filtered logcat output. Package metadata
+confirmed versionCode=1, versionName=0.1.0, targetSdk=35, and no requested permissions.
+The app-private audit log was read back through `run-as`; two AppStartup JSONL events were present,
+proving the logger wrote successfully on the physical device.
+
+[2026-09-08 05:15 +08:00] FIXED DEVICE POLICY
+The authorized OnePlus serial 92f73a16 is now the fixed automated test target. Any other ADB device
+that appears is ignored. Future install, launch, logcat, screenshot and read-back commands will use
+the explicit serial selector and will not require the user to remain present.
+
+[2026-09-08 05:20 +08:00] PACKAGE INVENTORY SLICE
+Added InstalledAppInfo and PackageInventoryReader. The reader uses only public PackageManager APIs,
+stable packageName identity, distinctBy(packageName), deterministic sorting, and typed failures.
+Startup now performs a read-only inventory and writes its verified count to JSONL. On the physical
+OnePlus, OEM policy logged `doesn't have GET_INSTALLED_APPS perm, return self!`; the truthful result
+was Verified count=1 (the app itself), not a fabricated full-device inventory. This limitation is
+accepted as a provider capability result and will drive a future user-visible explanation or an
+explicit optional Usage/ADB diagnostic path.
+
+[2026-09-08 05:25 +08:00] SCREENSHOT SMOKE TEST
+After static build and install, a screenshot was pulled from the fixed OnePlus and visually inspected.
+The screen rendered the LeslieCleaner Android title, maintenance foundation status, audit filename,
+and read-only safety message without clipping or crash overlay. Artifact:
+Android_App/device-smoke.png.
+
+[2026-09-08 05:30 +08:00] CONTINUOUS DEVELOPMENT WATCHDOG
+Added LeslieCleaner/scripts/LeslieCleaner-DevelopmentWatchdog.ps1. It runs every 30 minutes, writes
+heartbeat state, runs the baseline validator, checks the fixed ADB serial, and writes
+logs/CONTINUE.request. A hidden long-running PowerShell instance was started. The first check exposed
+that generated build files polluted the validator; the validator was corrected to exclude build and
+.gradle directories. The next check passed with MarkdownCount=83, ManifestEntries=83,
+SourceFiles=14 and all safety counters zero. The watchdog is a progress/health heartbeat; it cannot
+invent an AI response when no agent session is active, but it prevents silent project health drift
+and leaves a continuation marker for the next development turn.
+
+[2026-09-08 06:00 +08:00] LAEP REBASELINE
+The Android project was re-read under LAEP and a dedicated Android_App/AI_SPEC was created with
+requirements, project state, progress, decisions, known issues and test plan. The prompt generator
+now injects the LAEP Read-Analyze-Plan-Implement-Build-Test-Debug-Retest-Regression-Document-
+Continue cycle and the explicit pre-package device gate. All 83 Android prompts were regenerated
+and the baseline validator passed again. Per the user's current instruction, no device connection
+or installation is performed during this rebaseline phase.
+The previously running watchdog was stopped because its ADB heartbeat would violate this new
+pre-package device gate. It will be restarted only after the next APK/local verification gate.
+
+[2026-09-08 13:55 +08:00] WATCHDOG RESTARTED WITH DEVICE GATE
+The watchdog was updated and restarted as a hidden PowerShell process (PID is recorded only in the
+host process table). It runs the baseline validator every 600 seconds (10 minutes), writes CONTINUE.request,
+and defers all ADB access until Android_App/DEVICE_TEST_GATE.PASSED exists. Immediate heartbeat:
+baseline-ok, MarkdownCount=83, ManifestEntries=83, safety counters all zero, device-gated.
+
+[2026-09-08 14:10 +08:00] PRODUCT UI REWORK (LOCAL ONLY)
+Reworked MainActivity from a sparse status page into a Material 3 product dashboard: branded top
+bar, device-health score card, protected read-only state, scan action with progress indicator,
+discovered-package cards, and Home/Cleanup/Settings bottom navigation shell. Fixed the required
+ExperimentalMaterial3 opt-in. Executed local `test assembleDebug` after the change: BUILD SUCCESSFUL
+in 15s. No device was connected or installed during this pre-package rework, as required.
+
+[2026-09-08 14:57 +08:00] WATCHDOG INTERVAL UPDATE
+The supervisor default interval was changed from 1800 seconds to 600 seconds (10 minutes). The
+previous hidden instance was replaced; one active watchdog process is confirmed. Its heartbeat
+reports intervalSeconds=600, baseline-ok and device-gated. The existing LAEP goal remains the
+active unfinished target; a duplicate goal could not be created by the goal manager.
+
+[2026-09-08] CURRENT EXECUTION — PROMPT COMPLETENESS AND APP FOUNDATION
+The source inventory was rechecked at 88 files. The existing Android adaptation covered 83 nested
+Development Bible files; five top-level source prompts were missing from the manifest. Added five
+traceable Android adaptations under Android_Prompt/Legacy and expanded PROMPT_MANIFEST.json to 88
+entries with full source-relative paths. Static validation: source=88, manifest=88, destination
+missing=0, dangerous permission references=0, hidden/root references=0.
+
+Created the previously empty Android_App with a Kotlin/Compose Android 10+ foundation, zero
+manifest permissions, read-only dashboard, and AI_SPEC state records. The first build exposed a
+Java/Kotlin JVM target mismatch (1.8 vs 17); unified both targets at 17. Retest result:
+`test assembleDebug` BUILD SUCCESSFUL using local Gradle 8.10.2 and JDK 17. Artifact:
+Android_App/app/build/outputs/apk/debug/app-debug.apk (24,190,380 bytes). No device was connected
+or modified. Device/OEM evidence remains pending.
+
+[2026-09-08] T-004 — TYPED IDENTITY AND READ-ONLY PACKAGE INVENTORY
+Added Android_App/app/src/main/java/com/lesliecleaner/android/Identity.kt with profile-scoped
+package identity plus content URI, MediaStore ID, and app-owned record identities. Added
+PackageInventoryReader using public PackageManager APIs only; results are sorted, deduplicated,
+and returned through typed success/failure contracts. MainActivity now runs this scan off the main
+thread and reports provider limitations without claiming complete device coverage.
+
+Added IdentityTest with 3 JVM tests. Verification command `test assembleDebug` completed
+BUILD SUCCESSFUL using Gradle 8.10.2/JDK 17. Test result: 3 tests, 0 failures, 0 errors.
+New APK: Android_App/app/build/outputs/apk/debug/app-debug.apk (24,246,520 bytes). No device was
+connected or modified. Next task is capability explanation plus persistent scan audit events.
+
+[2026-09-08] T-006 — BOUNDED AUDIT HISTORY
+Added bounded recent history and redacted export support to JsonlAuditLogger. The app-private audit
+file is capped at 200 records, recent reads are limited before UI presentation, and the dashboard
+shows the latest events without exposing destructive controls. Added retention coverage test.
+
+Verification: `test assembleDebug` BUILD SUCCESSFUL with Gradle 8.10.2/JDK 17. No device access.
+Next: add an explicit Android share-sheet export with user confirmation and an export-result audit.
+
+[2026-09-08] T-007 — CONFIRMED SHARE-SHEET EXPORT
+Added FileProvider-backed export of the bounded redacted JSONL audit file. The UI requires explicit
+confirmation, shares only a cache-scoped URI, and records requested, share_sheet_started, and typed
+failure outcomes. No raw app-private path or target URI is exposed.
+
+Final verification: `test assembleDebug` BUILD SUCCESSFUL with Gradle 8.10.2/JDK 17, exit code 0.
+APK: Android_App/app/build/outputs/apk/debug/app-debug.apk (29,646,098 bytes). Device/OEM share
+behavior remains pending; no device was connected or modified.
+
+[2026-09-08] T-009 — INSTRUMENTED FILEPROVIDER CONTRACT
+Added FileProviderContractTest under Android_App/app/src/androidTest. It verifies the export URI is
+content-scheme, the file remains under app cache, and raw content URIs/storage paths are absent.
+Added AndroidJUnitRunner and test dependencies. `test assembleDebug assembleAndroidTest` completed
+BUILD SUCCESSFUL; the debug app and androidTest APK were produced. connectedDebugAndroidTest was not
+run because no emulator/device target was authorized. No device was connected or modified.
+
+[2026-09-08] T-008 — DEDICATED AUDIT HISTORY PRESENTATION
+Added a dedicated modal audit-history page reachable from the dashboard. It loads at most the
+latest 50 redacted events, shows the retention limit, supports closing, and reuses the explicit
+export confirmation boundary. The first build caught an incorrect Dialog import; corrected it to
+the Compose window Dialog and retested successfully.
+
+Verification: `test assembleDebug` BUILD SUCCESSFUL, Gradle 8.10.2/JDK 17, exit code 0. No device
+or emulator was connected. Next task is instrumented FileProvider/share-flow verification.
+
+[2026-09-08] T-005 — CAPABILITY EXPLANATION AND PERSISTENT AUDIT
+Added ScanAuditRecord and JsonlAuditLogger. Audit data is app-private JSONL, escaped, limited to
+event/result/count/coverage/typed failure kind, and flushed with FileDescriptor.sync(). MainActivity
+now records verified and failed package scans off the main thread. The UI explicitly labels results
+as provider-visible rather than a complete device inventory.
+
+Added two audit unit tests. Verification: `test assembleDebug` BUILD SUCCESSFUL with 10 total
+test executions across debug/release, 0 failures, 0 errors. APK:
+Android_App/app/build/outputs/apk/debug/app-debug.apk (24,255,284 bytes). No device access.
+
+[2026-09-08] T-010 — DEVICE INSTRUMENTATION ATTEMPT
+ADB read-only discovery found authorized OnePlus serial 92f73a16, model PKG110, Android 16/API 36,
+owner user 0. Gradle `connectedDebugAndroidTest` reached the device but failed before tests while
+committing the app install with ddmlib Error -99; report stated Finished 0 tests. A direct `adb
+install -r --user 0` path and a `push + shell cmd package install -r --user 0` fallback both hung
+in the OEM package installer and were stopped. No package was installed and no device test passed.
+Device evidence remains blocked on an OEM-compatible install path; local build/test remains valid.
+
+[2026-09-08] T-012 — PRODUCT UI REDESIGN
+Rebuilt MainActivity into a Material 3 dashboard with branded header, protected-state indicator,
+gradient safe-scan hero, prominent primary action, honest provider-visible result text, capability
+cards, audit preview, explicit export entry point, settings placeholder, adaptive scrolling, dark
+theme colors, semantic labels, and bottom navigation. No scan/security/data contracts were changed.
+
+The first UI build exposed malformed encoded text and a missing background parenthesis; both were
+fixed. The full local command `test assembleDebug assembleAndroidTest` then completed BUILD
+SUCCESSFUL with Gradle 8.10.2/JDK 17. APK size: 29,646,098 bytes. Device screenshot remains
+PendingEvidence because the authorized OEM install path still returns Error -99.
+
+[2026-09-09] T-015 — LAUNCHER ICON UPGRADE
+Replaced the default launcher artwork with a native Android adaptive icon: blue brand background,
+white shield outline, and check mark foreground. Wired `android:icon` and `android:roundIcon` to
+the adaptive resource; the app remains Chinese in the product UI and no runtime permission was added.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL with Gradle 8.10.2/JDK 17.
+`aapt2 dump badging` confirmed `res/mipmap-anydpi-v26/ic_launcher.xml`. Shell-owned install session
+1246658056 succeeded on OnePlus PKG110/API 36, and `MainActivity` launched successfully. APK:
+Android_App/app/build/outputs/apk/debug/app-debug.apk (29,646,440 bytes).
+
+[2026-09-09] T-016 — LAUNCHER ICON VISUAL REVISION
+The first shield-check icon was rejected as too generic. Replaced it with a darker, more premium
+adaptive mark: indigo-purple background, cyan/lilac cleaning sparkles, and white sweeping motion
+bands. Kept the Android-native vector/adaptive resource approach and the existing icon manifest wiring.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. Revised APK was installed
+through the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-017 — PREMIUM LAUNCHER ICON REFINEMENT
+The second icon still felt too illustrative. Refined the mark into a restrained premium identity:
+graphite-to-indigo background, ivory geometric Leslie L, and a single champagne-gold sparkle.
+The adaptive vector resources and manifest wiring remain unchanged.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. APK was installed through
+the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-033/T-034 — FACT-BASED APP METADATA AND DELTA EXTENSION
+Extended the existing per-application read-only detail with target SDK, last update time, and a
+Chinese attention explanation derived only from public PackageManager facts. Debuggable and disabled
+states are explicitly described as observable signals, never as malware conclusions. Repeat-scan
+fingerprints now include version, target SDK, update time, enabled state, and debug state while
+continuing to hash package identities and store no raw package names.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL with Gradle 8.10.2/JDK 17.
+Device verification remains restricted to OnePlus PKG110/API 36 (serial 92f73a16); other connected
+devices are out of scope.
+
+[2026-09-09] T-040/T-048 — LAEP 4.1 2.0.0 REBASELINE AND DEVICE RELEASE REVIEW
+Rebuilt the Android project specification from the user request through LAEP 4.1 REG: vision,
+requirements, scope, architecture, data model, task tree, tests, acceptance, risks, invariants,
+verification matrix, REG output, engineering baseline, assumptions, traceability, progress,
+decisions, issues, evidence, and changelog. Implemented device health analysis for storage, memory,
+and battery; unified it with application inventory, hashed repeat-scan deltas, guarded analysis,
+Chinese result states, and bounded scan-start/finish/failure audit records. Bumped the app to
+versionCode 6/versionName 2.0.0.
+
+Verification: Gradle `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL; OnePlus PKG110/API 36
+serial 92f73a16 showed 253 apps, storage 12%, memory 8.5–8.6 GB, battery 100%; FileProviderContractTest
+passed 1/1; LAEP audit passed. No other device was tested or modified.
+
+[2026-09-09] T-035 — 1.2.0 ONEPLUS REGRESSION COMPLETE
+Packaged versionCode 5/versionName 1.2.0, normalized invalid early package timestamps to “未提供”,
+and verified the final APK on OnePlus PKG110/API 36 only. Homepage scanning displayed 253 readable
+applications; metadata detail showed target SDK, update-time handling, and fact-based attention text.
+FileProviderContractTest passed 1/1.
+
+[2026-09-09] T-022 — HOMEPAGE SECURITY SCAN FIX
+The homepage scan button was wired to background work but gave no prominent result feedback, and
+the old PackageManager call returned an unknown error on Android 16. Updated PackageInventoryReader
+to use Android 13+ flags with per-package fault tolerance. Added a visible scan-result dialog with
+count, labels, versions, audit scope, and failure feedback.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. On OnePlus PKG110/API 36,
+tapping `开始安全扫描` displayed `扫描完成`, found 253 provider-visible applications, and showed
+application labels and versions.
+
+[2026-09-09] T-023 — FULL FEATURE SMOKE TEST
+Verified on OnePlus PKG110/API 36: homepage scan, scan-result dialog, audit history, settings page,
+application-list entry, export confirmation, and FileProvider instrumentation. Fixed the previously
+empty application-list click handler. Export now uses `text/plain` for broader handler compatibility
+and records an explicit failure audit when the device has no share handler.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL; FileProviderContractTest
+passed 1/1; device UI checks confirmed history/settings/application-list result boundaries. The test
+device has no share application, so the external chooser itself cannot be demonstrated there.
+
+[2026-09-09] T-024 — COMPLETE REMAINING PRIVACY AND SETTINGS MODULES
+Replaced the privacy-signals placeholder with a Chinese privacy boundary dialog covering public API
+scope, permissions, Root/hidden API policy, and local redacted retention. Replaced the settings
+placeholder with read-only protection status, audit retention details, and a confirmed local audit
+history clear action. No new permission or destructive device operation was added.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. Privacy dialog and settings
+page were opened on OnePlus PKG110/API 36; settings showed the clear-history control and all UI stayed Chinese.
+
+[2026-09-09] T-021 — BLUE-PURPLE ICON BASE
+Shifted the selected lighter blue base toward a stronger blue-purple gradient while keeping the
+Leslie L monogram and champagne sparkle unchanged.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. APK was installed through
+the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-020 — LIGHTER BLUE ICON BASE
+Kept the selected L monogram and champagne sparkle, but lifted the background from dark navy to
+a brighter blue gradient so the icon reads more clearly on the launcher.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. APK was installed through
+the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-019 — BLUE-BASE L MONOGRAM RESTORED
+Restored the previously preferred Leslie L monogram and champagne sparkle, replacing the crystal
+badge. Updated only the visual base to a premium deep-navy-to-royal-blue gradient.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. APK was installed through
+the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-018 — CRYSTAL BADGE LAUNCHER ICON
+Replaced the monogram direction with a completely different premium crystal-badge concept:
+midnight blue gradient background, ivory outer facets, violet and mint inner facets, plus a
+single champagne sparkle. No shield, lettermark, or cleaning-swoosh motif remains.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL. APK was installed through
+the shell-owned session on OnePlus PKG110/API 36 and `MainActivity` launched successfully.
+
+[2026-09-09] T-033/T-034 — FACT-BASED APP METADATA AND DELTA EXTENSION
+Extended the existing per-application read-only detail with target SDK, last update time, and a
+Chinese attention explanation derived only from public PackageManager facts. Debuggable and disabled
+states are explicitly described as observable signals, never as malware conclusions. Repeat-scan
+fingerprints now include version, target SDK, update time, enabled state, and debug state while
+continuing to hash package identities and store no raw package names.
+
+Verification: `test assembleDebug assembleAndroidTest` BUILD SUCCESSFUL with Gradle 8.10.2/JDK 17.
+Device verification remains restricted to OnePlus PKG110/API 36 (serial 92f73a16); other connected
+devices are out of scope.

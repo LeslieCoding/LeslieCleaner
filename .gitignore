@@ -1,0 +1,26 @@
+# Local .NET SDK / runtime (machine-specific)
+.dotnet/
+.dotnet-home/
+.dotnet-sdk/
+
+# Build outputs
+**/artifacts/
+**/bin/
+**/obj/
+**/build/
+**/installer/output/
+
+# Logs and temp
+logs/
+*.log
+.tmp/
+
+# OS / editor
+Thumbs.db
+.vs/
+.idea/
+
+# Android/Gradle
+.gradle/
+local.properties
+*.keystore

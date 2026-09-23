@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.Modules.Cleaner</RootNamespace>
+    <AssemblyName>LeslieCleaner.Modules.Cleaner</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+  </ItemGroup>
+
+</Project>

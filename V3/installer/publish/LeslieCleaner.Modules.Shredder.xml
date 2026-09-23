@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.Shredder</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredderEngine">
+            <summary>
+            碎纸机引擎。DoD 3/7 遍、Gutmann 35 遍覆写（真实模式表），
+            SSD 自动切换安全策略（加密随机单遍 + 截断 + 删除）。
+            任务队列支持 AddFiles/AddFolder/Start/Pause/Resume/Cancel 与进度报告。
+            关键路径防护：盘根、Windows 整树、Program Files 整树一律拦截；
+            符号链接只删除不覆写（避免覆写穿透到目标）。
+            粉碎即不可恢复：这是本模块的设计目的，全部操作留日志。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.#ctor(LeslieCleaner.Core.Abstractions.ILogService,System.Func{System.String,System.Nullable{System.Boolean}},LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以日志服务创建引擎。</summary>
+            <param name="logService">日志服务。</param>
+            <param name="ssdProbe">SSD 探针（测试注入）；为 <see langword="null"/> 时用真实 IOCTL 探测。</param>
+            <param name="securityOperationGate">启动安全检查失败时阻止不可恢复粉碎的运行时闸门。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredderEngine.IsPaused">
+            <summary>当前是否暂停。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredderEngine.IsRunning">
+            <summary>当前是否有执行中的队列。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.AddFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            向队列追加文件。返回任务标识列表（含被防护拦截项，状态 Blocked）。
+            </summary>
+            <param name="paths">文件路径集合。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.AddFolder(System.String)">
+            <summary>
+            向队列追加文件夹（递归粉碎其中全部文件）。
+            </summary>
+            <param name="directoryPath">文件夹路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.GetTasks">
+            <summary>当前任务快照（含历史状态）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.RemovePendingTasks(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            从队列移除指定任务（仅 Pending/Blocked 可移除；执行中或已完成的不动）。
+            返回实际移除数量。
+            </summary>
+            <param name="taskIds">任务标识集合。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.StartAsync(LeslieCleaner.Modules.Shredder.ShredMethod,System.IProgress{LeslieCleaner.Modules.Shredder.ShredProgress},System.Threading.CancellationToken)">
+            <summary>
+            启动队列执行（幂等：执行中再次调用直接返回当前任务集合）。
+            </summary>
+            <param name="method">粉碎方法；SSD 上自动降级为 <see cref="F:LeslieCleaner.Modules.Shredder.ShredMethod.SsdSafe"/>（除显式选择外）。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.Pause">
+            <summary>暂停队列。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.Resume">
+            <summary>继续队列。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.Cancel">
+            <summary>取消队列。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderEngine.IsProtectedPath(System.String)">
+            <summary>
+            关键路径防护判定（纯函数）：盘根、Windows 整树、Program Files 整树返回
+            <see langword="true"/>（拦截）。
+            </summary>
+            <param name="fullPath">完整路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredderModule">
+            <summary>File Shredder 模块（圣经第一节功能清单第 7 条）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredderModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredderModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.Shredder 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ServiceCollectionExtensions.AddLeslieCleanerShredderModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 File Shredder 模块。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredMethod">
+            <summary>粉碎方法。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredMethod.DoD3Pass">
+            <summary>DoD 5220.22-M 3 遍（0x00 → 0xFF → 随机）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredMethod.DoD7Pass">
+            <summary>DoD 5220.22-M ECE 7 遍。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredMethod.Gutmann35Pass">
+            <summary>Gutmann 35 遍。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredMethod.SsdSafe">
+            <summary>SSD 安全策略：加密随机单遍 + 截断 + 删除（SSD 覆写无意义且伤寿命）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredTask">
+            <summary>队列中的粉碎任务。</summary>
+            <param name="Id">任务标识。</param>
+            <param name="Path">文件或文件夹路径。</param>
+            <param name="IsDirectory">是否文件夹。</param>
+            <param name="Status">状态。</param>
+            <param name="TotalFiles">包含文件数（扫描后填充）。</param>
+            <param name="ProcessedFiles">已处理文件数。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredTask.#ctor(System.Guid,System.String,System.Boolean,LeslieCleaner.Modules.Shredder.ShredTaskStatus,System.Int32,System.Int32,System.String)">
+            <summary>队列中的粉碎任务。</summary>
+            <param name="Id">任务标识。</param>
+            <param name="Path">文件或文件夹路径。</param>
+            <param name="IsDirectory">是否文件夹。</param>
+            <param name="Status">状态。</param>
+            <param name="TotalFiles">包含文件数（扫描后填充）。</param>
+            <param name="ProcessedFiles">已处理文件数。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.Id">
+            <summary>任务标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.Path">
+            <summary>文件或文件夹路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.IsDirectory">
+            <summary>是否文件夹。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.Status">
+            <summary>状态。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.TotalFiles">
+            <summary>包含文件数（扫描后填充）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.ProcessedFiles">
+            <summary>已处理文件数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredTask.Error">
+            <summary>失败原因。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredTaskStatus">
+            <summary>任务状态。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Pending">
+            <summary>排队中。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Running">
+            <summary>执行中。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Completed">
+            <summary>已完成。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Failed">
+            <summary>失败。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Cancelled">
+            <summary>已取消。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredTaskStatus.Blocked">
+            <summary>被防护拦截。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredProgress">
+            <summary>粉碎进度快照。</summary>
+            <param name="CurrentFile">当前文件。</param>
+            <param name="CurrentPass">当前遍数（1 起）。</param>
+            <param name="TotalPasses">总遍数。</param>
+            <param name="ProcessedFiles">已处理文件数。</param>
+            <param name="TotalFiles">总文件数。</param>
+            <param name="ProcessedBytes">当前文件已覆写字节。</param>
+            <param name="TotalBytes">当前文件总字节。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredProgress.#ctor(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int64,System.Int64)">
+            <summary>粉碎进度快照。</summary>
+            <param name="CurrentFile">当前文件。</param>
+            <param name="CurrentPass">当前遍数（1 起）。</param>
+            <param name="TotalPasses">总遍数。</param>
+            <param name="ProcessedFiles">已处理文件数。</param>
+            <param name="TotalFiles">总文件数。</param>
+            <param name="ProcessedBytes">当前文件已覆写字节。</param>
+            <param name="TotalBytes">当前文件总字节。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.CurrentFile">
+            <summary>当前文件。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.CurrentPass">
+            <summary>当前遍数（1 起）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.TotalPasses">
+            <summary>总遍数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.ProcessedFiles">
+            <summary>已处理文件数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.TotalFiles">
+            <summary>总文件数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.ProcessedBytes">
+            <summary>当前文件已覆写字节。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredProgress.TotalBytes">
+            <summary>当前文件总字节。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredPatternProvider">
+            <summary>
+            覆写模式表。提供 DoD 5220.22-M 3 遍、DoD ECE 7 遍与 Gutmann 35 遍的
+            真实字节模式序列；每遍为固定字节、三字节轮换模式或加密随机数。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPattern">
+            <summary>一遍覆写模式。</summary>
+            <param name="Kind">模式类别。</param>
+            <param name="Pattern">固定字节序列（轮换填充）；随机遍为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPattern.#ctor(LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPatternKind,System.Byte[])">
+            <summary>一遍覆写模式。</summary>
+            <param name="Kind">模式类别。</param>
+            <param name="Pattern">固定字节序列（轮换填充）；随机遍为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPattern.Kind">
+            <summary>模式类别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPattern.Pattern">
+            <summary>固定字节序列（轮换填充）；随机遍为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPatternKind">
+            <summary>模式类别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPatternKind.Fixed">
+            <summary>固定字节序列按长度轮换填充。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPatternKind.Random">
+            <summary>加密随机（RandomNumberGenerator）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Shredder.ShredPatternProvider.GutmannFixedPatterns">
+            <summary>Gutmann 27 个固定三遍轮换模式（第 5~31 遍，首尾各 4 遍随机）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredPatternProvider.GetPasses(LeslieCleaner.Modules.Shredder.ShredMethod)">
+            <summary>
+            获取指定方法的完整遍序列。
+            </summary>
+            <param name="method">粉碎方法。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.ShredPatternProvider.FillBuffer(LeslieCleaner.Modules.Shredder.ShredPatternProvider.PassPattern,System.Span{System.Byte})">
+            <summary>
+            按模式填充缓冲区（固定序列轮换 / 加密随机）。
+            </summary>
+            <param name="pass">遍模式。</param>
+            <param name="buffer">目标缓冲区。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Shredder.StorageMediaDetector">
+            <summary>
+            存储介质检测。经 IOCTL_STORAGE_QUERY_PROPERTY 读取设备描述符，
+            以 SeekPenalty 判定 SSD（无寻道惩罚）；同时用 Trim 属性辅助。
+            打开物理盘句柄可能需要管理员：失败返回 <see langword="null"/>（未知），
+            调用方按"保守按 SSD 处理"或提示用户决定。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.StorageMediaDetector.IsSsd(System.String)">
+            <summary>
+            探测指定路径所在物理盘是否 SSD。无法判定（无权限/非 Windows/失败）返回
+            <see langword="null"/>。
+            </summary>
+            <param name="path">卷内任意路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Shredder.StorageMediaDetector.ParseSeekPenaltyDescriptor(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            解析 DEVICE_SEEK_PENALTY_DESCRIPTOR：版本(4)+大小(4)+IncursSeekPenalty(1)。
+            无寻道惩罚 → SSD。纯函数，可单元测试。
+            </summary>
+            <param name="descriptor">IOCTL 输出缓冲。</param>
+        </member>
+    </members>
+</doc>

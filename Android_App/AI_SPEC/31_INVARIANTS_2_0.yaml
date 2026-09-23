@@ -1,0 +1,67 @@
+version: "3.0.0"
+project: "LeslieCleaner Android"
+invariants:
+  - id: "INV-3-001"
+    title: "No unsupported security or cleanup claims"
+    source: "USER_EXPLICIT / AI_RECOMMENDED"
+    trigger: "Security or junk result"
+    prohibited_changes: ["claim full antivirus", "claim universal cleanup", "hide unavailable state"]
+    verification: ["copy review", "source-bound tests"]
+    severity: "HIGH"
+    status: "ACTIVE"
+  - id: "INV-3-002"
+    title: "No unapproved cloud endpoint"
+    source: "LAEP P0 / R3-N02"
+    trigger: "Rule update"
+    prohibited_changes: ["upload app list", "activate unknown URL", "execute remote rule code"]
+    verification: ["network-free tests", "configuration review"]
+    severity: "CRITICAL"
+    status: "ACTIVE"
+  - id: "INV-3-003"
+    title: "User-mediated cleanup and startup control"
+    source: "USER_EXPLICIT / platform boundary"
+    trigger: "Junk or startup action"
+    prohibited_changes: ["silent delete", "toggle arbitrary app startup without system/user action"]
+    verification: ["intent tests", "UI confirmation semantics"]
+    severity: "CRITICAL"
+    status: "ACTIVE"
+  - id: "INV-3-004"
+    title: "Every module entry is functional"
+    source: "USER_EXPLICIT"
+    trigger: "Module card tap"
+    prohibited_changes: ["empty callback", "route only to unrelated app search"]
+    verification: ["Compose semantics and OnePlus smoke"]
+    severity: "HIGH"
+    status: "ACTIVE"
+  - id: "INV-2-001"
+    title: "No destructive device mutation"
+    source: "USER_EXPLICIT / LAEP P0"
+    trigger: "Any analysis run"
+    prohibited_changes: ["delete files", "delete apps", "clear external data", "change settings"]
+    verification: ["manifest/static scan", "code review", "OnePlus smoke"]
+    severity: "CRITICAL"
+    status: "ACTIVE"
+  - id: "INV-2-002"
+    title: "Public API and provider-visible honesty"
+    source: "AI_RECOMMENDED"
+    trigger: "Any inventory or health result"
+    prohibited_changes: ["claim complete device coverage", "claim malware verdict"]
+    verification: ["UI copy checks", "reader tests"]
+    severity: "HIGH"
+    status: "ACTIVE"
+  - id: "INV-2-003"
+    title: "Bounded redacted local evidence"
+    source: "LEGACY_BEHAVIOR"
+    trigger: "Any persistence/export"
+    prohibited_changes: ["raw package identity in snapshot", "raw personal paths or URI in audit"]
+    verification: ["audit tests", "FileProviderContractTest"]
+    severity: "HIGH"
+    status: "ACTIVE"
+  - id: "INV-2-004"
+    title: "OnePlus-only device verification"
+    source: "USER_EXPLICIT"
+    trigger: "Any ADB/device test"
+    prohibited_changes: ["use other connected device", "broadcast install to all devices"]
+    verification: ["command review uses -s 92f73a16"]
+    severity: "HIGH"
+    status: "ACTIVE"

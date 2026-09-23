@@ -1,0 +1,527 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.Cleaner</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry">
+            <summary>大文件条目。</summary>
+            <param name="Path">完整路径。</param>
+            <param name="SizeBytes">大小（字节）。</param>
+            <param name="LastWriteUtc">最后写入时间（UTC）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry.#ctor(System.String,System.Int64,System.DateTimeOffset)">
+            <summary>大文件条目。</summary>
+            <param name="Path">完整路径。</param>
+            <param name="SizeBytes">大小（字节）。</param>
+            <param name="LastWriteUtc">最后写入时间（UTC）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry.Path">
+            <summary>完整路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry.SizeBytes">
+            <summary>大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry.LastWriteUtc">
+            <summary>最后写入时间（UTC）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat">
+            <summary>文件类型统计。</summary>
+            <param name="Extension">扩展名（小写，无扩展名为 "(none)"）。</param>
+            <param name="Count">文件数。</param>
+            <param name="TotalBytes">总大小。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat.#ctor(System.String,System.Int64,System.Int64)">
+            <summary>文件类型统计。</summary>
+            <param name="Extension">扩展名（小写，无扩展名为 "(none)"）。</param>
+            <param name="Count">文件数。</param>
+            <param name="TotalBytes">总大小。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat.Extension">
+            <summary>扩展名（小写，无扩展名为 "(none)"）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat.Count">
+            <summary>文件数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat.TotalBytes">
+            <summary>总大小。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode">
+            <summary>Treemap 数据节点（面积 = SizeBytes；绘制在 UI 阶段）。</summary>
+            <param name="Name">节点名。</param>
+            <param name="Path">完整路径。</param>
+            <param name="SizeBytes">聚合大小（自身子树合计）。</param>
+            <param name="Children">子节点。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode.#ctor(System.String,System.String,System.Int64,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode})">
+            <summary>Treemap 数据节点（面积 = SizeBytes；绘制在 UI 阶段）。</summary>
+            <param name="Name">节点名。</param>
+            <param name="Path">完整路径。</param>
+            <param name="SizeBytes">聚合大小（自身子树合计）。</param>
+            <param name="Children">子节点。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode.Name">
+            <summary>节点名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode.Path">
+            <summary>完整路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode.SizeBytes">
+            <summary>聚合大小（自身子树合计）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode.Children">
+            <summary>子节点。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult">
+            <summary>分析结果。</summary>
+            <param name="TopFiles">Top N 大文件（按大小降序）。</param>
+            <param name="TypeStats">类型统计（按总大小降序）。</param>
+            <param name="Treemap">Treemap 根节点集合（每个扫描根一棵）。</param>
+            <param name="Suggestions">规则引擎清理建议（引用真实依据）。</param>
+            <param name="ScannedFiles">扫描文件总数。</param>
+            <param name="TotalBytes">扫描总大小。</param>
+            <param name="WasCancelled">是否被取消。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.#ctor(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Analytics.FileTypeStat},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Analytics.TreemapNode},System.Collections.Generic.IReadOnlyList{System.String},System.Int64,System.Int64,System.Boolean)">
+            <summary>分析结果。</summary>
+            <param name="TopFiles">Top N 大文件（按大小降序）。</param>
+            <param name="TypeStats">类型统计（按总大小降序）。</param>
+            <param name="Treemap">Treemap 根节点集合（每个扫描根一棵）。</param>
+            <param name="Suggestions">规则引擎清理建议（引用真实依据）。</param>
+            <param name="ScannedFiles">扫描文件总数。</param>
+            <param name="TotalBytes">扫描总大小。</param>
+            <param name="WasCancelled">是否被取消。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.TopFiles">
+            <summary>Top N 大文件（按大小降序）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.TypeStats">
+            <summary>类型统计（按总大小降序）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.Treemap">
+            <summary>Treemap 根节点集合（每个扫描根一棵）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.Suggestions">
+            <summary>规则引擎清理建议（引用真实依据）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.ScannedFiles">
+            <summary>扫描文件总数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.TotalBytes">
+            <summary>扫描总大小。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalysisResult.WasCancelled">
+            <summary>是否被取消。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine">
+            <summary>
+            大文件分析引擎。输出 Top N 大文件、文件类型统计、Treemap 数据模型与
+            规则引擎清理建议（禁止伪 AI：每条建议引用真实依据——位置/大小/未访问天数）。
+            支持暂停/取消，禁区规则与索引引擎一致。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.DefaultTopCount">
+            <summary>Top 大文件默认数量。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.StaleDaysThreshold">
+            <summary>"长期未访问"阈值天数。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.HugeFileBytes">
+            <summary>"超大文件"阈值（4 GiB）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.#ctor(LeslieCleaner.Core.Abstractions.ILogService,System.Func{System.String,System.Boolean})">
+            <summary>以日志服务创建引擎。</summary>
+            <param name="logService">日志服务。</param>
+            <param name="forbiddenProbe">禁区判定（测试注入）；为 <see langword="null"/> 时跳过禁区检查（由调用方保证范围）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.IsPaused">
+            <summary>当前是否暂停。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.Pause">
+            <summary>暂停。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.Resume">
+            <summary>继续。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.Cancel">
+            <summary>取消。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.AnalyzeAsync(System.Collections.Generic.IReadOnlyList{System.String},System.Int32,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            执行分析。
+            </summary>
+            <param name="roots">扫描根目录。</param>
+            <param name="topCount">Top 大文件数量。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Analytics.LargeFileAnalyzerEngine.BuildSuggestions(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Analytics.LargeFileEntry},System.DateTimeOffset)">
+            <summary>
+            规则引擎建议（纯函数）。
+            </summary>
+            <param name="topFiles">Top 大文件。</param>
+            <param name="nowUtc">当前时间。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.CleanEngine">
+            <summary>
+            清理引擎实现。文件项经 <see cref="T:LeslieCleaner.Core.Abstractions.IQuarantineService"/> 进隔离区；
+            注册表项先 <see cref="T:LeslieCleaner.Core.Abstractions.IBackupService"/> 备份再经 <see cref="T:LeslieCleaner.Core.Abstractions.IRegistryEngine"/> 删除
+            （"键路径|值名" 编码删值，否则删键）。每次清理写入操作清单
+            （%ProgramData%\LeslieCleaner\Operations\{operationId}.json），
+            <see cref="M:LeslieCleaner.Modules.Cleaner.CleanEngine.RollbackAsync(System.String,System.Threading.CancellationToken)"/> 凭清单完整回滚。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanEngine.#ctor(LeslieCleaner.Core.Abstractions.IQuarantineService,LeslieCleaner.Core.Abstractions.IBackupService,LeslieCleaner.Core.Abstractions.IRegistryEngine,LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISystemRecycleBinService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate,LeslieCleaner.Core.Abstractions.ICleanupTargetPolicy)">
+            <summary>以隔离区、备份、注册表引擎、路径与日志服务创建清理引擎。</summary>
+            <param name="quarantineService">隔离区服务。</param>
+            <param name="backupService">备份服务。</param>
+            <param name="registryEngine">注册表引擎；为 <see langword="null"/> 时注册表项记为失败。</param>
+            <param name="pathService">路径服务。</param>
+            <param name="logService">日志服务。</param>
+            <param name="recycleBinService">Windows Shell 回收站服务；为空时拒绝清空回收站。</param>
+            <param name="securityOperationGate">启动安全检查失败时阻止破坏性清理的运行时闸门。</param>
+            <param name="cleanupTargetPolicy">文件执行前的 WRP、重解析点与应用核心边界策略。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanEngine.CleanAsync(LeslieCleaner.Core.Models.CleanRequest,System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanEngine.RollbackAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanEngine.SplitRegistryTarget(System.String)">
+            <summary>
+            拆分注册表目标编码："键路径|值名" → (键路径, 值名)；无分隔符 → (键路径, null)。
+            </summary>
+            <param name="encoded">编码后的目标路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.CleanerModule">
+            <summary>Smart Scan / 清理模块（圣经第一节功能清单第 1 条）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanerModule.#ctor(LeslieCleaner.Modules.Cleaner.Scanning.IScanEnvironment)">
+            <summary>以扫描环境创建模块。</summary>
+            <param name="environment">扫描环境。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.CleanerModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanerModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.CleanerModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine">
+            <summary>
+            重复文件查找引擎。三层递进：大小分组 → 部分哈希（头尾各 64KB + 大小）→
+            全量 SHA256（异步流式 + 取消），避免对全库逐文件全量哈希。
+            视频/音频按扩展名分层后在层内走同样的三层；相似图片走感知哈希（汉明距离 ≤ 5）。
+            批量删除经 <see cref="T:LeslieCleaner.Core.Abstractions.IQuarantineService"/> 进隔离区（可回滚）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.#ctor(LeslieCleaner.Core.Abstractions.IQuarantineService,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以隔离区与日志服务创建引擎。</summary>
+            <param name="quarantineService">隔离区服务。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.IsPaused">
+            <summary>当前是否暂停。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.Pause">
+            <summary>暂停扫描。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.Resume">
+            <summary>继续扫描。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.Cancel">
+            <summary>取消扫描。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.FindDuplicatesAsync(System.Collections.Generic.IReadOnlyList{System.String},System.Int64,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            三层递进查找重复文件（含视频/音频分层）。
+            </summary>
+            <param name="roots">扫描根目录。</param>
+            <param name="minSizeBytes">参与比较的最小文件大小（默认 1KB，过滤噪声）。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.FindSimilarImagesAsync(System.Collections.Generic.IReadOnlyList{System.String},System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            查找相似图片（aHash + dHash 任一距离 ≤ 5 即相似）。
+            </summary>
+            <param name="roots">扫描根目录。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.DeleteRedundantAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup},LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy,System.String,System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            按保留策略批量删除冗余文件（进隔离区，可回滚）。
+            </summary>
+            <param name="groups">重复组。</param>
+            <param name="policy">保留策略。</param>
+            <param name="preferredDirectory"><see cref="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.PreferredDirectory"/> 的优先目录。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>清理结果（含回滚凭据 OperationId）。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateFinderEngine.ClassifyMedia(System.String)">
+            <summary>媒体分层判定。</summary>
+            <param name="path">文件路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup">
+            <summary>一组重复文件。</summary>
+            <param name="ContentHash">全量内容哈希（SHA256 hex）。</param>
+            <param name="Files">组内文件路径（至少 2 个）。</param>
+            <param name="SizeEach">单文件大小（字节）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int64)">
+            <summary>一组重复文件。</summary>
+            <param name="ContentHash">全量内容哈希（SHA256 hex）。</param>
+            <param name="Files">组内文件路径（至少 2 个）。</param>
+            <param name="SizeEach">单文件大小（字节）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup.ContentHash">
+            <summary>全量内容哈希（SHA256 hex）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup.Files">
+            <summary>组内文件路径（至少 2 个）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup.SizeEach">
+            <summary>单文件大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateGroup.WastedBytes">
+            <summary>可释放字节（保留 1 份后的冗余）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.SimilarImageGroup">
+            <summary>相似图片组。</summary>
+            <param name="ReferenceImage">基准图片。</param>
+            <param name="SimilarImages">相似图片（含与基准的汉明距离，距离 ≤ 阈值）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.SimilarImageGroup.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.Int32}})">
+            <summary>相似图片组。</summary>
+            <param name="ReferenceImage">基准图片。</param>
+            <param name="SimilarImages">相似图片（含与基准的汉明距离，距离 ≤ 阈值）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.SimilarImageGroup.ReferenceImage">
+            <summary>基准图片。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Duplicates.SimilarImageGroup.SimilarImages">
+            <summary>相似图片（含与基准的汉明距离，距离 ≤ 阈值）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy">
+            <summary>智能保留策略。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.Newest">
+            <summary>保留最新（LastWriteTime 最大）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.Oldest">
+            <summary>保留最旧。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.ShortestPath">
+            <summary>保留最短路径。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.PreferredDirectory">
+            <summary>指定目录优先（目录内文件优先保留）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.MediaKind">
+            <summary>媒体文件类别（视频/音频去重分层用）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.MediaKind.None">
+            <summary>非媒体。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.MediaKind.Video">
+            <summary>视频。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.MediaKind.Audio">
+            <summary>音频。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateRetention">
+            <summary>智能保留规则（纯函数）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.DuplicateRetention.Select(System.Collections.Generic.IReadOnlyList{System.String},LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy,System.String)">
+            <summary>
+            按策略从重复组中选出保留文件，其余为可删除冗余。
+            </summary>
+            <param name="files">组内文件。</param>
+            <param name="policy">保留策略。</param>
+            <param name="preferredDirectory"><see cref="F:LeslieCleaner.Modules.Cleaner.Duplicates.KeepPolicy.PreferredDirectory"/> 时的优先目录。</param>
+            <returns>(保留文件, 冗余文件)。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash">
+            <summary>
+            感知哈希（aHash/dHash 64 位）。经 System.Drawing 解码 JPEG/PNG/BMP，
+            缩放到 8x8（aHash）与 9x8（dHash）灰度位图计算；汉明距离 ≤ 5 判相似。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash.SimilarityThreshold">
+            <summary>相似判定汉明距离阈值。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash.ComputeAverageHash(System.String)">
+            <summary>
+            计算 aHash（8x8 均值哈希）。
+            </summary>
+            <param name="imagePath">图片路径（JPEG/PNG/BMP）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash.ComputeDifferenceHash(System.String)">
+            <summary>
+            计算 dHash（9x8 水平梯度哈希）。
+            </summary>
+            <param name="imagePath">图片路径（JPEG/PNG/BMP）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash.HammingDistance(System.UInt64,System.UInt64)">
+            <summary>
+            两个 64 位哈希的汉明距离。
+            </summary>
+            <param name="a">哈希 a。</param>
+            <param name="b">哈希 b。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Duplicates.PerceptualHash.IsSupportedImage(System.String)">
+            <summary>判断是否支持的图片扩展名。</summary>
+            <param name="path">文件路径。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.ScanSafetyLevel">
+            <summary>扫描目标安全级别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Scanning.ScanSafetyLevel.Default">
+            <summary>安全级：自动生成垃圾，默认勾选。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Scanning.ScanSafetyLevel.Optional">
+            <summary>可选级：删除可能影响性能预取/系统行为，默认不勾选。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition">
+            <summary>
+            一类 Smart Scan 扫描目标。候选目录以 "位置键:相对路径" 描述，
+            相对路径的单个路径段可为 <c>*</c> 通配（匹配任意一级子目录）。
+            </summary>
+            <param name="Id">目标标识（亦为 <c>ScannedItem.Category</c>）。</param>
+            <param name="DisplayName">显示名称。</param>
+            <param name="Safety">安全级别。</param>
+            <param name="CandidatePatterns">候选目录模式集合。</param>
+            <param name="FileFilters">文件名过滤（如 thumbcache_*.db）；空数组表示全部文件。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.#ctor(System.String,System.String,LeslieCleaner.Modules.Cleaner.Scanning.ScanSafetyLevel,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>
+            一类 Smart Scan 扫描目标。候选目录以 "位置键:相对路径" 描述，
+            相对路径的单个路径段可为 <c>*</c> 通配（匹配任意一级子目录）。
+            </summary>
+            <param name="Id">目标标识（亦为 <c>ScannedItem.Category</c>）。</param>
+            <param name="DisplayName">显示名称。</param>
+            <param name="Safety">安全级别。</param>
+            <param name="CandidatePatterns">候选目录模式集合。</param>
+            <param name="FileFilters">文件名过滤（如 thumbcache_*.db）；空数组表示全部文件。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.Id">
+            <summary>目标标识（亦为 <c>ScannedItem.Category</c>）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.DisplayName">
+            <summary>显示名称。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.Safety">
+            <summary>安全级别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.CandidatePatterns">
+            <summary>候选目录模式集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.ScanTargetDefinition.FileFilters">
+            <summary>文件名过滤（如 thumbcache_*.db）；空数组表示全部文件。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.IScanEnvironment">
+            <summary>
+            扫描环境抽象：把位置键（Temp/Windows/LocalAppData 等）解析为实际路径并展开通配目录。
+            生产实现走环境变量与 <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>；
+            测试实现指向临时目录，使扫描引擎完全不依赖真实系统路径。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.IScanEnvironment.ResolveLocation(System.String)">
+            <summary>
+            解析位置键为目录路径；未知键返回 <see langword="null"/>。
+            </summary>
+            <param name="locationKey">位置键，如 "Temp"、"LocalAppData"。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.IScanEnvironment.ExpandDirectories(System.String,System.String)">
+            <summary>
+            展开候选目录模式，返回实际存在的目录集合（不存在自动跳过）。
+            </summary>
+            <param name="locationKey">位置键。</param>
+            <param name="relativePattern">相对路径模式，单段可为 <c>*</c> 通配。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.SmartScanTargets">
+            <summary>
+            Smart Scan 十四类扫描目标定义（圣经第一节第 1 条）。
+            路径不存在自动跳过；红线：仅覆盖系统自动生成的垃圾，不含用户文档/配置。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Scanning.SmartScanTargets.RegistryCategoryId">
+            <summary>注册表清理目标标识（由 IRegistryScanner 供数，不走目录枚举）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Scanning.SmartScanTargets.RecycleBinCategoryId">
+            <summary>Windows Shell 回收站类别标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.Scanning.SmartScanTargets.All">
+            <summary>全部目标定义。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.SystemScanEnvironment">
+            <summary>
+            生产扫描环境。位置键经环境变量与 <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>
+            解析，零硬编码盘符与系统路径。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.SystemScanEnvironment.ResolveLocation(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="F:LeslieCleaner.Modules.Cleaner.Scanning.SystemScanEnvironment.FixedDrivesLocationKey">
+            <summary>固定盘位置键前缀（回收站等需覆盖全部盘符的目标使用）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.SystemScanEnvironment.ExpandDirectories(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.Scanning.WindowsFileSizeMeasurement">
+            <summary>读取 Windows 文件的逻辑大小与真实磁盘分配大小。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.Scanning.WindowsFileSizeMeasurement.TryGetAllocatedSize(System.String,System.Int64@)">
+            <summary>
+            尝试读取 NTFS/Windows 文件系统分配字节。支持压缩和稀疏文件；失败时返回
+            <see langword="false"/>，调用方必须保留逻辑大小并标记口径不完整。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.Cleaner 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.ServiceCollectionExtensions.AddLeslieCleanerCleanerModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册 Cleaner 模块：Smart Scan 引擎、清理引擎、扫描环境与模块本身。
+            依赖 Infrastructure（隔离区/备份/注册表）与 Data 已先行注册。
+            </summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Cleaner.SmartScanEngine">
+            <summary>
+            Smart Scan 引擎。十四类目标并行扫描（目标间并行、目标内顺序 IO），
+            支持 Pause/Resume/Cancel 与超时；性能目标 &lt; 5s。
+            只读扫描，不做任何修改；注册表类由 <see cref="T:LeslieCleaner.Core.Abstractions.IRegistryScanner"/> 供数。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.SmartScanEngine.#ctor(LeslieCleaner.Modules.Cleaner.Scanning.IScanEnvironment,LeslieCleaner.Core.Abstractions.IRegistryScanner,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISystemRecycleBinService)">
+            <summary>以扫描环境、注册表扫描器与日志服务创建引擎。</summary>
+            <param name="environment">扫描环境（位置解析）。</param>
+            <param name="registryScanner">注册表扫描器；为 <see langword="null"/> 时跳过注册表目标。</param>
+            <param name="logService">日志服务。</param>
+            <param name="recycleBinService">Windows Shell 回收站服务；为空时仅使用目录枚举回退。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Cleaner.SmartScanEngine.IsPaused">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.SmartScanEngine.Pause">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.SmartScanEngine.Resume">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.SmartScanEngine.Cancel">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Cleaner.SmartScanEngine.ScanAsync(LeslieCleaner.Core.Models.ScanOptions,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,494 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.Startup</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.SignatureVerifier">
+            <summary>
+            Authenticode 数字签名验证（真实验签）：
+            WinVerifyTrust（WINTRUST_ACTION_GENERIC_VERIFY_V2）判定有效性，
+            X509Certificate2.CreateFromSignedFile 提取签名者主题。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.SignatureVerifier.#ctor(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以日志服务创建验签器。</summary>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.SignatureVerifier.VerifyAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            验证文件数字签名。
+            </summary>
+            <param name="filePath">可执行文件完整路径。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupSourceKind">
+            <summary>启动项来源分类（四级）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupSourceKind.MicrosoftWindows">
+            <summary>Microsoft Windows（系统与微软官方组件）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupSourceKind.HardwareDriver">
+            <summary>Hardware Drivers（驱动/OEM 厂商组件）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupSourceKind.UserApplication">
+            <summary>User Applications（用户安装的软件，主管理区）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupSourceKind.StartupUnknown">
+            <summary>Unknown（来源无法识别，黄色警告）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupClassification">
+            <summary>分类结果。</summary>
+            <param name="Kind">来源分类。</param>
+            <param name="Reasons">判定依据（用于 UI 展示与 AI 建议，全部真实因素）。</param>
+            <param name="Confidence">置信度 0.0-1.0。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassification.#ctor(LeslieCleaner.Modules.Startup.Classification.StartupSourceKind,System.Collections.Generic.IReadOnlyList{System.String},System.Double)">
+            <summary>分类结果。</summary>
+            <param name="Kind">来源分类。</param>
+            <param name="Reasons">判定依据（用于 UI 展示与 AI 建议，全部真实因素）。</param>
+            <param name="Confidence">置信度 0.0-1.0。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupClassification.Kind">
+            <summary>来源分类。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupClassification.Reasons">
+            <summary>判定依据（用于 UI 展示与 AI 建议，全部真实因素）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupClassification.Confidence">
+            <summary>置信度 0.0-1.0。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel">
+            <summary>启动影响等级。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel.Critical">
+            <summary>极高。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel.High">
+            <summary>高。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel.Medium">
+            <summary>中。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel.Low">
+            <summary>低。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel.Minimal">
+            <summary>极低。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate">
+            <summary>启动影响评估（估计值，UI 需标注）。</summary>
+            <param name="Stars">星级 1-5。</param>
+            <param name="Level">等级。</param>
+            <param name="CpuEstimate">CPU 影响估计（%）。</param>
+            <param name="DiskEstimateMB">磁盘 IO 估计（MB）。</param>
+            <param name="MemoryEstimateMB">内存占用估计（MB）。</param>
+            <param name="TimeEstimateSeconds">启动耗时估计（秒）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.#ctor(System.Int32,LeslieCleaner.Modules.Startup.Classification.StartupImpactLevel,System.Double,System.Double,System.Double,System.Double)">
+            <summary>启动影响评估（估计值，UI 需标注）。</summary>
+            <param name="Stars">星级 1-5。</param>
+            <param name="Level">等级。</param>
+            <param name="CpuEstimate">CPU 影响估计（%）。</param>
+            <param name="DiskEstimateMB">磁盘 IO 估计（MB）。</param>
+            <param name="MemoryEstimateMB">内存占用估计（MB）。</param>
+            <param name="TimeEstimateSeconds">启动耗时估计（秒）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.Stars">
+            <summary>星级 1-5。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.Level">
+            <summary>等级。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.CpuEstimate">
+            <summary>CPU 影响估计（%）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.DiskEstimateMB">
+            <summary>磁盘 IO 估计（MB）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.MemoryEstimateMB">
+            <summary>内存占用估计（MB）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate.TimeEstimateSeconds">
+            <summary>启动耗时估计（秒）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.SignatureInfo">
+            <summary>签名验证结果。</summary>
+            <param name="IsValid">签名是否有效（WinVerifyTrust）。</param>
+            <param name="SignerSubject">签名者主题（X.509 Subject）；无签名/验证失败为 <see langword="null"/>。</param>
+            <param name="VerificationState">Whether file-signature verification was performed.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.SignatureInfo.#ctor(System.Boolean,System.String,LeslieCleaner.Modules.Startup.Classification.SignatureVerificationState)">
+            <summary>签名验证结果。</summary>
+            <param name="IsValid">签名是否有效（WinVerifyTrust）。</param>
+            <param name="SignerSubject">签名者主题（X.509 Subject）；无签名/验证失败为 <see langword="null"/>。</param>
+            <param name="VerificationState">Whether file-signature verification was performed.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.SignatureInfo.IsValid">
+            <summary>签名是否有效（WinVerifyTrust）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.SignatureInfo.SignerSubject">
+            <summary>签名者主题（X.509 Subject）；无签名/验证失败为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.SignatureInfo.VerificationState">
+            <summary>Whether file-signature verification was performed.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.SignatureVerificationState">
+            <summary>签名验证状态。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.SignatureVerificationState.NotChecked">
+            <summary>尚未执行深度验证。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.SignatureVerificationState.Verified">
+            <summary>已执行验证，签名有效或无效由 <see cref="P:LeslieCleaner.Modules.Startup.Classification.SignatureInfo.IsValid"/> 表示。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.DisableProtection">
+            <summary>禁用保护级别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.DisableProtection.Allowed">
+            <summary>允许直接禁用。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.DisableProtection.ConfirmHardware">
+            <summary>需"可能影响硬件功能"确认。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.Classification.DisableProtection.ConfirmSystemCritical">
+            <summary>系统关键启动项：必须弹三后果警告，默认取消。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupClassifier">
+            <summary>
+            启动项来源分类器（纯函数，禁止仅按注册表路径分类）。
+            综合 Publisher/Company、Signer 主题、数字签名有效性、路径位置、
+            已知厂商名单多因素判定，产出分类 + 判定依据 + 置信度。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.DriverVendors">
+            <summary>硬件驱动/OEM 厂商名单（小写匹配前缀）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.Classify(System.String,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            执行分类。
+            </summary>
+            <param name="name">启动项名称。</param>
+            <param name="publisher">发布商（注册表 Publisher 或版本信息 CompanyName）。</param>
+            <param name="signer">签名者主题；无签名/未验证为 <see langword="null"/>。</param>
+            <param name="signatureValid">签名是否有效。</param>
+            <param name="filePath">可执行文件路径；无文件（计划任务等）为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.IsMicrosoft(System.String,System.String)">
+            <summary>判断是否微软厂商。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.IsMicrosoftSigner(System.String)">
+            <summary>判断签名者是否微软（兼容 X.509 DN 形式 "CN=Microsoft Windows, O=..."）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.IsMicrosoftPath(System.String)">
+            <summary>判断是否微软系统路径（Windows/WindowsApps/Common Files\Microsoft Shared）。</summary>
+            <param name="filePath">文件路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.IsUserPath(System.String)">
+            <summary>判断是否用户软件常规路径。</summary>
+            <param name="filePath">文件路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupClassifier.GetProtection(LeslieCleaner.Modules.Startup.Classification.StartupSourceKind)">
+            <summary>分类对应的禁用保护级别（纯函数）。</summary>
+            <param name="kind">来源分类。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupImpactAssessor">
+            <summary>
+            启动影响评估器（纯函数启发式，输出为估计值，UI 必须标注）。
+            因素：文件大小、来源类型、已知重型启动项名单、签名状态。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.Classification.StartupImpactAssessor.KnownHeavyPrograms">
+            <summary>已知重型启动项（可执行文件名小写，高影响基线）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupImpactAssessor.Assess(System.String,System.Int64,LeslieCleaner.Modules.Startup.Classification.StartupSourceKind,System.Boolean)">
+            <summary>
+            评估启动影响（星级 1-5 + 等级 + CPU/磁盘/内存/耗时估计）。
+            </summary>
+            <param name="fileName">可执行文件名。</param>
+            <param name="fileSizeBytes">文件大小（无文件为 0）。</param>
+            <param name="sourceKind">来源分类。</param>
+            <param name="signatureValid">签名是否有效。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.Classification.StartupAdvisor">
+            <summary>
+            AI 启动建议引擎（纯函数规则引擎：每条建议必须引用真实依据）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.Classification.StartupAdvisor.Advise(System.String,LeslieCleaner.Modules.Startup.Classification.StartupClassification,System.Boolean)">
+            <summary>
+            生成启动建议。
+            </summary>
+            <param name="name">启动项名称。</param>
+            <param name="classification">分类结果。</param>
+            <param name="signatureValid">签名是否有效。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.Startup 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.ServiceCollectionExtensions.AddLeslieCleanerStartupModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 Startup Manager 模块。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupImpactScorer">
+            <summary>
+            启动影响评分与建议生成（纯函数规则引擎，禁止伪 AI：
+            每条建议必须引用真实依据——位置、发布者、名单命中）。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupImpactScorer.KnownHighImpactPrograms">
+            <summary>常见高影响程序名单（可执行文件名小写）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupImpactScorer.Score(System.String,System.String,System.String,LeslieCleaner.Modules.Startup.StartupItemKind)">
+            <summary>
+            计算启动影响评级。
+            </summary>
+            <param name="name">启动项名称。</param>
+            <param name="command">命令行/ImagePath。</param>
+            <param name="publisher">发布者。</param>
+            <param name="kind">类别。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupImpactScorer.BuildSuggestion(LeslieCleaner.Modules.Startup.StartupItem)">
+            <summary>
+            生成规则建议文本（引用真实依据）。
+            </summary>
+            <param name="item">已评分的启动项。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupImpactScorer.IsKnownHighImpact(System.String)">
+            <summary>判断是否命中常见高影响程序名单。</summary>
+            <param name="command">命令行/ImagePath。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupItemDetail">
+            <summary>
+            启动项完整详情（Startup Manager v2 数据模型）。
+            影响估计与 CPU/磁盘/内存数值均为启发式估计值（UI 需标注）。
+            </summary>
+            <param name="Item">基础启动项。</param>
+            <param name="FilePath">可执行文件路径（无文件项为 <see langword="null"/>）。</param>
+            <param name="FileSizeBytes">文件大小（无文件为 0）。</param>
+            <param name="Signature">签名验证结果。</param>
+            <param name="Classification">来源分类。</param>
+            <param name="Impact">影响评估（估计值）。</param>
+            <param name="Advice">AI 建议（引用真实依据）。</param>
+            <param name="Sha256">文件 SHA256（无文件/计算失败为 <see langword="null"/>）。</param>
+            <param name="InstallDate">安装日期（注册表来源项）。</param>
+            <param name="ModifiedUtc">文件最后修改时间。</param>
+            <param name="Protection">禁用保护级别。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupItemDetail.#ctor(LeslieCleaner.Modules.Startup.StartupItem,System.String,System.Int64,LeslieCleaner.Modules.Startup.Classification.SignatureInfo,LeslieCleaner.Modules.Startup.Classification.StartupClassification,LeslieCleaner.Modules.Startup.Classification.StartupImpactEstimate,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.DateTimeOffset},LeslieCleaner.Modules.Startup.Classification.DisableProtection)">
+            <summary>
+            启动项完整详情（Startup Manager v2 数据模型）。
+            影响估计与 CPU/磁盘/内存数值均为启发式估计值（UI 需标注）。
+            </summary>
+            <param name="Item">基础启动项。</param>
+            <param name="FilePath">可执行文件路径（无文件项为 <see langword="null"/>）。</param>
+            <param name="FileSizeBytes">文件大小（无文件为 0）。</param>
+            <param name="Signature">签名验证结果。</param>
+            <param name="Classification">来源分类。</param>
+            <param name="Impact">影响评估（估计值）。</param>
+            <param name="Advice">AI 建议（引用真实依据）。</param>
+            <param name="Sha256">文件 SHA256（无文件/计算失败为 <see langword="null"/>）。</param>
+            <param name="InstallDate">安装日期（注册表来源项）。</param>
+            <param name="ModifiedUtc">文件最后修改时间。</param>
+            <param name="Protection">禁用保护级别。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Item">
+            <summary>基础启动项。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.FilePath">
+            <summary>可执行文件路径（无文件项为 <see langword="null"/>）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.FileSizeBytes">
+            <summary>文件大小（无文件为 0）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Signature">
+            <summary>签名验证结果。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Classification">
+            <summary>来源分类。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Impact">
+            <summary>影响评估（估计值）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Advice">
+            <summary>AI 建议（引用真实依据）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Sha256">
+            <summary>文件 SHA256（无文件/计算失败为 <see langword="null"/>）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.InstallDate">
+            <summary>安装日期（注册表来源项）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.ModifiedUtc">
+            <summary>文件最后修改时间。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItemDetail.Protection">
+            <summary>禁用保护级别。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupManagerEngine">
+            <summary>
+            启动项管理引擎。覆盖：注册表 Run/RunOnce（HKLM 64/32 位 + HKCU）、Startup 文件夹
+            （用户+公共）、计划任务（schtasks 枚举/禁用/启用）、服务与驱动自启动
+            （HKLM\SYSTEM\CurrentControlSet\Services 的 Start 值，按 Type 区分服务/驱动）。
+            禁用一律备份式：原值/原文件/原 Start 值先落备份库再移除，可完整恢复，禁止直接删。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.#ctor(LeslieCleaner.Core.Abstractions.IPathService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以路径与日志服务创建引擎。</summary>
+            <param name="pathService">路径服务。</param>
+            <param name="logService">日志服务。</param>
+            <param name="securityOperationGate">启动安全检查失败时阻止启动项禁用的运行时闸门。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.EnumerateDetailedAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            枚举全部启动项并聚合完整详情（v2）：签名验证、来源分类、影响评估、
+            AI 建议、SHA256、修改时间、保护级别。全部真实数据，估计值已标注。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <param name="includeFileVerification">Whether to verify executable signatures and calculate file hashes.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.ResolveExecutablePath(LeslieCleaner.Modules.Startup.StartupItem)">
+            <summary>
+            从启动项命令行解析可执行文件路径（无命令行或不可解析时返回 <see langword="null"/>）。
+            </summary>
+            <param name="item">启动项。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.EnumerateAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            枚举全部启动项（含已禁用记录），带评分与建议。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.DisableAsync(LeslieCleaner.Modules.Startup.StartupItem,System.Threading.CancellationToken)">
+            <summary>
+            备份式禁用启动项。
+            </summary>
+            <param name="item">待禁用项。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupManagerEngine.EnableAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            从备份恢复启用启动项。
+            </summary>
+            <param name="itemId">启动项标识。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupItemKind">
+            <summary>启动项类别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupItemKind.RegistryRun">
+            <summary>注册表 Run/RunOnce（64 位 / 32 位 / HKCU / HKLM）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupItemKind.StartupFolder">
+            <summary>Startup 文件夹（用户 / 公共）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupItemKind.ScheduledTask">
+            <summary>计划任务。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupItemKind.Service">
+            <summary>服务自启动。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupItemKind.Driver">
+            <summary>驱动自启动。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupImpact">
+            <summary>启动影响评级。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupImpact.Low">
+            <summary>低（系统组件/微软签名）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupImpact.Medium">
+            <summary>中。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Startup.StartupImpact.High">
+            <summary>高（常见重型程序/无签名第三方）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupItem">
+            <summary>一个启动项。</summary>
+            <param name="Id">稳定标识（类别+位置+名称的哈希无关拼接）。</param>
+            <param name="Name">显示名。</param>
+            <param name="Kind">类别。</param>
+            <param name="Location">位置描述（键路径/文件夹/任务名/服务名）。</param>
+            <param name="Command">命令行或 ImagePath，可为 <see langword="null"/>。</param>
+            <param name="Publisher">发布者（版本信息），可为 <see langword="null"/>。</param>
+            <param name="Enabled">当前是否启用。</param>
+            <param name="Impact">启动影响评级。</param>
+            <param name="Suggestion">规则引擎生成的建议文本（引用真实依据）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupItem.#ctor(System.String,System.String,LeslieCleaner.Modules.Startup.StartupItemKind,System.String,System.String,System.String,System.Boolean,LeslieCleaner.Modules.Startup.StartupImpact,System.String)">
+            <summary>一个启动项。</summary>
+            <param name="Id">稳定标识（类别+位置+名称的哈希无关拼接）。</param>
+            <param name="Name">显示名。</param>
+            <param name="Kind">类别。</param>
+            <param name="Location">位置描述（键路径/文件夹/任务名/服务名）。</param>
+            <param name="Command">命令行或 ImagePath，可为 <see langword="null"/>。</param>
+            <param name="Publisher">发布者（版本信息），可为 <see langword="null"/>。</param>
+            <param name="Enabled">当前是否启用。</param>
+            <param name="Impact">启动影响评级。</param>
+            <param name="Suggestion">规则引擎生成的建议文本（引用真实依据）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Id">
+            <summary>稳定标识（类别+位置+名称的哈希无关拼接）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Name">
+            <summary>显示名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Kind">
+            <summary>类别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Location">
+            <summary>位置描述（键路径/文件夹/任务名/服务名）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Command">
+            <summary>命令行或 ImagePath，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Publisher">
+            <summary>发布者（版本信息），可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Enabled">
+            <summary>当前是否启用。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Impact">
+            <summary>启动影响评级。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupItem.Suggestion">
+            <summary>规则引擎生成的建议文本（引用真实依据）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupChangeResult">
+            <summary>禁用/启用操作结果。</summary>
+            <param name="ItemId">启动项标识。</param>
+            <param name="Success">是否成功。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupChangeResult.#ctor(System.String,System.Boolean,System.String)">
+            <summary>禁用/启用操作结果。</summary>
+            <param name="ItemId">启动项标识。</param>
+            <param name="Success">是否成功。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupChangeResult.ItemId">
+            <summary>启动项标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupChangeResult.Success">
+            <summary>是否成功。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupChangeResult.Error">
+            <summary>失败原因。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Startup.StartupModule">
+            <summary>Startup Manager 模块（圣经第一节功能清单第 5 条）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Startup.StartupModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Startup.StartupModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

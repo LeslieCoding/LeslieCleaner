@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <ModulePaths>
+            <Include>
+              <ModulePath>.*LeslieCleaner\..*\.dll$</ModulePath>
+            </Include>
+            <Exclude>
+              <ModulePath>.*LeslieCleaner\.Tests\.dll$</ModulePath>
+              <ModulePath>.*LeslieCleaner\.PluginHost\.IntegrationTests\.dll$</ModulePath>
+              <ModulePath>.*LeslieCleaner\.SamplePlugin\.dll$</ModulePath>
+            </Exclude>
+          </ModulePaths>
+          <Attributes>
+            <Exclude>
+              <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
+              <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
+              <Attribute>^System\.Runtime\.CompilerServices\.CompilerGeneratedAttribute$</Attribute>
+            </Exclude>
+          </Attributes>
+          <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
+          <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses>
+          <CollectFromChildProcesses>True</CollectFromChildProcesses>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

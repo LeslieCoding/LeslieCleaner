@@ -1,0 +1,98 @@
+LESLIECLEANER ANDROID NEXT - MASTER DEVELOPMENT CONTRACT
+Version: 1.0.0
+Date: 2026-09-08
+Scope: Android 10+ (API 29+) phones, including OnePlus/OxygenOS where public APIs permit
+
+1. PURPOSE
+
+This directory is the single source of truth for the Android edition of LeslieCleaner Next. It
+contains exactly one adapted document for every source Development Bible/Prompt document (83 files),
+plus this non-prompt master contract, a manifest, and a chronological development log. The source
+Windows V4/V5 project remains separate. Android work must not scatter files into the Windows source
+tree.
+
+2. PRODUCT BOUNDARY
+
+The Android edition is a privacy-first maintenance and diagnostics app, not a root cleaner. It may
+discover packages, app/cache metadata, user-selected documents, MediaStore items, permissions,
+storage pressure, battery/thermal signals, browser-visible data where public providers permit, and
+its own history. It may mutate only through public APIs, explicit system/user confirmation, or
+app-owned reversible storage. It must report unsupported capabilities instead of simulating them.
+
+3. ORDERED PROJECT LAYOUT
+
+Android_Prompt/
+  Main/ Modules/ Prompt_Library/ UI/ UX/ AI/ 00_Execution_Contract.md
+  ANDROID_MASTER_CONTRACT.txt
+  PROMPT_MANIFEST.json
+  DEVELOPMENT_LOG.txt
+Android_App/
+  settings.gradle.kts, build.gradle.kts, gradle.properties
+  app/ (src/main, src/test, src/androidTest, proguard-rules.pro)
+  core/ (domain/data/platform contracts)
+  feature-* (one bounded feature per module)
+  benchmark/
+  docs/
+  build/ and artifacts/ are generated only and must not contain source.
+
+4. NON-NEGOTIABLE SAFETY RULES
+
+- No root, bootloader unlock, hidden API, SELinux bypass, accessibility abuse, or silent ADB
+  production dependency.
+- No MANAGE_EXTERNAL_STORAGE unless a separately reviewed release decision proves the feature cannot
+  use SAF/MediaStore and the user has explicitly enabled it.
+- No deletion based on display name, path substring, package label, or stale cached row.
+- Every mutation has operation ID, exact typed target, permission snapshot, preflight backup/hash or
+  reversible platform transaction, post-operation read-back, and a bounded rollback attempt.
+- Cancellation after mutation must still execute read-back/rollback with a non-cancellable cleanup
+  token before returning.
+- Logs are JSONL, app-private, rotated, redacted, flushed for destructive events, and exportable.
+- Device-only evidence is labelled PendingEvidence; never claim emulator/unit tests prove OEM behavior.
+
+5. TECHNICAL STANDARD
+
+Kotlin; Jetpack Compose + Material 3; ViewModel + StateFlow; coroutines/structured concurrency;
+Room for durable structured history; DataStore for settings; WorkManager for bounded background work;
+PackageManager, PackageInstaller, MediaStore, DocumentsContract/SAF, UsageStats and public system
+settings intents through platform adapters. Min/target SDK and dependency versions are pinned in the
+Android_App build files and updated only with a documented compatibility test.
+
+6. PERMISSION AND DATA CONTRACT
+
+Each permission is a typed capability with state: Granted, Denied, Restricted, NotRequested,
+Unsupported, or Revoked. The UI explains why it is needed and offers the minimum settings action.
+Raw file paths, document URIs, account IDs, device serials, tokens and personal content are redacted
+before logs, exports, remote AI calls or bug reports. Work profiles and multiple Android users are
+distinct scopes and must never be merged.
+
+7. VERIFICATION CONTRACT
+
+An operation is successful only when a same-provider re-query proves the requested state. An accepted
+system Intent is not proof. For app uninstall, PackageInstaller status plus a fresh PackageManager
+query are required. For MediaStore deletion, a fresh query must not find the exact ID. For SAF, the
+document provider must report the expected state. For app-owned records, transaction commit and
+hash/read-back are required.
+
+8. TEST MATRIX
+
+JVM unit: identity, normalization, policy, risk, redaction, failure mapping, cancellation.
+Instrumented: Room/DataStore, lifecycle, Compose semantics, provider adapters and permission denial.
+Device: API 29/30/33/35 where available; OnePlus/OxygenOS is a separate evidence row. ADB probe is
+read-only by default. Any destructive fixture requires an explicit environment flag, disposable
+package/data, cleanup in finally, and a captured log/report.
+
+9. CHANGE AND LOGGING PROCESS
+
+Every change updates the relevant adapted prompt, PROMPT_MANIFEST.json if files change,
+DEVELOPMENT_LOG.txt, source/test paths, permission boundary, rollback behavior, and exact test
+commands. Do not rename or move Android_Prompt files casually. New files require a numbered entry and
+an explicit reason. The Android app must not be declared ready while a required acceptance row is
+PendingEvidence.
+
+10. DELIVERY GATE
+
+Before delivery: prompt count equals 83; manifest count equals 83; app source has no Windows-only
+API; debug and release builds succeed; JVM/instrumented tests pass; lint and dependency checks pass;
+structured log export works; USB/ADB status is recorded; device tests and unresolved limits are
+listed. If Android SDK or the phone is unavailable, continue deterministic work and record the exact
+blocker rather than fabricating device evidence.

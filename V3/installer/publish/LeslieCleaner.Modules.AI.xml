@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.AI</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.AI.SystemMetrics">
+            <summary>
+            系统健康指标（全部来自真实扫描/系统数据，禁止伪数据）。
+            </summary>
+            <param name="JunkBytes">Smart Scan 可清理垃圾总量（字节）。</param>
+            <param name="HighImpactStartupCount">高影响启动项数量。</param>
+            <param name="RegistryIssueCount">注册表问题项数量。</param>
+            <param name="DiskFreePercent">系统盘剩余空间百分比（0-100）。</param>
+            <param name="PrivacyItemCount">隐私项数量。</param>
+            <param name="TopLargeFileBytes">最大单文件字节数。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.SystemMetrics.#ctor(System.Int64,System.Int32,System.Int32,System.Double,System.Int32,System.Int64)">
+            <summary>
+            系统健康指标（全部来自真实扫描/系统数据，禁止伪数据）。
+            </summary>
+            <param name="JunkBytes">Smart Scan 可清理垃圾总量（字节）。</param>
+            <param name="HighImpactStartupCount">高影响启动项数量。</param>
+            <param name="RegistryIssueCount">注册表问题项数量。</param>
+            <param name="DiskFreePercent">系统盘剩余空间百分比（0-100）。</param>
+            <param name="PrivacyItemCount">隐私项数量。</param>
+            <param name="TopLargeFileBytes">最大单文件字节数。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.JunkBytes">
+            <summary>Smart Scan 可清理垃圾总量（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.HighImpactStartupCount">
+            <summary>高影响启动项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.RegistryIssueCount">
+            <summary>注册表问题项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.DiskFreePercent">
+            <summary>系统盘剩余空间百分比（0-100）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.PrivacyItemCount">
+            <summary>隐私项数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.SystemMetrics.TopLargeFileBytes">
+            <summary>最大单文件字节数。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.MaintenancePlan">
+            <summary>自动维护计划（配置驱动）。</summary>
+            <param name="Name">计划名。</param>
+            <param name="IntervalDays">间隔天数。</param>
+            <param name="ModuleIds">执行的模块标识集合。</param>
+            <param name="Enabled">是否启用。</param>
+            <param name="LastRunUtc">上次执行时间；从未执行为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlan.#ctor(System.String,System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Boolean,System.Nullable{System.DateTimeOffset})">
+            <summary>自动维护计划（配置驱动）。</summary>
+            <param name="Name">计划名。</param>
+            <param name="IntervalDays">间隔天数。</param>
+            <param name="ModuleIds">执行的模块标识集合。</param>
+            <param name="Enabled">是否启用。</param>
+            <param name="LastRunUtc">上次执行时间；从未执行为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.Name">
+            <summary>计划名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.IntervalDays">
+            <summary>间隔天数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.ModuleIds">
+            <summary>执行的模块标识集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.Enabled">
+            <summary>是否启用。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.MaintenancePlan.LastRunUtc">
+            <summary>上次执行时间；从未执行为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiAnalysisReport">
+            <summary>AI 分析报告。</summary>
+            <param name="Score">健康评分（0-100）。</param>
+            <param name="StartupSuggestions">启动优化建议。</param>
+            <param name="PrivacySuggestions">隐私风险分析。</param>
+            <param name="StorageSuggestions">存储优化建议。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiAnalysisReport.#ctor(System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>AI 分析报告。</summary>
+            <param name="Score">健康评分（0-100）。</param>
+            <param name="StartupSuggestions">启动优化建议。</param>
+            <param name="PrivacySuggestions">隐私风险分析。</param>
+            <param name="StorageSuggestions">存储优化建议。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.Score">
+            <summary>健康评分（0-100）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.StartupSuggestions">
+            <summary>启动优化建议。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.PrivacySuggestions">
+            <summary>隐私风险分析。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiAnalysisReport.StorageSuggestions">
+            <summary>存储优化建议。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.AiModule">
+            <summary>AI Optimizer 模块（圣经第一节功能清单第 10 条）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.AI.AiModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.AiModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.AI 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.ServiceCollectionExtensions.AddLeslieCleanerAiModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 AI Optimizer 模块。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.HealthScoreEngine">
+            <summary>
+            系统健康评分引擎（加权真实指标，公式见 docs/05-ai.md 与 DEVLOG）：
+            垃圾量（GB × 5，封顶 25）+ 高影响启动项（× 4，封顶 20）+ 注册表问题（每 10 项 1 分，封顶 15）
+            + 磁盘剩余（&lt;20% 时每 1% 扣 1，封顶 25）+ 隐私项（每 20 项扣 1，封顶 15）。
+            纯函数，建议必须引用具体数据。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.ComputeScore(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>
+            计算健康评分（0-100）。
+            </summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.Analyze(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>
+            生成完整分析报告（评分 + 三类建议，全部引用具体数据）。
+            </summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildStartupSuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>启动优化建议。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildPrivacySuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>隐私风险分析。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.HealthScoreEngine.BuildStorageSuggestions(LeslieCleaner.Modules.AI.SystemMetrics)">
+            <summary>存储优化建议。</summary>
+            <param name="metrics">系统指标。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.AI.MaintenancePlanner">
+            <summary>
+            自动维护计划器。配置驱动的计划（间隔天数 + 模块集合），到期判定为纯函数；
+            可选注册为系统计划任务（schtasks，权限不足时降级为仅配置存储并记日志）。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.AI.MaintenancePlanner.PlansConfigKey">
+            <summary>维护计划配置键（MaintenancePlan 数组，LastRunUtc 由计划器回写）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.#ctor(LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以配置与日志服务创建计划器。</summary>
+            <param name="configService">配置服务。</param>
+            <param name="logService">日志服务。</param>
+            <param name="securityOperationGate">Blocks creation of scheduled maintenance when integrity validation fails.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.IsPlanDue(LeslieCleaner.Modules.AI.MaintenancePlan,System.DateTimeOffset)">
+            <summary>
+            计划到期判定（纯函数）：启用且（从未执行 或 距上次执行 ≥ 间隔天数）。
+            </summary>
+            <param name="plan">维护计划。</param>
+            <param name="nowUtc">当前时间。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.SavePlansAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.AI.MaintenancePlan},System.Threading.CancellationToken)">
+            <summary>
+            保存计划列表。
+            </summary>
+            <param name="plans">计划集合。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.GetPlans">
+            <summary>
+            读取计划列表。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.GetDuePlans(System.DateTimeOffset)">
+            <summary>
+            获取当前到期的计划。
+            </summary>
+            <param name="nowUtc">当前时间。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.MarkExecutedAsync(System.String,System.DateTimeOffset,System.Threading.CancellationToken)">
+            <summary>
+            标记计划已执行（回写 LastRunUtc）。
+            </summary>
+            <param name="planName">计划名。</param>
+            <param name="runUtc">执行时间。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.RegisterScheduledTaskAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            将维护计划注册为系统计划任务（每日触发 LeslieCleaner.App --maintenance）。
+            权限不足/失败时记日志并降级返回 <see langword="false"/>（配置侧计划仍然有效）。
+            </summary>
+            <param name="executablePath">应用可执行文件路径。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.AI.MaintenancePlanner.UnregisterScheduledTaskAsync(System.Threading.CancellationToken)">
+            <summary>
+            删除系统维护计划任务（不存在/权限不足返回 <see langword="false"/>）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+    </members>
+</doc>

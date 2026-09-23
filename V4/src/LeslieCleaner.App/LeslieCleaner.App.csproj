@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>LeslieCleaner.App</RootNamespace>
+    <AssemblyName>LeslieCleaner.App</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\lesliecleaner.ico</ApplicationIcon>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <!-- 调试符号分离：pdb 独立文件，不进 dll/exe -->
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Release 发布：关闭调试符号与 Trace，R2R 保持 -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>$(DefineConstants.Replace(';TRACE', ''))</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Infrastructure\LeslieCleaner.Infrastructure.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Data\LeslieCleaner.Data.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.UI\LeslieCleaner.UI.csproj" />
+  </ItemGroup>
+
+</Project>

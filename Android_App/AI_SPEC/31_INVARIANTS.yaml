@@ -1,0 +1,48 @@
+version: "1.0"
+project: "LeslieCleaner Android"
+invariants:
+  - id: "INV-001"
+    title: "No dangerous runtime permissions"
+    description: "The app keeps zero uses-permission declarations and does not request dangerous runtime permissions."
+    source: "LEGACY_BEHAVIOR"
+    scope: ["AndroidManifest.xml", "privacy"]
+    trigger: "Every build and install"
+    prohibited_changes: ["Add storage, contacts, network, root, or hidden API access"]
+    verification: ["Manifest scan", "Privacy dialog review"]
+    related_tests: ["FileProviderContractTest"]
+    severity: "CRITICAL"
+    owner: "Codex"
+    version: 1
+    effective_from: "2026-09-09"
+    status: "ACTIVE"
+    evidence: []
+  - id: "INV-002"
+    title: "Provider-visible scope is honest"
+    description: "Inventory results must not claim complete device coverage."
+    source: "LEGACY_BEHAVIOR"
+    scope: ["PackageInventoryReader", "scan-result"]
+    trigger: "Every inventory result"
+    prohibited_changes: ["Claim full device inventory from PackageManager visibility"]
+    verification: ["Summary UI includes provider-visible scope", "Unit tests"]
+    related_tests: ["IdentityTest"]
+    severity: "HIGH"
+    owner: "Codex"
+    version: 1
+    effective_from: "2026-09-09"
+    status: "ACTIVE"
+    evidence: []
+  - id: "INV-003"
+    title: "Audit data remains redacted and bounded"
+    description: "Audit JSONL remains app-private, escaped, and capped at 200 records."
+    source: "LEGACY_BEHAVIOR"
+    scope: ["JsonlAuditLogger", "AuditRecord"]
+    trigger: "Every scan and export"
+    prohibited_changes: ["Persist raw paths, content URIs, personal content, or unbounded records"]
+    verification: ["Audit unit tests", "FileProviderContractTest"]
+    related_tests: ["AuditRecordTest", "AuditRetentionTest", "AuditExportTest"]
+    severity: "CRITICAL"
+    owner: "Codex"
+    version: 1
+    effective_from: "2026-09-09"
+    status: "ACTIVE"
+    evidence: []

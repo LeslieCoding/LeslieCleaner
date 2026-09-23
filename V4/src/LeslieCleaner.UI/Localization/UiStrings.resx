@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>  <data name="PlatformCenterTitle" xml:space="preserve"><value>平台中心</value></data>
+  <data name="PlatformCenterDescription" xml:space="preserve"><value>AI 建议、插件权限、安全评估与更新状态集中呈现</value></data>
+  <data name="AiAssistant" xml:space="preserve"><value>AI 助手</value></data>
+  <data name="AskAi" xml:space="preserve"><value>分析问题</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="PluginManager" xml:space="preserve"><value>插件管理</value></data>
+  <data name="RefreshAndVerify" xml:space="preserve"><value>刷新并校验</value></data>
+  <data name="UpdateCenter" xml:space="preserve"><value>更新中心</value></data>
+  <data name="CheckUpdates" xml:space="preserve"><value>检查更新</value></data>
+  <data name="SecurityCenter" xml:space="preserve"><value>安全中心</value></data>
+  <data name="Reassess" xml:space="preserve"><value>重新评估</value></data>
+  <data name="EnableOrDisable" xml:space="preserve"><value>启用/禁用</value></data>
+  <data name="Retry" xml:space="preserve"><value>重试</value></data>
+</root>

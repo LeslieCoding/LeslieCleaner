@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Data</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Data.FileIndexRepository">
+            <summary>
+            file_index 表仓储。提供事务化批量插入（支撑 10 万级行导入）
+            与基于 idx_publisher / idx_product 索引的查询。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.#ctor(LeslieCleaner.Core.Abstractions.IDatabase)">
+            <summary>以数据库契约创建仓储。</summary>
+            <param name="database">数据库。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.UpsertBatchAsync(System.Collections.Generic.IEnumerable{LeslieCleaner.Core.Models.FileIndexRecord},System.Threading.CancellationToken)">
+            <summary>
+            事务化批量写入索引记录（按 path 去重覆盖）。
+            </summary>
+            <param name="records">记录序列（可惰性枚举，内存占用与单批参数对象成正比）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>执行的总语句数。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.QueryByPublisherAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            按发布者查询（走 idx_publisher，大小写不敏感）。
+            </summary>
+            <param name="publisher">发布者名称。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.QueryByProductAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            按产品名查询（走 idx_product，大小写不敏感）。
+            </summary>
+            <param name="productName">产品名。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.CountAsync(System.Threading.CancellationToken)">
+            <summary>
+            返回索引总行数。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Data.ResidualRuleImporter">
+            <summary>
+            残留规则种子导入器。从嵌入资源 residual-rules.seed.json 读取规则并
+            upsert 进 residual_rules 表；幂等，可重复执行。规则内容在阶段 16 扩充至 1000+。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.ImportAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.Threading.CancellationToken)">
+            <summary>
+            将嵌入种子规则导入 residual_rules 表。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>导入的规则条数。</returns>
+            <exception cref="T:System.InvalidOperationException">种子资源缺失或损坏时抛出。</exception>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.LoadAllAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.Threading.CancellationToken)">
+            <summary>
+            从 residual_rules 表读取全部规则。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.QueryAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            按发布者/产品查询规则（先精确匹配 publisher+product，再回退发布者级规则）。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="publisher">发布者。</param>
+            <param name="product">产品名，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Data.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Data 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ServiceCollectionExtensions.AddLeslieCleanerData(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册 Data 层服务：SQLite 数据库（%ProgramData%\LeslieCleaner\Data\LeslieCleaner.db）、
+            文件索引仓储、残留规则导入器。数据库在首次使用前须调用
+            <see cref="M:LeslieCleaner.Core.Abstractions.IDatabase.InitializeAsync(System.Threading.CancellationToken)"/>（幂等）。
+            </summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Data.SqliteDatabase">
+            <summary>
+            SQLite 数据库实现（Microsoft.Data.Sqlite）。WAL 模式 + 连接池，
+            初始化幂等：建表 file_index / scan_cache / quarantine_meta / residual_rules / settings
+            及 idx_publisher、idx_product 索引，并导入残留规则种子数据。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Data.SqliteDatabase.DatabasePath">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.#ctor(System.String,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以数据库文件路径与日志服务创建实例（初始化前不触碰磁盘）。</summary>
+            <param name="databasePath">数据库文件完整路径。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.VerifyIntegrityAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.QueryAsync``1(System.String,System.Func{Microsoft.Data.Sqlite.SqliteDataReader,``0},System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteBatchAsync(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.DisposeAsync">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

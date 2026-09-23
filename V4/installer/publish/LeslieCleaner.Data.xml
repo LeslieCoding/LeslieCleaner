@@ -1,0 +1,506 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Data</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Data.DatabasePage`1">
+            <summary>One-based, bounded database page.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabasePage`1.#ctor(System.Collections.Generic.IReadOnlyList{`0},System.Int64,System.Int32,System.Int32)">
+            <summary>One-based, bounded database page.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.ScanRecordWrite">
+            <summary>Scan header persisted together with its detail items.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ScanRecordWrite.#ctor(System.String,System.DateTimeOffset,System.Nullable{System.DateTimeOffset},System.Int64,System.Int64,System.Int64,System.String)">
+            <summary>Scan header persisted together with its detail items.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.ScanItemWrite">
+            <summary>One scan result row.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ScanItemWrite.#ctor(System.String,System.String,System.String,System.Int64,System.String,System.Boolean,System.String)">
+            <summary>One scan result row.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.ScanRecordRow">
+            <summary>Read model for scan history.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ScanRecordRow.#ctor(System.Int64,System.String,System.DateTimeOffset,System.Nullable{System.DateTimeOffset},System.Int64,System.Int64,System.Int64,System.String,System.DateTimeOffset)">
+            <summary>Read model for scan history.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.ScanItemRow">
+            <summary>Read model for one scan item.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ScanItemRow.#ctor(System.Int64,System.Int64,System.String,System.String,System.String,System.Int64,System.String,System.Boolean,System.String,System.DateTimeOffset)">
+            <summary>Read model for one scan item.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.ApplicationRow">
+            <summary>Read model for installed applications.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ApplicationRow.#ctor(System.Int64,System.String,System.String,System.String,System.String,System.Int64,System.String,System.DateTimeOffset)">
+            <summary>Read model for installed applications.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.OperationLogWrite">
+            <summary>Privacy-minimized operation log input.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.OperationLogWrite.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.DateTimeOffset)">
+            <summary>Privacy-minimized operation log input.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.DatabaseV2Repository">
+            <summary>
+            Parameterized repository for schema-v2 history and settings. Every page is bounded;
+            scan header/details are committed as one unit and operational text is redacted.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.#ctor(LeslieCleaner.Core.Abstractions.IDatabase)">
+            <summary>Creates the repository over the database abstraction.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.UpsertSettingAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Upserts a non-sensitive user setting with UTC ticks.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.SaveScanAsync(LeslieCleaner.Data.ScanRecordWrite,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Data.ScanItemWrite},System.Threading.CancellationToken)">
+            <summary>Persists one scan and all items atomically; returns the generated scan id.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.GetScanRecordsPageAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Returns a newest-first, bounded page of scan headers.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.GetScanItemsPageAsync(System.Int64,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Returns a bounded page of details for one scan.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.GetApplicationsPageAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Searches applications using indexed exact-name/publisher predicates and bounded pagination.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.AddOperationLogAsync(LeslieCleaner.Data.OperationLogWrite,System.Threading.CancellationToken)">
+            <summary>Adds a privacy-minimized operation log using only parameters.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.SensitiveSettingKeyRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>(password|passwd|cookie|authorization|api[-_]?key|token|privatecontent)</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 5 alternative expressions, atomically.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                        ○ Match a character in the set [Ww].<br/>
+                        ○ Match with 2 alternative expressions, atomically.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                            ○ Match a character in the set [Dd].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Oo] exactly 2 times.<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match with 2 alternative expressions, atomically.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Uu].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Hh].<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [Zz].<br/>
+                                ○ Match a character in the set [Aa].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Nn].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Pp].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [-_] atomically, optionally.<br/>
+                                ○ Match a character in the set [Kk\u212A].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Yy].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [Vv].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.SecretAssignmentRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)(password|passwd|cookie|authorization|api[-_]?key|token)\\s*[:=]\\s*[^;\\s]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 4 alternative expressions.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                        ○ Match a character in the set [Ww].<br/>
+                        ○ Match with 2 alternative expressions.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                            ○ Match a character in the set [Dd].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Oo] exactly 2 times.<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match with 2 alternative expressions.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Uu].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Hh].<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [Zz].<br/>
+                                ○ Match a character in the set [Aa].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Nn].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Pp].<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [-_] atomically, optionally.<br/>
+                                ○ Match a character in the set [Kk\u212A].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Yy].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+            ○ Match a whitespace character atomically any number of times.<br/>
+            ○ Match a character in the set [:=].<br/>
+            ○ Match a whitespace character greedily any number of times.<br/>
+            ○ Match a character in the set [^;\s] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.BearerRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>(?i)Bearer\\s+[A-Za-z0-9._~+/-]+=*</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Bb].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match a character in the set [+--9A-Z_a-z~\u212A] atomically at least once.<br/>
+            ○ Match '=' atomically any number of times.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:LeslieCleaner.Data.DatabaseV2Repository.OperationLogRow">
+            <summary>Read model for operation log entry.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.OperationLogRow.#ctor(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.DateTimeOffset)">
+            <summary>Read model for operation log entry.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.GetOperationLogsPageAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Returns a newest-first, bounded page of operation logs.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.SearchOperationLogsAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Searches operation logs by keyword in description or operation field (case-insensitive).</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.PruneOperationLogsAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Deletes old operation logs (prunes to keep only N most recent).</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.DatabaseV2Repository.GetOperationCountsByModuleAsync(System.Threading.CancellationToken)">
+            <summary>Gets operation log count by module for stats.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Data.FileIndexRepository">
+            <summary>
+            Repository for the file_index table.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.#ctor(LeslieCleaner.Core.Abstractions.IDatabase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LeslieCleaner.Data.FileIndexRepository"/> class.
+            </summary>
+            <param name="database">The database instance.</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.UpsertBatchAsync(System.Collections.Generic.IEnumerable{LeslieCleaner.Core.Models.FileIndexRecord},System.Threading.CancellationToken)">
+            <summary>
+            Performs a batch upsert of the provided records.
+            </summary>
+            <param name="records">The records to upsert.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The number of records upserted.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.QueryByPublisherAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Queries records by publisher.
+            </summary>
+            <param name="publisher">The publisher name.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The matched records.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.QueryByProductAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Queries records by product name.
+            </summary>
+            <param name="productName">The product name.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The matched records.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.CountAsync(System.Threading.CancellationToken)">
+            <summary>
+            Returns the total count of index records.
+            </summary>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The total count.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.SearchAsync(LeslieCleaner.Core.Models.FileIndexSearchQuery,System.Threading.CancellationToken)">
+            <summary>
+            Performs a paginated search.
+            </summary>
+            <param name="query">The search query.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A search page containing items and total count.</returns>
+        </member>
+        <member name="M:LeslieCleaner.Data.FileIndexRepository.StreamSearchAsync(LeslieCleaner.Core.Models.FileIndexSearchQuery,System.Threading.CancellationToken)">
+            <summary>
+            Streams search results using pagination.
+            </summary>
+            <param name="query">The search query.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>An asynchronous stream of records.</returns>
+        </member>
+        <member name="T:LeslieCleaner.Data.ResidualRuleImporter">
+            <summary>
+            残留规则种子导入器。从嵌入资源 residual-rules.seed.json 读取规则并
+            upsert 进 residual_rules 表；幂等，可重复执行。规则内容在阶段 16 扩充至 1000+。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.ImportAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.Threading.CancellationToken)">
+            <summary>
+            将嵌入种子规则导入 residual_rules 表。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>导入的规则条数。</returns>
+            <exception cref="T:System.InvalidOperationException">种子资源缺失或损坏时抛出。</exception>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.LoadAllAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.Threading.CancellationToken)">
+            <summary>
+            从 residual_rules 表读取全部规则。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Data.ResidualRuleImporter.QueryAsync(LeslieCleaner.Core.Abstractions.IDatabase,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            按发布者/产品查询规则（先精确匹配 publisher+product，再回退发布者级规则）。
+            </summary>
+            <param name="database">已初始化的数据库。</param>
+            <param name="publisher">发布者。</param>
+            <param name="product">产品名，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Data.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Data 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.ServiceCollectionExtensions.AddLeslieCleanerData(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册 Data 层服务：SQLite 数据库（%ProgramData%\LeslieCleaner\Data\LeslieCleaner.db）、
+            文件索引仓储、残留规则导入器。数据库在首次使用前须调用
+            <see cref="M:LeslieCleaner.Core.Abstractions.IDatabase.InitializeAsync(System.Threading.CancellationToken)"/>（幂等）。
+            </summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Data.SqliteDatabase">
+            <summary>SQLite v2 database with WAL, migrations, verified backup and atomic recovery.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Data.SqliteDatabase.DatabasePath">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.#ctor(System.String,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>创建数据库实例；构造时不访问磁盘。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.VerifyIntegrityAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.CreateBackupAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.VerifyBackupAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.RecoverFromBackupAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.QueryAsync``1(System.String,System.Func{Microsoft.Data.Sqlite.SqliteDataReader,``0},System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteBatchAsync(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.ExecuteInTransactionAsync``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,Microsoft.Data.Sqlite.SqliteTransaction,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Data.SqliteDatabase.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the SensitiveSettingKeyRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SensitiveSettingKeyRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the SecretAssignmentRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SecretAssignmentRegex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerRegex_2">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the BearerRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.BearerRegex_2.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerRegex_2.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerRegex_2.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_280210002802100">
+            <summary>Supports searching for characters in or not in "AOPUaopu".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_A0011000A001100">
+            <summary>Supports searching for characters in or not in "ACPTacpt".</summary>
+        </member>
+    </members>
+</doc>

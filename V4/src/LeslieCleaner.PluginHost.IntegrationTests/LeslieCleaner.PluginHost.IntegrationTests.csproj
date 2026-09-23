@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.PluginHost.IntegrationTests</RootNamespace>
+    <AssemblyName>LeslieCleaner.PluginHost.IntegrationTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Data\LeslieCleaner.Data.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Infrastructure\LeslieCleaner.Infrastructure.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.PluginSdk\LeslieCleaner.PluginSdk.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.SamplePlugin\LeslieCleaner.SamplePlugin.csproj" />
+  </ItemGroup>
+
+  <Target Name="BuildPluginHost" BeforeTargets="Build">
+    <MSBuild Projects="..\LeslieCleaner.PluginHost\LeslieCleaner.PluginHost.csproj" Targets="Build" Properties="Configuration=$(Configuration);EnableDefaultCompileItems=true" />
+  </Target>
+
+</Project>

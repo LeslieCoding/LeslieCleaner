@@ -1,0 +1,618 @@
+[
+    {
+        "Index":  1,
+        "Source":  "LeslieCleaner_Development_Bible\\00_Execution_Contract.md",
+        "Destination":  "00_Execution_Contract.md",
+        "PromptId":  "AP-00-EXECUTION-CONTRACT-MD",
+        "Focus":  "Android platform architecture, lifecycle, storage, permissions, testing and release governance"
+    },
+    {
+        "Index":  2,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\50_AI_Rules.md",
+        "Destination":  "AI\\50_AI_Rules.md",
+        "PromptId":  "AP-AI-50-AI-RULES-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  3,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\51_Code_Review.md",
+        "Destination":  "AI\\51_Code_Review.md",
+        "PromptId":  "AP-AI-51-CODE-REVIEW-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  4,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\52_Testing.md",
+        "Destination":  "AI\\52_Testing.md",
+        "PromptId":  "AP-AI-52-TESTING-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  5,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\53_Security.md",
+        "Destination":  "AI\\53_Security.md",
+        "PromptId":  "AP-AI-53-SECURITY-MD",
+        "Focus":  "Android permission, profile, browser-provider and privacy-safe data handling with least privilege"
+    },
+    {
+        "Index":  6,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\54_Logging.md",
+        "Destination":  "AI\\54_Logging.md",
+        "PromptId":  "AP-AI-54-LOGGING-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  7,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\55_Benchmark.md",
+        "Destination":  "AI\\55_Benchmark.md",
+        "PromptId":  "AP-AI-55-BENCHMARK-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  8,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\56_Development_Workflow.md",
+        "Destination":  "AI\\56_Development_Workflow.md",
+        "PromptId":  "AP-AI-56-DEVELOPMENT-WORKFLOW-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  9,
+        "Source":  "LeslieCleaner_Development_Bible\\AI\\57_AI_Prompt_Execution_Contract.md",
+        "Destination":  "AI\\57_AI_Prompt_Execution_Contract.md",
+        "PromptId":  "AP-AI-57-AI-PROMPT-EXECUTION-CONTRACT-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  10,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\00_Master_System_Prompt.md",
+        "Destination":  "Main\\00_Master_System_Prompt.md",
+        "PromptId":  "AP-MAIN-00-MASTER-SYSTEM-PROMPT-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  11,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\01_Project_Rules.md",
+        "Destination":  "Main\\01_Project_Rules.md",
+        "PromptId":  "AP-MAIN-01-PROJECT-RULES-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  12,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\02_Architecture.md",
+        "Destination":  "Main\\02_Architecture.md",
+        "PromptId":  "AP-MAIN-02-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  13,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\03_Project_Structure.md",
+        "Destination":  "Main\\03_Project_Structure.md",
+        "PromptId":  "AP-MAIN-03-PROJECT-STRUCTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  14,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\04_Coding_Standard.md",
+        "Destination":  "Main\\04_Coding_Standard.md",
+        "PromptId":  "AP-MAIN-04-CODING-STANDARD-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  15,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\05_Performance_Standard.md",
+        "Destination":  "Main\\05_Performance_Standard.md",
+        "PromptId":  "AP-MAIN-05-PERFORMANCE-STANDARD-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  16,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\06_Memory_Optimization.md",
+        "Destination":  "Main\\06_Memory_Optimization.md",
+        "PromptId":  "AP-MAIN-06-MEMORY-OPTIMIZATION-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  17,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\07_Release_Optimization.md",
+        "Destination":  "Main\\07_Release_Optimization.md",
+        "PromptId":  "AP-MAIN-07-RELEASE-OPTIMIZATION-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  18,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\08_Database_Design.md",
+        "Destination":  "Main\\08_Database_Design.md",
+        "PromptId":  "AP-MAIN-08-DATABASE-DESIGN-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  19,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\09_API_Interface_Design.md",
+        "Destination":  "Main\\09_API_Interface_Design.md",
+        "PromptId":  "AP-MAIN-09-API-INTERFACE-DESIGN-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  20,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\10_Code_Architecture_Standard.md",
+        "Destination":  "Main\\10_Code_Architecture_Standard.md",
+        "PromptId":  "AP-MAIN-10-CODE-ARCHITECTURE-STANDARD-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  21,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\11_AI_Development_Prompt.md",
+        "Destination":  "Main\\11_AI_Development_Prompt.md",
+        "PromptId":  "AP-MAIN-11-AI-DEVELOPMENT-PROMPT-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  22,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\12_Testing_And_Quality_Assurance.md",
+        "Destination":  "Main\\12_Testing_And_Quality_Assurance.md",
+        "PromptId":  "AP-MAIN-12-TESTING-AND-QUALITY-ASSURANCE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  23,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\13_UI_UX_Design_Specification.md",
+        "Destination":  "Main\\13_UI_UX_Design_Specification.md",
+        "PromptId":  "AP-MAIN-13-UI-UX-DESIGN-SPECIFICATION-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  24,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\14_Installer_And_Deployment_Specification.md",
+        "Destination":  "Main\\14_Installer_And_Deployment_Specification.md",
+        "PromptId":  "AP-MAIN-14-INSTALLER-AND-DEPLOYMENT-SPECIFICATION-MD",
+        "Focus":  "APK/split-APK installation and uninstall through PackageInstaller with user confirmation and rollback-aware state"
+    },
+    {
+        "Index":  25,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\15_Data_Model_And_Database_Design.md",
+        "Destination":  "Main\\15_Data_Model_And_Database_Design.md",
+        "PromptId":  "AP-MAIN-15-DATA-MODEL-AND-DATABASE-DESIGN-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  26,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\16_Cleaner_Engine_Architecture.md",
+        "Destination":  "Main\\16_Cleaner_Engine_Architecture.md",
+        "PromptId":  "AP-MAIN-16-CLEANER-ENGINE-ARCHITECTURE-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  27,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\17_Registry_Cleaner_Architecture.md",
+        "Destination":  "Main\\17_Registry_Cleaner_Architecture.md",
+        "PromptId":  "AP-MAIN-17-REGISTRY-CLEANER-ARCHITECTURE-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  28,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\18_Uninstaller_Engine_Architecture.md",
+        "Destination":  "Main\\18_Uninstaller_Engine_Architecture.md",
+        "PromptId":  "AP-MAIN-18-UNINSTALLER-ENGINE-ARCHITECTURE-MD",
+        "Focus":  "APK/split-APK installation and uninstall through PackageInstaller with user confirmation and rollback-aware state"
+    },
+    {
+        "Index":  29,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\19_Startup_Manager_Architecture.md",
+        "Destination":  "Main\\19_Startup_Manager_Architecture.md",
+        "PromptId":  "AP-MAIN-19-STARTUP-MANAGER-ARCHITECTURE-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  30,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\20_Privacy_Cleaner_Architecture.md",
+        "Destination":  "Main\\20_Privacy_Cleaner_Architecture.md",
+        "PromptId":  "AP-MAIN-20-PRIVACY-CLEANER-ARCHITECTURE-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  31,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\21_File_Analyzer_Architecture.md",
+        "Destination":  "Main\\21_File_Analyzer_Architecture.md",
+        "PromptId":  "AP-MAIN-21-FILE-ANALYZER-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  32,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\22_Backup_And_Restore_System.md",
+        "Destination":  "Main\\22_Backup_And_Restore_System.md",
+        "PromptId":  "AP-MAIN-22-BACKUP-AND-RESTORE-SYSTEM-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  33,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\23_AI_Assistant_Architecture.md",
+        "Destination":  "Main\\23_AI_Assistant_Architecture.md",
+        "PromptId":  "AP-MAIN-23-AI-ASSISTANT-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  34,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\24_Plugin_System_Architecture.md",
+        "Destination":  "Main\\24_Plugin_System_Architecture.md",
+        "PromptId":  "AP-MAIN-24-PLUGIN-SYSTEM-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  35,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\25_Update_And_Version_Manager_Architecture.md",
+        "Destination":  "Main\\25_Update_And_Version_Manager_Architecture.md",
+        "PromptId":  "AP-MAIN-25-UPDATE-AND-VERSION-MANAGER-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  36,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\26_Logging_And_Monitoring_Architecture.md",
+        "Destination":  "Main\\26_Logging_And_Monitoring_Architecture.md",
+        "PromptId":  "AP-MAIN-26-LOGGING-AND-MONITORING-ARCHITECTURE-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  37,
+        "Source":  "LeslieCleaner_Development_Bible\\Main\\27_Security_Architecture.md",
+        "Destination":  "Main\\27_Security_Architecture.md",
+        "PromptId":  "AP-MAIN-27-SECURITY-ARCHITECTURE-MD",
+        "Focus":  "Android permission, profile, browser-provider and privacy-safe data handling with least privilege"
+    },
+    {
+        "Index":  38,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\20_Smart_Scan.md",
+        "Destination":  "Modules\\20_Smart_Scan.md",
+        "PromptId":  "AP-MODULES-20-SMART-SCAN-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  39,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\21_Cleaner.md",
+        "Destination":  "Modules\\21_Cleaner.md",
+        "PromptId":  "AP-MODULES-21-CLEANER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  40,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\22_Registry_Cleaner.md",
+        "Destination":  "Modules\\22_Registry_Cleaner.md",
+        "PromptId":  "AP-MODULES-22-REGISTRY-CLEANER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  41,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\23_Uninstaller.md",
+        "Destination":  "Modules\\23_Uninstaller.md",
+        "PromptId":  "AP-MODULES-23-UNINSTALLER-MD",
+        "Focus":  "APK/split-APK installation and uninstall through PackageInstaller with user confirmation and rollback-aware state"
+    },
+    {
+        "Index":  42,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\24_Residual_Engine.md",
+        "Destination":  "Modules\\24_Residual_Engine.md",
+        "PromptId":  "AP-MODULES-24-RESIDUAL-ENGINE-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  43,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\25_Startup_Manager.md",
+        "Destination":  "Modules\\25_Startup_Manager.md",
+        "PromptId":  "AP-MODULES-25-STARTUP-MANAGER-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  44,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\26_Privacy_Guard.md",
+        "Destination":  "Modules\\26_Privacy_Guard.md",
+        "PromptId":  "AP-MODULES-26-PRIVACY-GUARD-MD",
+        "Focus":  "Android permission, profile, browser-provider and privacy-safe data handling with least privilege"
+    },
+    {
+        "Index":  45,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\27_Browser_Cleaner.md",
+        "Destination":  "Modules\\27_Browser_Cleaner.md",
+        "PromptId":  "AP-MODULES-27-BROWSER-CLEANER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  46,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\28_File_Shredder.md",
+        "Destination":  "Modules\\28_File_Shredder.md",
+        "PromptId":  "AP-MODULES-28-FILE-SHREDDER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  47,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\29_Duplicate_Finder.md",
+        "Destination":  "Modules\\29_Duplicate_Finder.md",
+        "PromptId":  "AP-MODULES-29-DUPLICATE-FINDER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  48,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\30_Large_File_Analyzer.md",
+        "Destination":  "Modules\\30_Large_File_Analyzer.md",
+        "PromptId":  "AP-MODULES-30-LARGE-FILE-ANALYZER-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  49,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\31_Service_Manager.md",
+        "Destination":  "Modules\\31_Service_Manager.md",
+        "PromptId":  "AP-MODULES-31-SERVICE-MANAGER-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  50,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\32_Driver_Manager.md",
+        "Destination":  "Modules\\32_Driver_Manager.md",
+        "PromptId":  "AP-MODULES-32-DRIVER-MANAGER-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  51,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\33_Task_Scheduler.md",
+        "Destination":  "Modules\\33_Task_Scheduler.md",
+        "PromptId":  "AP-MODULES-33-TASK-SCHEDULER-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  52,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\34_Extension_Manager.md",
+        "Destination":  "Modules\\34_Extension_Manager.md",
+        "PromptId":  "AP-MODULES-34-EXTENSION-MANAGER-MD",
+        "Focus":  "Android platform architecture, lifecycle, storage, permissions, testing and release governance"
+    },
+    {
+        "Index":  53,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\35_AI_Assistant.md",
+        "Destination":  "Modules\\35_AI_Assistant.md",
+        "PromptId":  "AP-MODULES-35-AI-ASSISTANT-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  54,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\36_Settings.md",
+        "Destination":  "Modules\\36_Settings.md",
+        "PromptId":  "AP-MODULES-36-SETTINGS-MD",
+        "Focus":  "Android platform architecture, lifecycle, storage, permissions, testing and release governance"
+    },
+    {
+        "Index":  55,
+        "Source":  "LeslieCleaner_Development_Bible\\Modules\\37_Module_Implementation_Contract.md",
+        "Destination":  "Modules\\37_Module_Implementation_Contract.md",
+        "PromptId":  "AP-MODULES-37-MODULE-IMPLEMENTATION-CONTRACT-MD",
+        "Focus":  "Android platform architecture, lifecycle, storage, permissions, testing and release governance"
+    },
+    {
+        "Index":  56,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\00_Development_Agent_System_Prompt.md",
+        "Destination":  "Prompt_Library\\00_Development_Agent_System_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-00-DEVELOPMENT-AGENT-SYSTEM-PROMPT-MD",
+        "Focus":  "Android platform architecture, lifecycle, storage, permissions, testing and release governance"
+    },
+    {
+        "Index":  57,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\01_Residual_Engine_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\01_Residual_Engine_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-01-RESIDUAL-ENGINE-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  58,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\02_Registry_Engine_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\02_Registry_Engine_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-02-REGISTRY-ENGINE-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  59,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\03_Uninstaller_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\03_Uninstaller_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-03-UNINSTALLER-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "APK/split-APK installation and uninstall through PackageInstaller with user confirmation and rollback-aware state"
+    },
+    {
+        "Index":  60,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\04_Cleaner_Engine_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\04_Cleaner_Engine_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-04-CLEANER-ENGINE-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  61,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\05_Cache_Rules_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\05_Cache_Rules_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-05-CACHE-RULES-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android storage, cache, package-data and scoped cleanup providers (SAF/MediaStore/PackageManager)"
+    },
+    {
+        "Index":  62,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\06_Startup_Manager_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\06_Startup_Manager_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-06-STARTUP-MANAGER-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android lifecycle, JobScheduler/WorkManager, AppOps and platform capability boundaries; no unsupported desktop assumptions"
+    },
+    {
+        "Index":  63,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\07_Privacy_Browser_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\07_Privacy_Browser_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-07-PRIVACY-BROWSER-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "Android permission, profile, browser-provider and privacy-safe data handling with least privilege"
+    },
+    {
+        "Index":  64,
+        "Source":  "LeslieCleaner_Development_Bible\\Prompt_Library\\08_AI_Assistant_Implementation_Prompt.md",
+        "Destination":  "Prompt_Library\\08_AI_Assistant_Implementation_Prompt.md",
+        "PromptId":  "AP-PROMPT-LIBRARY-08-AI-ASSISTANT-IMPLEMENTATION-PROMPT-MD",
+        "Focus":  "On-device/local-first advisory AI, redaction, network opt-in, structured output validation and safe action delegation"
+    },
+    {
+        "Index":  65,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\10_UI_Design_System.md",
+        "Destination":  "UI\\10_UI_Design_System.md",
+        "PromptId":  "AP-UI-10-UI-DESIGN-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  66,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\11_UI_Component_Standard.md",
+        "Destination":  "UI\\11_UI_Component_Standard.md",
+        "PromptId":  "AP-UI-11-UI-COMPONENT-STANDARD-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  67,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\12_Animation_Standard.md",
+        "Destination":  "UI\\12_Animation_Standard.md",
+        "PromptId":  "AP-UI-12-ANIMATION-STANDARD-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  68,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\13_Color_System.md",
+        "Destination":  "UI\\13_Color_System.md",
+        "PromptId":  "AP-UI-13-COLOR-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  69,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\14_Typography.md",
+        "Destination":  "UI\\14_Typography.md",
+        "PromptId":  "AP-UI-14-TYPOGRAPHY-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  70,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\15_Icon_System.md",
+        "Destination":  "UI\\15_Icon_System.md",
+        "PromptId":  "AP-UI-15-ICON-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  71,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\16_Layout_System.md",
+        "Destination":  "UI\\16_Layout_System.md",
+        "PromptId":  "AP-UI-16-LAYOUT-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  72,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\17_Interaction_Design.md",
+        "Destination":  "UI\\17_Interaction_Design.md",
+        "PromptId":  "AP-UI-17-INTERACTION-DESIGN-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  73,
+        "Source":  "LeslieCleaner_Development_Bible\\UI\\18_UI_Implementation_Contract.md",
+        "Destination":  "UI\\18_UI_Implementation_Contract.md",
+        "PromptId":  "AP-UI-18-UI-IMPLEMENTATION-CONTRACT-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  74,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\40_Installer.md",
+        "Destination":  "UX\\40_Installer.md",
+        "PromptId":  "AP-UX-40-INSTALLER-MD",
+        "Focus":  "APK/split-APK installation and uninstall through PackageInstaller with user confirmation and rollback-aware state"
+    },
+    {
+        "Index":  75,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\41_Batch_Operation.md",
+        "Destination":  "UX\\41_Batch_Operation.md",
+        "PromptId":  "AP-UX-41-BATCH-OPERATION-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  76,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\42_History_Center.md",
+        "Destination":  "UX\\42_History_Center.md",
+        "PromptId":  "AP-UX-42-HISTORY-CENTER-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  77,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\43_Notification_Center.md",
+        "Destination":  "UX\\43_Notification_Center.md",
+        "PromptId":  "AP-UX-43-NOTIFICATION-CENTER-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  78,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\44_Search_System.md",
+        "Destination":  "UX\\44_Search_System.md",
+        "PromptId":  "AP-UX-44-SEARCH-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  79,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\45_Favorites.md",
+        "Destination":  "UX\\45_Favorites.md",
+        "PromptId":  "AP-UX-45-FAVORITES-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  80,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\46_Right_Click_Menu.md",
+        "Destination":  "UX\\46_Right_Click_Menu.md",
+        "PromptId":  "AP-UX-46-RIGHT-CLICK-MENU-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  81,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\47_Undo_System.md",
+        "Destination":  "UX\\47_Undo_System.md",
+        "PromptId":  "AP-UX-47-UNDO-SYSTEM-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  82,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\48_AI_Recommendation.md",
+        "Destination":  "UX\\48_AI_Recommendation.md",
+        "PromptId":  "AP-UX-48-AI-RECOMMENDATION-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  83,
+        "Source":  "LeslieCleaner_Development_Bible\\UX\\49_UX_Implementation_Contract.md",
+        "Destination":  "UX\\49_UX_Implementation_Contract.md",
+        "PromptId":  "AP-UX-49-UX-IMPLEMENTATION-CONTRACT-MD",
+        "Focus":  "Jetpack Compose, Material 3, accessibility, adaptive layouts, touch/keyboard semantics and state restoration"
+    },
+    {
+        "Index":  84,
+        "Source":  "CleanMyPCNext_Development_Bible_INDEX.md",
+        "Destination":  "Legacy\\CleanMyPCNext_Development_Bible_INDEX.md",
+        "PromptId":  "AP-LEGACY-CLEANMYPCNEXT-DEVELOPMENT-BIBLE-INDEX",
+        "Focus":  "Android platform boundary, lifecycle, storage, permissions, testing, privacy and release governance"
+    },
+    {
+        "Index":  85,
+        "Source":  "Feature Enhancement Prompt (2).txt",
+        "Destination":  "Legacy\\Feature Enhancement Prompt (2).txt",
+        "PromptId":  "AP-LEGACY-FEATURE-ENHANCEMENT-PROMPT-2",
+        "Focus":  "Android platform boundary, lifecycle, storage, permissions, testing, privacy and release governance"
+    },
+    {
+        "Index":  86,
+        "Source":  "Feature Enhancement Prompt.txt",
+        "Destination":  "Legacy\\Feature Enhancement Prompt.txt",
+        "PromptId":  "AP-LEGACY-FEATURE-ENHANCEMENT-PROMPT",
+        "Focus":  "Android platform boundary, lifecycle, storage, permissions, testing, privacy and release governance"
+    },
+    {
+        "Index":  87,
+        "Source":  "LeslieCleaner Development Bible v2.0.txt",
+        "Destination":  "Legacy\\LeslieCleaner Development Bible v2.0.txt",
+        "PromptId":  "AP-LEGACY-LESLIECLEANER-DEVELOPMENT-BIBLE-V2-0",
+        "Focus":  "Android platform boundary, lifecycle, storage, permissions, testing, privacy and release governance"
+    },
+    {
+        "Index":  88,
+        "Source":  "LeslieCleaner UI \u0026 Performance Optimization Prompt.txt",
+        "Destination":  "Legacy\\LeslieCleaner UI \u0026 Performance Optimization Prompt.txt",
+        "PromptId":  "AP-LEGACY-LESLIECLEANER-UI-\u0026-PERFORMANCE-OPTIMIZATION-PROMPT",
+        "Focus":  "Android platform boundary, lifecycle, storage, permissions, testing, privacy and release governance"
+    }
+]

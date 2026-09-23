@@ -1,0 +1,13 @@
+baseline_id: "EB-3.0.0-001"
+request_id: "REQ-3.0.0-MAINTENANCE-CENTER"
+version: "3.0.0"
+status: "READY_WITH_LIMITATIONS"
+product: "Chinese Android mobile maintenance center"
+modules: ["junk preview", "security/Play Protect", "startup visibility", "system acceleration", "app management", "history", "offline rule updates"]
+target: "Android API 29+; evidence target OnePlus PKG110/API 36 serial 92f73a16"
+architecture: "Compose shell -> MaintenanceCenter/AnalysisCoordinator -> readers/rules/handoffs -> bounded audit/snapshot stores"
+data_boundary: "App-private redacted evidence and hashed inventory snapshot; no raw identifiers in cloud or local audit by default"
+security_boundary: "No Root, hidden APIs, QUERY_ALL_PACKAGES, accessibility abuse, silent deletion, or remote commands"
+cloud_boundary: "Bundled rules first; live endpoint only after ownership, TLS, signing, privacy, and new REG"
+rollback: "Restore 2.0.0 APK/source and bundled rules; retain prior local snapshot if migration fails"
+limitations: ["OEM/package visibility", "Android has no universal autostart API", "full malware removal belongs to Play Protect/system authority", "only OnePlus evidence"]

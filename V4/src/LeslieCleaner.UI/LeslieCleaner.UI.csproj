@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>LeslieCleaner.UI</RootNamespace>
+    <AssemblyName>LeslieCleaner.UI</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Infrastructure\LeslieCleaner.Infrastructure.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\AI\LeslieCleaner.Modules.AI.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Browser\LeslieCleaner.Modules.Browser.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Cleaner\LeslieCleaner.Modules.Cleaner.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Privacy\LeslieCleaner.Modules.Privacy.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Shredder\LeslieCleaner.Modules.Shredder.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Startup\LeslieCleaner.Modules.Startup.csproj" />
+    <ProjectReference Include="..\LeslieCleaner.Modules\Uninstaller\LeslieCleaner.Modules.Uninstaller.csproj" />
+  </ItemGroup>
+
+</Project>

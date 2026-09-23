@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LeslieCleaner.PluginHost</RootNamespace>
+    <AssemblyName>LeslieCleaner.PluginHost</AssemblyName>
+    <Description>Isolated out-of-process runtime for LeslieCleaner plugins.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeslieCleaner.PluginSdk\LeslieCleaner.PluginSdk.csproj" />
+  </ItemGroup>
+
+</Project>

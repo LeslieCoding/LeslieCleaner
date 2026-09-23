@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LeslieCleaner.Modules.Browser</RootNamespace>
+    <AssemblyName>LeslieCleaner.Modules.Browser</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LeslieCleaner.Core\LeslieCleaner.Core.csproj" />
+  </ItemGroup>
+
+</Project>

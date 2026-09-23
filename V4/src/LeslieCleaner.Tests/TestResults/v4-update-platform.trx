@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="95aa8d0b-e8ed-4330-a955-a0e6fad2edf3" name="Leslie@LESLIE-OMEN 2026-08-16 23:48:31" runUser="LESLIE-OMEN\Leslie" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-16T23:48:31.0338840+08:00" queuing="2026-08-16T23:48:31.0338848+08:00" start="2026-08-16T23:48:30.1069356+08:00" finish="2026-08-16T23:50:01.8327940+08:00" />
+  <TestSettings name="default" id="eb030b33-ea74-4ad1-aee1-ca1ea459826b">
+    <Deployment runDeploymentRoot="Leslie_LESLIE-OMEN_2026-08-16_23_48_31" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="7dc2b8ec-763e-4fd0-81d1-1f144a11052b" testId="16c3910b-21b1-eb87-e43f-e87170410c8f" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_UnsafeManifestIsRejected" computerName="LESLIE-OMEN" duration="00:00:00.0050225" startTime="2026-08-16T23:48:30.8809372+08:00" endTime="2026-08-16T23:48:30.8809374+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7dc2b8ec-763e-4fd0-81d1-1f144a11052b" />
+    <UnitTestResult executionId="d71111b6-2490-49d2-91e1-990489422869" testId="f29e578a-73c9-64f1-1394-1b42290e7faf" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.1&quot;, b: &quot;1.0.0&quot;, expectedSign: 1)" computerName="LESLIE-OMEN" duration="00:00:00.0011356" startTime="2026-08-16T23:48:31.1234386+08:00" endTime="2026-08-16T23:48:31.1234387+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d71111b6-2490-49d2-91e1-990489422869" />
+    <UnitTestResult executionId="62846a82-fd7a-472e-80f2-54c6929e44c7" testId="e6e63130-614d-a2e3-01a7-731c173f092a" testName="LeslieCleaner.Tests.Updating.UpdateEndToEndTests.FullUpdateFlow_CheckDownloadVerifyApplyRestart" computerName="LESLIE-OMEN" duration="00:00:00.0010000" startTime="2026-08-16T23:50:01.7604055+08:00" endTime="2026-08-16T23:50:01.7604057+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62846a82-fd7a-472e-80f2-54c6929e44c7">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : 临时 HTTP 服务器未就绪</Message>
+          <StackTrace>   at LeslieCleaner.Tests.Updating.UpdateEndToEndTests.WaitForServerReady() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateEndToEndTests.cs:line 194&#xD;
+   at LeslieCleaner.Tests.Updating.UpdateEndToEndTests..ctor(ITestOutputHelper output) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateEndToEndTests.cs:line 67&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="16d21fa0-51e1-46e2-9427-bfd1e867d6b1" testId="cdaeb36d-1409-b4b9-7ce9-a398ec485016" testName="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_PayloadContainsNoPrivacyFields" computerName="LESLIE-OMEN" duration="00:00:00.0180370" startTime="2026-08-16T23:48:30.9965513+08:00" endTime="2026-08-16T23:48:30.9965514+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="16d21fa0-51e1-46e2-9427-bfd1e867d6b1" />
+    <UnitTestResult executionId="175688e7-f0ea-4f7c-867b-51376935f388" testId="ef2d7f89-d50c-96ac-e980-cb6cc3a79c34" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_CommitsExistingAndNewFilesAfterSuccess" computerName="LESLIE-OMEN" duration="00:00:00.0268581" startTime="2026-08-16T23:48:31.1568541+08:00" endTime="2026-08-16T23:48:31.1568545+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="175688e7-f0ea-4f7c-867b-51376935f388" />
+    <UnitTestResult executionId="e41815ca-85b6-413b-9988-6fe178e74902" testId="29eeb122-b8f8-cd24-82f1-a325f316b6d8" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_SameVersion_NoUpdate" computerName="LESLIE-OMEN" duration="00:00:00.0063067" startTime="2026-08-16T23:48:31.1298515+08:00" endTime="2026-08-16T23:48:31.1298518+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e41815ca-85b6-413b-9988-6fe178e74902" />
+    <UnitTestResult executionId="40f2e17d-0489-4783-babd-148f0e95ed12" testId="0c1522d5-cd75-6e8e-d77d-e6724814c840" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.0&quot;, b: &quot;1.0.1&quot;, expectedSign: -1)" computerName="LESLIE-OMEN" duration="00:00:00.0015306" startTime="2026-08-16T23:48:31.0772492+08:00" endTime="2026-08-16T23:48:31.0772493+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40f2e17d-0489-4783-babd-148f0e95ed12" />
+    <UnitTestResult executionId="01b52019-d047-489e-a785-55cb76e98850" testId="2a3245b7-ed68-17b5-3d23-ab5d39161b86" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0&quot;, b: &quot;1.0.0&quot;, expectedSign: 0)" computerName="LESLIE-OMEN" duration="00:00:00.0014231" startTime="2026-08-16T23:48:31.0814377+08:00" endTime="2026-08-16T23:48:31.0814378+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="01b52019-d047-489e-a785-55cb76e98850" />
+    <UnitTestResult executionId="528b5b95-4ed1-44bf-9916-aa5e848b4209" testId="c91afa9c-6a22-b43e-185a-ec292bfa36ef" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_UnsignedManifest_IsRejectedByDefault" computerName="LESLIE-OMEN" duration="00:00:00.0199373" startTime="2026-08-16T23:48:30.8758189+08:00" endTime="2026-08-16T23:48:30.8758192+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="528b5b95-4ed1-44bf-9916-aa5e848b4209" />
+    <UnitTestResult executionId="612e5a59-3ed5-4071-b8d6-3c9fc9b915f5" testId="b6080c63-d027-a64f-fa7a-728561c27a6e" testName="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_WritesLocalFile_WithErrorSummary" computerName="LESLIE-OMEN" duration="00:00:00.0409866" startTime="2026-08-16T23:48:31.0339786+08:00" endTime="2026-08-16T23:48:31.0339789+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="612e5a59-3ed5-4071-b8d6-3c9fc9b915f5" />
+    <UnitTestResult executionId="3406f005-368c-49c9-bd4e-8b76195d20bc" testId="c21ec127-61a3-79b2-d5ba-28aa2223cd7b" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.0.1&quot;, b: &quot;1.0.0&quot;, expectedSign: 1)" computerName="LESLIE-OMEN" duration="00:00:00.0406961" startTime="2026-08-16T23:48:31.1222304+08:00" endTime="2026-08-16T23:48:31.1222307+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3406f005-368c-49c9-bd4e-8b76195d20bc" />
+    <UnitTestResult executionId="ee37bf1c-1077-40bf-9e21-a4863d8635ca" testId="88661e4c-5893-8943-c158-b05824d2609f" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_PathTraversalIsRejectedBeforeWritingOutsideStaging" computerName="LESLIE-OMEN" duration="00:00:00.0311088" startTime="2026-08-16T23:48:30.8564135+08:00" endTime="2026-08-16T23:48:30.8564265+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ee37bf1c-1077-40bf-9e21-a4863d8635ca" />
+    <UnitTestResult executionId="f587cc56-6718-4dad-bc99-a65e731617e9" testId="1aa9c7d0-ba18-48a8-c563-89f494e84ebb" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_RequiresValidEcdsaManifestSignature" computerName="LESLIE-OMEN" duration="00:00:00.0629132" startTime="2026-08-16T23:48:30.9683554+08:00" endTime="2026-08-16T23:48:30.9683557+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f587cc56-6718-4dad-bc99-a65e731617e9">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : The process cannot access the file because it is being used by another process.</Message>
+          <StackTrace>   at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 556&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 245&#xD;
+   at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_RequiresValidEcdsaManifestSignature() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs:line 115&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="00f3d0c4-6098-4031-ad33-6ead657ba11d" testId="4ce5414a-7277-eefc-4552-f3889d359777" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_CopiesAndSkipsManifest" computerName="LESLIE-OMEN" duration="00:00:00.0172409" startTime="2026-08-16T23:48:31.0755937+08:00" endTime="2026-08-16T23:48:31.0755941+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="00f3d0c4-6098-4031-ad33-6ead657ba11d" />
+    <UnitTestResult executionId="af17c7d2-35ec-423e-bfc4-301bb14a3958" testId="cb5ee9ad-5e6d-3355-db3a-961c8e748a07" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_AbsoluteCrossOriginFileUrl_IsRejected" computerName="LESLIE-OMEN" duration="00:00:00.0282689" startTime="2026-08-16T23:48:31.0326396+08:00" endTime="2026-08-16T23:48:31.0326401+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af17c7d2-35ec-423e-bfc4-301bb14a3958" />
+    <UnitTestResult executionId="1ffb963d-9212-4e7b-a0b6-00e5344b7d86" testId="b395f5aa-047c-4b2a-6655-7144f2b0a8be" testName="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadSuccess_Recorded" computerName="LESLIE-OMEN" duration="00:00:00.1355154" startTime="2026-08-16T23:48:30.9674336+08:00" endTime="2026-08-16T23:48:30.9674339+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1ffb963d-9212-4e7b-a0b6-00e5344b7d86">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadSuccess_Recorded() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateDiagnosticsTests.cs:line 74&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="95d3f560-6492-449e-969d-16f74513133f" testId="d3fe2419-dc6f-dbdf-34af-3f05a6d6bcc9" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Compatibility_RejectsMissingDependencyAndWrongArchitecture" computerName="LESLIE-OMEN" duration="00:00:00.0060036" startTime="2026-08-16T23:48:30.9959871+08:00" endTime="2026-08-16T23:48:30.9959872+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="95d3f560-6492-449e-969d-16f74513133f" />
+    <UnitTestResult executionId="db33f171-5378-4b91-b64e-1305074a81b2" testId="fa5e2251-64c9-1748-69c0-6601340a50a3" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_ValidFiles_StagedAndVerified" computerName="LESLIE-OMEN" duration="00:00:00.0292483" startTime="2026-08-16T23:48:30.9964941+08:00" endTime="2026-08-16T23:48:30.9964942+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="db33f171-5378-4b91-b64e-1305074a81b2">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : The process cannot access the file because it is being used by another process.</Message>
+          <StackTrace>   at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 556&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 245&#xD;
+   at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_ValidFiles_StagedAndVerified() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs:line 165&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bd4ef808-c294-4be9-82d4-6d7579c9bd3e" testId="6569919d-a308-ed1e-02bc-896bfdb861aa" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_MidwayFailureRestoresExistingAndDeletesNewFiles" computerName="LESLIE-OMEN" duration="00:00:00.0339011" startTime="2026-08-16T23:48:31.1909083+08:00" endTime="2026-08-16T23:48:31.1909085+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd4ef808-c294-4be9-82d4-6d7579c9bd3e" />
+    <UnitTestResult executionId="e2f639a2-c680-44d3-be26-a6ff3ae80220" testId="6306a99b-bbc3-e6f7-aa3b-dd3e153d58bc" testName="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadFailure_DegradesSilently" computerName="LESLIE-OMEN" duration="00:00:00.0143156" startTime="2026-08-16T23:48:30.9958947+08:00" endTime="2026-08-16T23:48:30.9958948+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e2f639a2-c680-44d3-be26-a6ff3ae80220" />
+    <UnitTestResult executionId="171248f2-b99d-493b-b99e-3dad9aa0487f" testId="6601537e-097c-9105-8c87-4a038437aa79" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;2.0&quot;, b: &quot;1.9.9&quot;, expectedSign: 1)" computerName="LESLIE-OMEN" duration="00:00:00.0026333" startTime="2026-08-16T23:48:31.0799499+08:00" endTime="2026-08-16T23:48:31.0799501+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="171248f2-b99d-493b-b99e-3dad9aa0487f" />
+    <UnitTestResult executionId="96004b7e-2f59-42f0-be39-5835b1ec184e" testId="1d6dd12b-cbd5-373b-908f-3b36899617f1" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_Cancellation_IsPropagated" computerName="LESLIE-OMEN" duration="00:00:00.0114238" startTime="2026-08-16T23:48:30.9959375+08:00" endTime="2026-08-16T23:48:30.9959376+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96004b7e-2f59-42f0-be39-5835b1ec184e" />
+    <UnitTestResult executionId="88f9abf8-8073-469a-8ce7-b225b623f17c" testId="09fff98e-a6a7-8e8c-df44-2bca13605b28" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.InstallTransaction_MigrationFailure_RestoresBackupAndReportsHistory" computerName="LESLIE-OMEN" duration="00:00:00.0426899" startTime="2026-08-16T23:48:30.9956559+08:00" endTime="2026-08-16T23:48:30.9956559+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="88f9abf8-8073-469a-8ce7-b225b623f17c" />
+    <UnitTestResult executionId="b6c5081a-c72a-4610-8afd-6d05c625bc31" testId="4d704910-aeef-eb69-2679-ba8301472722" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_HashMismatch_CleansStagingAndThrows" computerName="LESLIE-OMEN" duration="00:00:00.0157155" startTime="2026-08-16T23:48:31.0587978+08:00" endTime="2026-08-16T23:48:31.0587981+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b6c5081a-c72a-4610-8afd-6d05c625bc31">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match&#xD;
+Expected: typeof(LeslieCleaner.Core.Diagnostics.LeslieCleanerException)&#xD;
+Actual:   typeof(System.IO.IOException)&#xD;
+---- System.IO.IOException : The process cannot access the file because it is being used by another process.</Message>
+          <StackTrace>   at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_HashMismatch_CleansStagingAndThrows() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs:line 139&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 556&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 245</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4798a633-b5ae-4fcf-ae6d-712ff551e69c" testId="1b619e6a-e834-3df7-a6e0-32b1e36a7087" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Check_ChannelAndIncrementalPackage_AreSelected" computerName="LESLIE-OMEN" duration="00:00:00.0995534" startTime="2026-08-16T23:48:30.9247212+08:00" endTime="2026-08-16T23:48:30.9247216+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4798a633-b5ae-4fcf-ae6d-712ff551e69c" />
+    <UnitTestResult executionId="f5f14d2a-9d72-4d4e-bfef-d08e71591f3b" testId="8ac83044-a849-bcd7-c11a-e06c8a20e264" testName="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_ExistingPartial_UsesRangeAndCompletes" computerName="LESLIE-OMEN" duration="00:00:00.0147718" startTime="2026-08-16T23:48:31.0041757+08:00" endTime="2026-08-16T23:48:31.0041760+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f5f14d2a-9d72-4d4e-bfef-d08e71591f3b">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : The process cannot access the file because it is being used by another process.</Message>
+          <StackTrace>   at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 556&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 557&#xD;
+   at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken) in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs:line 245&#xD;
+   at LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_ExistingPartial_UsesRangeAndCompletes() in D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdatePlatformV4Tests.cs:line 93&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="85c688af-d54c-41d8-95d7-913cd87beb60" testId="dae2b2f5-d385-8193-5a94-c2f954b73146" testName="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_ServerHasNewer_FindsDeltaFiles" computerName="LESLIE-OMEN" duration="00:00:00.0509654" startTime="2026-08-16T23:48:31.0406863+08:00" endTime="2026-08-16T23:48:31.0406869+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="85c688af-d54c-41d8-95d7-913cd87beb60" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_ServerHasNewer_FindsDeltaFiles" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="dae2b2f5-d385-8193-5a94-c2f954b73146">
+      <Execution id="85c688af-d54c-41d8-95d7-913cd87beb60" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CheckForUpdate_ServerHasNewer_FindsDeltaFiles" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;2.0&quot;, b: &quot;1.9.9&quot;, expectedSign: 1)" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="6601537e-097c-9105-8c87-4a038437aa79">
+      <Execution id="171248f2-b99d-493b-b99e-3dad9aa0487f" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CompareVersions_Semantic" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.0.1&quot;, b: &quot;1.0.0&quot;, expectedSign: 1)" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="c21ec127-61a3-79b2-d5ba-28aa2223cd7b">
+      <Execution id="3406f005-368c-49c9-bd4e-8b76195d20bc" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CompareVersions_Semantic" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_PathTraversalIsRejectedBeforeWritingOutsideStaging" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="88661e4c-5893-8943-c158-b05824d2609f">
+      <Execution id="ee37bf1c-1077-40bf-9e21-a4863d8635ca" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="DownloadUpdate_PathTraversalIsRejectedBeforeWritingOutsideStaging" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_CommitsExistingAndNewFilesAfterSuccess" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="ef2d7f89-d50c-96ac-e980-cb6cc3a79c34">
+      <Execution id="175688e7-f0ea-4f7c-867b-51376935f388" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="Updater_ReplaceFiles_CommitsExistingAndNewFilesAfterSuccess" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_Cancellation_IsPropagated" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="1d6dd12b-cbd5-373b-908f-3b36899617f1">
+      <Execution id="96004b7e-2f59-42f0-be39-5835b1ec184e" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="Download_Cancellation_IsPropagated" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_MidwayFailureRestoresExistingAndDeletesNewFiles" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="6569919d-a308-ed1e-02bc-896bfdb861aa">
+      <Execution id="bd4ef808-c294-4be9-82d4-6d7579c9bd3e" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="Updater_ReplaceFiles_MidwayFailureRestoresExistingAndDeletesNewFiles" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Check_ChannelAndIncrementalPackage_AreSelected" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="1b619e6a-e834-3df7-a6e0-32b1e36a7087">
+      <Execution id="4798a633-b5ae-4fcf-ae6d-712ff551e69c" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="Check_ChannelAndIncrementalPackage_AreSelected" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_HashMismatch_CleansStagingAndThrows" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="4d704910-aeef-eb69-2679-ba8301472722">
+      <Execution id="b6c5081a-c72a-4610-8afd-6d05c625bc31" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="DownloadUpdate_HashMismatch_CleansStagingAndThrows" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateEndToEndTests.FullUpdateFlow_CheckDownloadVerifyApplyRestart" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="e6e63130-614d-a2e3-01a7-731c173f092a">
+      <Execution id="62846a82-fd7a-472e-80f2-54c6929e44c7" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateEndToEndTests" name="FullUpdateFlow_CheckDownloadVerifyApplyRestart" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_ExistingPartial_UsesRangeAndCompletes" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="8ac83044-a849-bcd7-c11a-e06c8a20e264">
+      <Execution id="f5f14d2a-9d72-4d4e-bfef-d08e71591f3b" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="Download_ExistingPartial_UsesRangeAndCompletes" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.0&quot;, b: &quot;1.0.1&quot;, expectedSign: -1)" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="0c1522d5-cd75-6e8e-d77d-e6724814c840">
+      <Execution id="40f2e17d-0489-4783-babd-148f0e95ed12" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CompareVersions_Semantic" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0.1&quot;, b: &quot;1.0.0&quot;, expectedSign: 1)" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="f29e578a-73c9-64f1-1394-1b42290e7faf">
+      <Execution id="d71111b6-2490-49d2-91e1-990489422869" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CompareVersions_Semantic" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_PayloadContainsNoPrivacyFields" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="cdaeb36d-1409-b4b9-7ce9-a398ec485016">
+      <Execution id="16d21fa0-51e1-46e2-9427-bfd1e867d6b1" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests" name="EmitDiagnostics_PayloadContainsNoPrivacyFields" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_ValidFiles_StagedAndVerified" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="fa5e2251-64c9-1748-69c0-6601340a50a3">
+      <Execution id="db33f171-5378-4b91-b64e-1305074a81b2" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="DownloadUpdate_ValidFiles_StagedAndVerified" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CompareVersions_Semantic(a: &quot;1.0&quot;, b: &quot;1.0.0&quot;, expectedSign: 0)" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="2a3245b7-ed68-17b5-3d23-ab5d39161b86">
+      <Execution id="01b52019-d047-489e-a785-55cb76e98850" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CompareVersions_Semantic" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_RequiresValidEcdsaManifestSignature" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="1aa9c7d0-ba18-48a8-c563-89f494e84ebb">
+      <Execution id="f587cc56-6718-4dad-bc99-a65e731617e9" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="DownloadUpdate_RequiresValidEcdsaManifestSignature" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadFailure_DegradesSilently" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="6306a99b-bbc3-e6f7-aa3b-dd3e153d58bc">
+      <Execution id="e2f639a2-c680-44d3-be26-a6ff3ae80220" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests" name="EmitDiagnostics_UploadFailure_DegradesSilently" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.Updater_ReplaceFiles_CopiesAndSkipsManifest" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="4ce5414a-7277-eefc-4552-f3889d359777">
+      <Execution id="00f3d0c4-6098-4031-ad33-6ead657ba11d" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="Updater_ReplaceFiles_CopiesAndSkipsManifest" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_AbsoluteCrossOriginFileUrl_IsRejected" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="cb5ee9ad-5e6d-3355-db3a-961c8e748a07">
+      <Execution id="af17c7d2-35ec-423e-bfc4-301bb14a3958" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="Download_AbsoluteCrossOriginFileUrl_IsRejected" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_UnsafeManifestIsRejected" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="16c3910b-21b1-eb87-e43f-e87170410c8f">
+      <Execution id="7dc2b8ec-763e-4fd0-81d1-1f144a11052b" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CheckForUpdate_UnsafeManifestIsRejected" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadSuccess_Recorded" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="b395f5aa-047c-4b2a-6655-7144f2b0a8be">
+      <Execution id="1ffb963d-9212-4e7b-a0b6-00e5344b7d86" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests" name="EmitDiagnostics_UploadSuccess_Recorded" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_WritesLocalFile_WithErrorSummary" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="b6080c63-d027-a64f-fa7a-728561c27a6e">
+      <Execution id="612e5a59-3ed5-4071-b8d6-3c9fc9b915f5" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests" name="EmitDiagnostics_WritesLocalFile_WithErrorSummary" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Compatibility_RejectsMissingDependencyAndWrongArchitecture" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="d3fe2419-dc6f-dbdf-34af-3f05a6d6bcc9">
+      <Execution id="95d3f560-6492-449e-969d-16f74513133f" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="Compatibility_RejectsMissingDependencyAndWrongArchitecture" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.InstallTransaction_MigrationFailure_RestoresBackupAndReportsHistory" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="09fff98e-a6a7-8e8c-df44-2bca13605b28">
+      <Execution id="88f9abf8-8073-469a-8ce7-b225b623f17c" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests" name="InstallTransaction_MigrationFailure_RestoresBackupAndReportsHistory" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_SameVersion_NoUpdate" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="29eeb122-b8f8-cd24-82f1-a325f316b6d8">
+      <Execution id="e41815ca-85b6-413b-9988-6fe178e74902" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CheckForUpdate_SameVersion_NoUpdate" />
+    </UnitTest>
+    <UnitTest name="LeslieCleaner.Tests.Updating.UpdateServiceTests.CheckForUpdate_UnsignedManifest_IsRejectedByDefault" storage="d:\software\lesliecleaner\v4\artifacts\bin\lesliecleaner.tests\release\net8.0-windows10.0.19041.0\lesliecleaner.tests.dll" id="c91afa9c-6a22-b43e-185a-ec292bfa36ef">
+      <Execution id="528b5b95-4ed1-44bf-9916-aa5e848b4209" />
+      <TestMethod codeBase="D:\SoftWare\LeslieCleaner\V4\artifacts\bin\LeslieCleaner.Tests\Release\net8.0-windows10.0.19041.0\LeslieCleaner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LeslieCleaner.Tests.Updating.UpdateServiceTests" name="CheckForUpdate_UnsignedManifest_IsRejectedByDefault" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="16c3910b-21b1-eb87-e43f-e87170410c8f" executionId="7dc2b8ec-763e-4fd0-81d1-1f144a11052b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f29e578a-73c9-64f1-1394-1b42290e7faf" executionId="d71111b6-2490-49d2-91e1-990489422869" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e6e63130-614d-a2e3-01a7-731c173f092a" executionId="62846a82-fd7a-472e-80f2-54c6929e44c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cdaeb36d-1409-b4b9-7ce9-a398ec485016" executionId="16d21fa0-51e1-46e2-9427-bfd1e867d6b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ef2d7f89-d50c-96ac-e980-cb6cc3a79c34" executionId="175688e7-f0ea-4f7c-867b-51376935f388" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="29eeb122-b8f8-cd24-82f1-a325f316b6d8" executionId="e41815ca-85b6-413b-9988-6fe178e74902" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0c1522d5-cd75-6e8e-d77d-e6724814c840" executionId="40f2e17d-0489-4783-babd-148f0e95ed12" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a3245b7-ed68-17b5-3d23-ab5d39161b86" executionId="01b52019-d047-489e-a785-55cb76e98850" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c91afa9c-6a22-b43e-185a-ec292bfa36ef" executionId="528b5b95-4ed1-44bf-9916-aa5e848b4209" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b6080c63-d027-a64f-fa7a-728561c27a6e" executionId="612e5a59-3ed5-4071-b8d6-3c9fc9b915f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c21ec127-61a3-79b2-d5ba-28aa2223cd7b" executionId="3406f005-368c-49c9-bd4e-8b76195d20bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88661e4c-5893-8943-c158-b05824d2609f" executionId="ee37bf1c-1077-40bf-9e21-a4863d8635ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1aa9c7d0-ba18-48a8-c563-89f494e84ebb" executionId="f587cc56-6718-4dad-bc99-a65e731617e9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4ce5414a-7277-eefc-4552-f3889d359777" executionId="00f3d0c4-6098-4031-ad33-6ead657ba11d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cb5ee9ad-5e6d-3355-db3a-961c8e748a07" executionId="af17c7d2-35ec-423e-bfc4-301bb14a3958" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b395f5aa-047c-4b2a-6655-7144f2b0a8be" executionId="1ffb963d-9212-4e7b-a0b6-00e5344b7d86" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d3fe2419-dc6f-dbdf-34af-3f05a6d6bcc9" executionId="95d3f560-6492-449e-969d-16f74513133f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fa5e2251-64c9-1748-69c0-6601340a50a3" executionId="db33f171-5378-4b91-b64e-1305074a81b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6569919d-a308-ed1e-02bc-896bfdb861aa" executionId="bd4ef808-c294-4be9-82d4-6d7579c9bd3e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6306a99b-bbc3-e6f7-aa3b-dd3e153d58bc" executionId="e2f639a2-c680-44d3-be26-a6ff3ae80220" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6601537e-097c-9105-8c87-4a038437aa79" executionId="171248f2-b99d-493b-b99e-3dad9aa0487f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1d6dd12b-cbd5-373b-908f-3b36899617f1" executionId="96004b7e-2f59-42f0-be39-5835b1ec184e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="09fff98e-a6a7-8e8c-df44-2bca13605b28" executionId="88f9abf8-8073-469a-8ce7-b225b623f17c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4d704910-aeef-eb69-2679-ba8301472722" executionId="b6c5081a-c72a-4610-8afd-6d05c625bc31" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1b619e6a-e834-3df7-a6e0-32b1e36a7087" executionId="4798a633-b5ae-4fcf-ae6d-712ff551e69c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8ac83044-a849-bcd7-c11a-e06c8a20e264" executionId="f5f14d2a-9d72-4d4e-bfef-d08e71591f3b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dae2b2f5-d385-8193-5a94-c2f954b73146" executionId="85c688af-d54c-41d8-95d7-913cd87beb60" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="列表中未列出的结果" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="27" executed="27" passed="21" failed="6" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.30)&#xD;
+[xUnit.net 00:00:00.10]   Discovering: LeslieCleaner.Tests&#xD;
+[xUnit.net 00:00:00.18]   Discovered:  LeslieCleaner.Tests&#xD;
+[xUnit.net 00:00:00.19]   Starting:    LeslieCleaner.Tests&#xD;
+[xUnit.net 00:00:00.37]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.37]       Expected: True&#xD;
+[xUnit.net 00:00:00.37]       Actual:   False&#xD;
+[xUnit.net 00:00:00.37]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateDiagnosticsTests.cs(74,0): at LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadSuccess_Recorded()&#xD;
+[xUnit.net 00:00:00.37]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.37]       System.IO.IOException : The process cannot access the file because it is being used by another process.&#xD;
+[xUnit.net 00:00:00.37]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.37]            at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(556,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(245,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.37]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs(115,0): at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_RequiresValidEcdsaManifestSignature()&#xD;
+[xUnit.net 00:00:00.37]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.40]       System.IO.IOException : The process cannot access the file because it is being used by another process.&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]            at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+[xUnit.net 00:00:00.40]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(556,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.40]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.40]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.40]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(245,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.40]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs(165,0): at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_ValidFiles_StagedAndVerified()&#xD;
+[xUnit.net 00:00:00.40]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.41]       System.IO.IOException : The process cannot access the file because it is being used by another process.&#xD;
+[xUnit.net 00:00:00.41]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.41]            at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+[xUnit.net 00:00:00.41]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(556,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.41]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.41]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.41]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(245,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.41]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdatePlatformV4Tests.cs(93,0): at LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_ExistingPartial_UsesRangeAndCompletes()&#xD;
+[xUnit.net 00:00:00.41]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.46]       Assert.Throws() Failure: Exception type was not an exact match&#xD;
+[xUnit.net 00:00:00.46]       Expected: typeof(LeslieCleaner.Core.Diagnostics.LeslieCleanerException)&#xD;
+[xUnit.net 00:00:00.46]       Actual:   typeof(System.IO.IOException)&#xD;
+[xUnit.net 00:00:00.46]       ---- System.IO.IOException : The process cannot access the file because it is being used by another process.&#xD;
+[xUnit.net 00:00:00.46]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.46]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateServiceTests.cs(139,0): at LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_HashMismatch_CleansStagingAndThrows()&#xD;
+[xUnit.net 00:00:00.46]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.46]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.46]            at System.IO.FileSystem.MoveFile(String sourceFullPath, String destFullPath, Boolean overwrite)&#xD;
+[xUnit.net 00:00:00.46]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(556,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.46]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.46]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(557,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadFileResumableAsync(Uri source, UpdateFileEntry entry, String destination, Int64 completedBefore, Int64 totalBytes, Stopwatch stopwatch, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:00.46]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Infrastructure\Updating\UpdateService.cs(245,0): at LeslieCleaner.Infrastructure.Updating.UpdateService.DownloadUpdateAsync(UpdateManifest manifest, IReadOnlyList`1 filesToDownload, UpdateDownloadOptions options, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:31.17]       System.InvalidOperationException : 临时 HTTP 服务器未就绪&#xD;
+[xUnit.net 00:01:31.17]       Stack Trace:&#xD;
+[xUnit.net 00:01:31.17]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateEndToEndTests.cs(194,0): at LeslieCleaner.Tests.Updating.UpdateEndToEndTests.WaitForServerReady()&#xD;
+[xUnit.net 00:01:31.17]         D:\SoftWare\LeslieCleaner\V4\src\LeslieCleaner.Tests\Updating\UpdateEndToEndTests.cs(67,0): at LeslieCleaner.Tests.Updating.UpdateEndToEndTests..ctor(ITestOutputHelper output)&#xD;
+[xUnit.net 00:01:31.17]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:01:31.17]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:01:31.17]   Finished:    LeslieCleaner.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:48:30.9649638+08:00">
+        <Text>[xUnit.net 00:00:00.37]     LeslieCleaner.Tests.Updating.UpdateDiagnosticsTests.EmitDiagnostics_UploadSuccess_Recorded [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:48:30.9680692+08:00">
+        <Text>[xUnit.net 00:00:00.37]     LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_RequiresValidEcdsaManifestSignature [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:48:31.0433209+08:00">
+        <Text>[xUnit.net 00:00:00.40]     LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_ValidFiles_StagedAndVerified [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:48:31.0433867+08:00">
+        <Text>[xUnit.net 00:00:00.41]     LeslieCleaner.Tests.Updating.UpdatePlatformV4Tests.Download_ExistingPartial_UsesRangeAndCompletes [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:48:31.0587408+08:00">
+        <Text>[xUnit.net 00:00:00.46]     LeslieCleaner.Tests.Updating.UpdateServiceTests.DownloadUpdate_HashMismatch_CleansStagingAndThrows [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="LESLIE-OMEN" outcome="Error" timestamp="2026-08-16T23:50:01.7606623+08:00">
+        <Text>[xUnit.net 00:01:31.17]     LeslieCleaner.Tests.Updating.UpdateEndToEndTests.FullUpdateFlow_CheckDownloadVerifyApplyRestart [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

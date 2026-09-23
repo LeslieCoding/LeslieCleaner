@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.App</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.App.Program">
+            <summary>
+            WPF 应用程序宿主：DI 装配（核心基础设施 + 接口键懒工厂 + 模块懒激活器）、
+            全局异常处理、主题初始化、Mica、冷启动测量。
+            命令行钩子（截图验证用，真实行为非假数据）：
+            <c>--page &lt;导航标题&gt;</c> 启动后直达页面；<c>--theme light|dark</c> 强制主题；
+            <c>--autoscan</c> 启动后自动开始 Smart Scan。
+            </summary>
+            <summary>
+            Program
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.App.Program.StartupPage">
+            <summary>启动参数：直达页面标题。</summary>
+        </member>
+        <member name="P:LeslieCleaner.App.Program.AutoScan">
+            <summary>启动参数：启动后自动 Smart Scan。</summary>
+        </member>
+        <member name="P:LeslieCleaner.App.Program.StartupThemeOverride">
+            <summary>启动参数：主题覆盖（light/dark/auto）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.App.Program.OnStartup(System.Windows.StartupEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.App.Program.OnExit(System.Windows.ExitEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.App.Program.RegisterLazyInterfaceServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            以 Core 接口为键的懒工厂注册：注册路径只引用 Core 类型，
+            实现类型按程序集+类型名在首次解析时加载（模块程序集首次使用时才入内存）。
+            </summary>
+            <param name="services">服务集合。</param>
+        </member>
+        <member name="M:LeslieCleaner.App.Program.CreateLazy``1(System.IServiceProvider,System.String,System.String,System.Object[])">
+            <summary>延迟加载程序集并构造类型（构造函数依赖由容器注入）。</summary>
+            <typeparam name="T">返回类型。</typeparam>
+            <param name="provider">服务容器。</param>
+            <param name="assemblyFile">程序集文件名。</param>
+            <param name="typeName">全名类型名。</param>
+            <param name="explicitArgs">显式构造参数。</param>
+        </member>
+        <member name="M:LeslieCleaner.App.Program.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.App.Program.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.App.MainWindow">
+            <summary>
+            主窗口：导航装配（收藏星标/右键）、确认对话框宿主（免打扰）、
+            Ctrl+K 全局搜索弹层、通知中心（铃铛+未读角标+撤销）、Mica、启动钩子。
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.App.MainWindow.#ctor(System.IServiceProvider)">
+            <summary>以 DI 容器创建主窗口。</summary>
+            <param name="services">服务容器。</param>
+        </member>
+        <member name="M:LeslieCleaner.App.MainWindow.ApplyStartupHooks">
+            <summary>应用启动钩子（--page / --theme / --autoscan）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.App.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>

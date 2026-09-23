@@ -1,0 +1,588 @@
+# LeslieCleaner Android Adaptation - LeslieCleaner Development Bible v2.0
+
+> Android Prompt ID: AP-LEGACY-LESLIECLEANER-DEVELOPMENT-BIBLE-V2-0
+> Source Prompt: `LeslieCleaner Development Bible v2.0.txt`
+> Target platform: Android 10+ (API 29+)
+> Status: generated Android adaptation; source content is retained below for traceability.
+
+## Android execution boundary
+
+Translate desktop-only requirements into public Android APIs and explicit user actions. Do not emulate Windows registry, services, drivers, unrestricted filesystem access, silent deletion, root access, hidden APIs, accessibility abuse, or undocumented OEM behavior. Use Kotlin, Jetpack Compose, typed capability results, scoped storage, SAF, MediaStore, PackageManager, WorkManager, app-private storage, read-back verification, redacted JSONL audit logs, and reversible operations where mutation is permitted.
+
+Every implementation must follow: Read -> Analyze -> Plan -> Implement -> Build -> Test -> Debug -> Retest -> Regression -> Document -> Continue. Each change must record requirement IDs, assumptions, risk, rollback, commands, evidence, and acceptance status in `Android_App/AI_SPEC`.
+
+## Source content
+
+# LeslieCleaner Development Bible v2.0
+
+## SYSTEM PROMPT
+
+你正在开发一款商业级 Windows 系统维护软件。
+
+项目名称：LeslieCleaner
+产品定位：AI Powered Windows Optimization Platform
+目标系统：Windows 10 / Windows 11（x64）
+开发模式：Production Ready Only
+禁止事项：
+
+* 禁止生成 Demo 代码
+* 禁止生成 Placeholder 代码
+* 禁止生成 TODO 注释
+* 禁止生成伪数据
+* 禁止省略异常处理
+* 禁止硬编码路径
+* 禁止阻塞 UI 线程
+* 禁止使用低效全盘递归扫描作为主要实现方案
+
+所有代码必须满足：
+
+* 企业级可维护性
+* 高性能
+* 多线程安全
+* 低内存占用
+* 支持回滚恢复
+* 支持日志追踪
+* 支持单元测试
+* 支持集成测试
+* 支持插件扩展
+* 支持后续 AI 功能扩展
+
+技术栈固定：
+
+* UI：C# + WPF (.NET 8)
+* 架构：MVVM
+* DI：Microsoft.Extensions.DependencyInjection
+* 数据库：SQLite
+* 日志：Serilog
+* JSON：System.Text.Json
+* 并发：Task Parallel Library + Channels
+* 安装：MSIX + Inno Setup
+* 更新：自定义增量更新系统
+
+代码质量要求：
+
+* 所有公共 API 必须有 XML 注释
+* 所有异常必须记录日志
+* 所有危险操作必须支持撤销
+* 所有文件删除默认进入隔离区
+* 所有线程必须支持取消令牌
+* 所有 IO 必须异步化
+* 所有扫描必须支持暂停/继续/取消
+* 所有模块必须通过接口解耦
+* 所有配置必须热更新
+* 所有 UI 必须支持 100%~300% DPI 缩放
+
+性能目标：
+
+* 冷启动 < 1.5s
+* Smart Scan < 5s
+* Registry Scan < 3s
+* Browser Cache Scan < 2s
+* Uninstall Residual Scan < 10s（重点要求）
+* 内存占用空闲 < 150MB
+* CPU 空闲占用 < 1%
+
+必须优先解决 CleanMyPC 的核心缺陷：
+卸载残留扫描极慢。新的 LeslieCleaner 必须实现秒级残留定位，而不是全盘递归扫描。
+
+---
+
+# 一、产品功能清单（必须全部实现）
+
+## 1. Smart Scan
+
+* 临时文件
+* Windows 更新缓存
+* Delivery Optimization 缓存
+* 缩略图缓存
+* 日志文件
+* 崩溃转储
+* Prefetch
+* 回收站
+* 注册表清理
+* 浏览器缓存
+* GPU Shader Cache
+* Font Cache
+* DirectX Shader Cache
+* AI 软件缓存（Cursor/VSCode/JetBrains/ChatGPT Desktop 等）
+
+## 2. Registry Cleaner
+
+* 无效扩展名
+* 无效 COM
+* 无效 CLSID
+* 无效卸载项
+* 失效字体引用
+* 失效路径
+* ActiveX 残留
+* 应用残留键值
+* 自动备份
+* 一键恢复
+* 风险评分
+
+## 3. Smart Uninstaller（核心模块）
+
+* 普通 Win32 程序
+* MSI 程序
+* MSIX 程序
+* Appx/UWP 应用
+* Microsoft Store 应用
+* Winget 安装程序
+* Steam 游戏
+* Epic 游戏
+* Battle.net 游戏
+* Adobe 套件
+* Office 套件
+* Visual Studio 组件
+* Docker/WSL 环境
+* Node/Python/Java 环境
+* 浏览器扩展
+* 开机启动项
+* 服务项
+* 驱动残留
+* 计划任务残留
+
+## 4. Browser Cleaner
+
+* Chrome
+* Edge
+* Firefox
+* Brave
+* Arc
+* Opera
+* Vivaldi
+* Cookie 管理
+* 登录状态保留
+* 自动清理规则
+
+## 5. Startup Manager
+
+* 注册表启动项
+* Startup 文件夹
+* 计划任务
+* 服务自启动
+* 驱动自启动
+* 启动影响评分
+* AI 启动建议
+
+## 6. Privacy Guard
+
+* 最近文件
+* 剪贴板历史
+* 搜索历史
+* 运行历史
+* Office 历史
+* 浏览器隐私数据
+* 地理位置缓存
+* 语音输入缓存
+
+## 7. File Shredder（碎纸机）
+
+* 单文件粉碎
+* 文件夹粉碎
+* 拖拽粉碎
+* 3 次覆盖
+* 7 次覆盖
+* 35 次覆盖
+* SSD 安全删除策略
+* 任务队列
+
+## 8. Duplicate Finder
+
+* Hash 去重
+* 相似图片识别
+* 视频去重
+* 音频去重
+* 批量删除
+* 智能保留规则
+
+## 9. Large File Analyzer
+
+* Treemap 视图
+* Top 100 文件
+* 文件类型统计
+* AI 清理建议
+
+## 10. AI Optimizer
+
+* 系统健康评分
+* 启动优化建议
+* 隐私风险分析
+* 存储优化建议
+* 自动维护计划
+
+---
+
+# 二、重点：卸载残留极速扫描架构（必须严格实现）
+
+禁止使用：
+
+* 全盘递归扫描
+* Directory.GetFiles("C:\", "*", AllDirectories)
+* 逐文件字符串匹配
+* 同步 IO 扫描
+
+必须采用 Multi-Stage Residual Pipeline。
+
+## Stage 1：安装数据库定位（<100ms）
+
+扫描：
+
+* HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall
+* HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall
+* MSI ProductCode
+* Windows Installer Cache
+* Winget Source
+* Appx Package Database
+
+输出：
+
+* InstallLocation
+* Publisher
+* DisplayName
+* ProductCode
+* UpgradeCode
+* InstallDate
+
+## Stage 2：已知规则库定位（<300ms）
+
+内置 ResidualRule.db。
+
+示例：
+
+```json
+{
+  "publisher": "Adobe",
+  "paths": [
+    "%ProgramFiles%\\\\Adobe",
+    "%AppData%\\\\Adobe",
+    "%LocalAppData%\\\\Adobe",
+    "%ProgramData%\\\\Adobe"
+  ],
+  "registry": [
+    "HKCU\\\\Software\\\\Adobe",
+    "HKLM\\\\Software\\\\Adobe"
+  ]
+}
+```
+
+必须内置至少 1000+ 软件规则。
+
+## Stage 3：安装日志定位（<500ms）
+
+优先读取：
+
+* MSI 日志
+* Inno Setup 卸载日志
+* NSIS 卸载日志
+* Burn Bundle 日志
+* Visual Studio 安装日志
+* Adobe 安装日志
+
+## Stage 4：Publisher 索引定位（<1s）
+
+预构建 SQLite 索引：
+
+```sql
+CREATE INDEX idx_publisher ON file_index(publisher);
+CREATE INDEX idx_product ON file_index(product_name);
+```
+
+## Stage 5：深度扫描（仅在必要时）
+
+限制范围：
+
+* Program Files
+* Program Files (x86)
+* AppData
+* ProgramData
+* Documents
+* Desktop
+
+禁止扫描：
+
+* Windows
+* WinSxS
+* System32
+* DriverStore
+* pagefile.sys
+* hiberfil.sys
+
+## 性能目标（强制）
+
+| 软件                 | 目标时间 |
+| ------------------ | ---: |
+| 微信                 |  <2s |
+| QQ                 |  <2s |
+| Chrome             |  <3s |
+| VSCode             |  <3s |
+| JetBrains          |  <5s |
+| Adobe Photoshop    |  <8s |
+| Visual Studio 2022 | <10s |
+| Docker Desktop     |  <8s |
+
+必须实现：
+
+* 扫描缓存
+* 增量扫描
+* 文件系统监控
+* NTFS USN Journal 加速
+* 多线程并行扫描
+* SIMD 字符串匹配
+* Memory-Mapped File 索引
+
+---
+
+# 三、UI 设计系统（必须严格遵守）
+
+## 风格
+
+* Fluent Design 2
+* Windows 11 原生风格
+* Acrylic + Mica
+* 圆角 10px
+* 阴影 3 层
+* 60FPS 动画
+
+## 主题
+
+* Light
+* Dark
+* Auto（跟随系统）
+
+## 主色板
+
+```text
+Primary: #2563EB
+Success: #16A34A
+Warning: #EA580C
+Danger : #DC2626
+Background Light: #F5F7FA
+Background Dark : #111827
+```
+
+## 布局
+
+* 左侧导航宽度 260px
+* 顶部栏高度 56px
+* 卡片间距 16px
+* 页面边距 24px
+* 主按钮高度 44px
+* 输入框高度 40px
+
+## 首页结构
+
+```text
+┌─────────────────────────────┐
+│ LeslieCleaner              │
+├──────────┬──────────────────┤
+│ 导航栏   │ 系统健康评分 98  │
+│          │ Smart Scan       │
+│          │ Deep Clean        │
+│          │ AI Analyze        │
+│          │ 存储/隐私/性能卡片│
+└──────────┴──────────────────┘
+```
+
+---
+
+# 四、线程架构（必须实现）
+
+## UI 线程
+
+* 仅处理渲染
+* 禁止任何 IO
+
+## Scan Thread Pool
+
+* CPU 核心数 * 2
+* 动态扩缩容
+* 优先级调度
+
+## IO Queue
+
+* Channel-based
+* Backpressure
+* 批量读取
+
+## Cancellation
+
+所有任务必须支持：
+
+* Pause
+* Resume
+* Cancel
+* Timeout
+
+---
+
+# 五、安全机制（必须实现）
+
+## 隔离区
+
+删除文件默认进入：
+
+```text
+%ProgramData%\\LeslieCleaner\\Quarantine
+```
+
+保留 30 天。
+
+## 注册表备份
+
+每次清理自动生成：
+
+```text
+.reg + metadata.json
+```
+
+支持一键恢复。
+
+## 系统还原点
+
+危险操作前自动创建。
+
+---
+
+# 六、日志规范
+
+使用 Serilog。
+
+日志目录：
+
+```text
+%LocalAppData%\\LeslieCleaner\\Logs
+```
+
+必须记录：
+
+* ScanStart
+* ScanFinish
+* DeleteStart
+* DeleteFinish
+* RestoreStart
+* RestoreFinish
+* Exception
+* PerformanceMetrics
+* UserAction
+
+---
+
+# 七、测试要求（必须全部通过）
+
+## Unit Test
+
+覆盖率 ≥ 85%。
+
+## Integration Test
+
+* 卸载流程
+* 注册表清理
+* 浏览器清理
+* 启动项管理
+
+## Performance Test
+
+* 100 万文件索引
+* 10GB 缓存清理
+* 5000 注册表项扫描
+
+## Memory Leak Test
+
+连续扫描 24 小时。
+
+## Compatibility Test
+
+* Windows 10 22H2
+* Windows 11 23H2
+* Windows 11 24H2
+
+---
+
+# 八、项目目录（必须按此结构生成）
+
+```text
+LeslieCleaner/
+├── src/
+│   ├── LeslieCleaner.App
+│   ├── LeslieCleaner.UI
+│   ├── LeslieCleaner.Core
+│   ├── LeslieCleaner.Infrastructure
+│   ├── LeslieCleaner.Data
+│   ├── LeslieCleaner.Modules
+│   │   ├── Cleaner
+│   │   ├── Registry
+│   │   ├── Uninstaller
+│   │   ├── Browser
+│   │   ├── Privacy
+│   │   ├── Startup
+│   │   ├── Shredder
+│   │   └── AI
+│   └── LeslieCleaner.Tests
+├── docs/
+├── assets/
+├── installer/
+└── tools/
+```
+
+---
+
+# 九、AI 执行顺序（必须严格按顺序开发）
+
+1. 架构层
+2. Infrastructure
+3. Logging
+4. Configuration
+5. Database
+6. File Index Engine
+7. Registry Engine
+8. Smart Scan Engine
+9. Browser Cleaner
+10. Startup Manager
+11. Privacy Guard
+12. File Shredder
+13. Duplicate Finder
+14. Large File Analyzer
+15. Smart Uninstaller（重点）
+16. Residual Database
+17. AI Optimizer
+18. UI 完整实现
+19. Integration Tests
+20. Installer
+21. Auto Update
+22. Release Build
+
+每完成一个阶段必须输出：
+
+* 代码
+* 架构图
+* 类图
+* 时序图
+* 单元测试
+* Benchmark 结果
+* 已知问题
+* 下一阶段计划
+
+禁止跳步骤。
+
+---
+
+# 十、最终交付标准（必须满足）
+
+LeslieCleaner 最终必须达到：
+
+* 可直接编译运行
+* 无编译警告
+* 无未实现接口
+* 无 TODO
+* 无 Placeholder
+* UI 完整
+* 功能完整
+* 安装包可用
+* 更新系统可用
+* 卸载系统可用
+* 残留扫描速度达到秒级
+* 所有核心功能通过自动化测试
+* 达到商业软件发布标准
+
+当你开始开发时，首先生成完整的 Solution 与项目结构，然后进入第一阶段：Architecture Layer。

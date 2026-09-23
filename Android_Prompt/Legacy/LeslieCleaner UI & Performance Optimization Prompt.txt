@@ -1,0 +1,859 @@
+# LeslieCleaner Android Adaptation - LeslieCleaner UI & Performance Optimization Prompt
+
+> Android Prompt ID: AP-LEGACY-LESLIECLEANER-UI-&-PERFORMANCE-OPTIMIZATION-PROMPT
+> Source Prompt: `LeslieCleaner UI & Performance Optimization Prompt.txt`
+> Target platform: Android 10+ (API 29+)
+> Status: generated Android adaptation; source content is retained below for traceability.
+
+## Android execution boundary
+
+Translate desktop-only requirements into public Android APIs and explicit user actions. Do not emulate Windows registry, services, drivers, unrestricted filesystem access, silent deletion, root access, hidden APIs, accessibility abuse, or undocumented OEM behavior. Use Kotlin, Jetpack Compose, typed capability results, scoped storage, SAF, MediaStore, PackageManager, WorkManager, app-private storage, read-back verification, redacted JSONL audit logs, and reversible operations where mutation is permitted.
+
+Every implementation must follow: Read -> Analyze -> Plan -> Implement -> Build -> Test -> Debug -> Retest -> Regression -> Document -> Continue. Each change must record requirement IDs, assumptions, risk, rollback, commands, evidence, and acceptance status in `Android_App/AI_SPEC`.
+
+## Source content
+
+# LeslieCleaner UI & Performance Optimization Prompt
+## 模块名称
+Global UI Redesign + Performance Optimization + Final Release Optimization
+
+本次任务目标：
+
+在保持 LeslieCleaner 全部功能完整的前提下，对整个软件进行一次商业级 UI 重构，并在项目开发完成后执行最终性能优化与发布前瘦身，最终达到国际一线商业软件的视觉品质、运行效率和发布质量。
+
+======================================================================
+第一部分：全局 UI 重构（Global UI Redesign）
+======================================================================
+
+【设计目标】
+
+将 LeslieCleaner 当前整体偏深色、偏沉重的 UI 风格，升级为：
+
+现代、高级、专业、轻盈、具有高级质感的白色主题（Premium Light Theme）。
+
+最终视觉定位：
+
+Apple × Microsoft Fluent 2 × Twitter(X) × Notion × Arc Browser × Raycast
+
+整个软件第一眼应该让用户感觉：
+
+✓ 干净
+✓ 高级
+✓ 专业
+✓ 克制
+✓ 通透
+✓ 有呼吸感
+✓ 有层次感
+✓ 有品质感
+
+绝不能让用户感觉：
+
+× 廉价
+× 国产安全软件
+× Win7 工具箱
+× 杀毒软件
+× 塑料感
+× 花里胡哨
+× 大面积深色背景
+
+======================================================================
+视觉关键词（Visual Keywords）
+======================================================================
+
+Premium
+
+Elegant
+
+Modern
+
+Minimal
+
+Professional
+
+Apple-like
+
+Twitter-like
+
+Notion-like
+
+Fluent Design
+
+Natural
+
+Craftsmanship
+
+======================================================================
+整体配色（Color System）
+======================================================================
+
+不要使用纯白 (#FFFFFF)。
+
+整体采用柔和暖白。
+
+推荐：
+
+App Background
+
+#F6F8FA
+
+Content Background
+
+#FFFFFF
+
+Secondary Background
+
+#F8F9FB
+
+Card
+
+#FFFFFF
+
+Hover
+
+#F1F4F8
+
+Divider
+
+#E8ECF2
+
+Border
+
+#E6EAF0
+
+Shadow
+
+rgba(15,23,42,.06)
+
+Accent Blue
+
+#2563EB
+
+Success
+
+#16A34A
+
+Warning
+
+#EA580C
+
+Danger
+
+#DC2626
+
+整个软件必须拥有：
+
+柔和
+
+高级
+
+自然
+
+现代
+
+有空气感
+
+======================================================================
+整体布局（Layout）
+======================================================================
+
+增加大量留白。
+
+所有页面遵循统一 Design System。
+
+统一：
+
+Page Padding
+
+24px
+
+Card Padding
+
+20px
+
+Grid Gap
+
+16px
+
+Card Radius
+
+14px
+
+Button Radius
+
+10px
+
+Input Radius
+
+10px
+
+页面不要拥挤。
+
+提高阅读舒适度。
+
+======================================================================
+卡片设计（Card）
+======================================================================
+
+统一采用：
+
+Floating Card。
+
+特点：
+
+白色背景
+
+轻微阴影
+
+极浅边框
+
+柔和圆角
+
+Shadow：
+
+0 4px 18px rgba(15,23,42,.06)
+
+Border：
+
+1px solid #E8ECF2
+
+不要：
+
+厚重阴影
+
+不要：
+
+拟物
+
+不要：
+
+复杂渐变
+
+======================================================================
+Sidebar
+======================================================================
+
+背景：
+
+纯白。
+
+宽度：
+
+260px。
+
+采用：
+
+Fluent Navigation。
+
+图标：
+
+Lucide
+
+Fluent Icons
+
+Material Symbols Outlined
+
+禁止：
+
+彩色图标。
+
+禁止：
+
+厚重图标。
+
+Hover：
+
+浅蓝。
+
+Active：
+
+品牌蓝。
+
+======================================================================
+TopBar
+======================================================================
+
+高度：
+
+60px。
+
+背景：
+
+白色。
+
+包含：
+
+Logo
+
+Search
+
+AI Assistant
+
+Notification
+
+Setting
+
+User
+
+整体极简。
+
+======================================================================
+字体
+======================================================================
+
+Segoe UI Variable
+
+Inter
+
+字号：
+
+Title
+
+28
+
+H1
+
+24
+
+H2
+
+20
+
+Body
+
+14
+
+Caption
+
+12
+
+颜色：
+
+Primary
+
+#111827
+
+Secondary
+
+#4B5563
+
+Hint
+
+#6B7280
+
+Disabled
+
+#9CA3AF
+
+======================================================================
+动画
+======================================================================
+
+60FPS。
+
+Hover
+
+150ms
+
+Transition
+
+250ms
+
+Card Hover：
+
+轻微上浮：
+
+translateY(-2px)
+
+整体自然。
+
+不要炫技。
+
+======================================================================
+Dashboard
+======================================================================
+
+首页采用现代 Dashboard。
+
+包含：
+
+系统健康评分
+
+Storage
+
+Performance
+
+Registry
+
+Startup
+
+Privacy
+
+Applications
+
+AI Assistant
+
+Smart Scan
+
+Deep Clean
+
+采用：
+
+现代卡片布局。
+
+图表：
+
+极简。
+
+======================================================================
+所有模块 UI 必须统一
+======================================================================
+
+包括：
+
+Cleaner
+
+Registry
+
+Browser
+
+Startup
+
+Privacy
+
+Uninstaller
+
+Shredder
+
+Duplicate Finder
+
+Large File
+
+AI Assistant
+
+Settings
+
+History
+
+全部采用统一设计语言。
+
+任何页面不得出现风格不一致。
+
+======================================================================
+第二部分：性能优化（Performance Optimization）
+======================================================================
+
+整个软件必须保证：
+
+启动速度快。
+
+扫描速度快。
+
+关闭速度快。
+
+响应速度快。
+
+CPU 占用低。
+
+内存占用低。
+
+磁盘 IO 合理。
+
+GPU 占用低。
+
+禁止为了视觉效果大量消耗 GPU。
+
+======================================================================
+内存优化（Memory Optimization）
+======================================================================
+
+整个软件运行期间：
+
+空闲状态：
+
+目标：
+
+<120MB
+
+允许峰值：
+
+<250MB
+
+深度扫描期间：
+
+尽量控制：
+
+<350MB
+
+禁止：
+
+大量对象长期驻留。
+
+禁止：
+
+无意义缓存。
+
+禁止：
+
+重复数据。
+
+禁止：
+
+重复 Bitmap。
+
+禁止：
+
+重复 Icon。
+
+禁止：
+
+重复字符串。
+
+必须：
+
+对象复用。
+
+Bitmap Cache。
+
+Virtualization。
+
+Lazy Loading。
+
+Incremental Loading。
+
+按需加载。
+
+页面离开立即释放资源。
+
+大型图片自动释放。
+
+所有事件必须解绑。
+
+所有 Timer 必须释放。
+
+所有 Stream 必须 Dispose。
+
+所有数据库连接及时释放。
+
+所有文件句柄及时关闭。
+
+所有 Observable 必须取消订阅。
+
+======================================================================
+CPU 优化
+======================================================================
+
+空闲：
+
+CPU
+
+<1%
+
+扫描：
+
+合理利用多线程。
+
+禁止：
+
+死循环。
+
+Busy Waiting。
+
+无意义刷新。
+
+UI 高频重绘。
+
+======================================================================
+磁盘 IO
+======================================================================
+
+采用：
+
+异步 IO。
+
+批量读取。
+
+Memory Mapped File。
+
+SQLite Index。
+
+NTFS USN Journal。
+
+缓存策略。
+
+禁止：
+
+重复扫描。
+
+重复读取。
+
+同步阻塞 IO。
+
+======================================================================
+项目体积优化（Project Size Optimization）
+======================================================================
+
+项目开发完成后。
+
+必须进行：
+
+Final Cleanup。
+
+目前项目体积已经超过 500MB。
+
+必须在保证所有功能完整的前提下，对整个项目进行彻底瘦身。
+
+重点不是删除功能。
+
+而是删除：
+
+所有无用资源。
+
+所有无用代码。
+
+所有临时文件。
+
+所有缓存。
+
+所有测试残留。
+
+所有编译残留。
+
+所有重复资源。
+
+所有无引用文件。
+
+======================================================================
+必须删除
+======================================================================
+
+Debug Logs
+
+Temp Files
+
+Cache
+
+Unused Images
+
+Unused Icons
+
+Unused Fonts
+
+Unused DLL
+
+Unused NuGet Package
+
+Unused References
+
+Unused Assets
+
+Unused Localization
+
+Unused JSON
+
+Unused Config
+
+Unused Resource Dictionary
+
+Unused Style
+
+Unused Theme
+
+Unused View
+
+Unused ViewModel
+
+Unused Model
+
+Unused Service
+
+Unused Helper
+
+Unused Extension
+
+Unused Test Data
+
+Unused Sample
+
+Unused Demo
+
+Unused Script
+
+Unused Build Artifact
+
+Unused Publish Artifact
+
+Unused Backup
+
+Unused Prototype
+
+Unused Experimental Code
+
+Unused Commented Code
+
+TODO
+
+FIXME
+
+Placeholder
+
+Mock Data
+
+Fake Data
+
+======================================================================
+代码优化（Code Optimization）
+======================================================================
+
+最后执行两轮完整代码审查（Code Review）。
+
+第一轮：
+
+自动分析：
+
+重复代码。
+
+无效代码。
+
+复杂逻辑。
+
+低性能算法。
+
+无意义对象。
+
+重复 LINQ。
+
+重复查询。
+
+重复判断。
+
+重复创建对象。
+
+冗余变量。
+
+冗余接口。
+
+冗余类。
+
+冗余依赖。
+
+全部优化。
+
+第二轮：
+
+再次执行：
+
+Architecture Review。
+
+Performance Review。
+
+Memory Review。
+
+Security Review。
+
+Maintainability Review。
+
+最终输出商业级代码。
+
+如果某部分继续优化会影响稳定性，则保持当前实现，不允许为了追求极限性能而降低代码可读性、稳定性或可维护性。
+
+======================================================================
+发布版本（Release Build）
+======================================================================
+
+最终交付必须为：
+
+Release 模式。
+
+关闭：
+
+Debug。
+
+关闭：
+
+Symbols。
+
+关闭：
+
+Trace。
+
+关闭：
+
+Diagnostic。
+
+关闭：
+
+Test Stub。
+
+关闭：
+
+Experimental Feature。
+
+关闭：
+
+Internal Tool。
+
+关闭：
+
+Developer Menu。
+
+关闭：
+
+Demo。
+
+关闭：
+
+Mock。
+
+关闭：
+
+Sample。
+
+======================================================================
+最终交付标准（Final Release Standard）
+======================================================================
+
+最终发布版本必须满足：
+
+✓ UI 达到国际一线商业软件视觉水平。
+
+✓ 白色主题高级、舒适、有质感，不廉价、不刺眼。
+
+✓ 全部页面设计风格统一。
+
+✓ 动画流畅。
+
+✓ 启动迅速。
+
+✓ 扫描迅速。
+
+✓ 内存占用尽可能低。
+
+✓ CPU 占用尽可能低。
+
+✓ 无内存泄漏。
+
+✓ 无资源泄漏。
+
+✓ 无无用代码。
+
+✓ 无无用资源。
+
+✓ 无无用依赖。
+
+✓ 无 TODO。
+
+✓ 无 Placeholder。
+
+✓ 无测试残留。
+
+✓ 无调试残留。
+
+✓ 无冗余资源。
+
+✓ 项目目录整洁。
+
+✓ Release 版本达到商业软件正式发布标准。
+
+最终目标：
+
+LeslieCleaner 不仅要功能完整，更要做到「界面高级、运行流畅、资源占用低、项目整洁、代码优雅、发布质量达到商业级」，成为可以长期维护和持续迭代的企业级 Windows 系统优化平台。

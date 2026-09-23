@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>  <data name="PlatformCenterTitle" xml:space="preserve"><value>Platform Center</value></data>
+  <data name="PlatformCenterDescription" xml:space="preserve"><value>AI guidance, plugin permissions, security assessment, and updates in one place</value></data>
+  <data name="AiAssistant" xml:space="preserve"><value>AI Assistant</value></data>
+  <data name="AskAi" xml:space="preserve"><value>Analyze</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="PluginManager" xml:space="preserve"><value>Plugin Manager</value></data>
+  <data name="RefreshAndVerify" xml:space="preserve"><value>Refresh and verify</value></data>
+  <data name="UpdateCenter" xml:space="preserve"><value>Update Center</value></data>
+  <data name="CheckUpdates" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="SecurityCenter" xml:space="preserve"><value>Security Center</value></data>
+  <data name="Reassess" xml:space="preserve"><value>Reassess</value></data>
+  <data name="EnableOrDisable" xml:space="preserve"><value>Enable/Disable</value></data>
+  <data name="Retry" xml:space="preserve"><value>Retry</value></data>
+</root>

@@ -1,0 +1,806 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Modules.Uninstaller</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers">
+            <summary>
+            各来源的解析器（纯函数，可独立单元测试）。
+            覆盖：Uninstall 键值、Steam ACF / libraryfolders.vdf、Epic .item 清单、
+            VS 实例 state.json、winget list 表格文本。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseUninstallValues(System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},System.String)">
+            <summary>
+            从 Uninstall 键值字典解析应用记录。
+            </summary>
+            <param name="keyName">键名（MSI 时为 ProductCode GUID）。</param>
+            <param name="values">值字典（DisplayName/DisplayVersion/Publisher/...）。</param>
+            <param name="sourcePrefix">来源前缀（hklm64/hklm32/hkcu）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseSteamAppManifest(System.String,System.String)">
+            <summary>
+            解析 Steam appmanifest_*.acf 文本。
+            </summary>
+            <param name="acfContent">ACF 文件内容。</param>
+            <param name="libraryRoot">所属库根（…\steamapps）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseLibraryFolders(System.String,System.String)">
+            <summary>
+            解析 Steam libraryfolders.vdf，返回库 steamapps 目录列表（含主库与自定义库）。
+            </summary>
+            <param name="vdfContent">vdf 文件内容。</param>
+            <param name="steamRoot">Steam 安装根目录。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseEpicManifest(System.String,System.String)">
+            <summary>
+            解析 Epic .item 清单 JSON。
+            </summary>
+            <param name="json">清单内容。</param>
+            <param name="manifestPath">清单文件路径（用于 Id）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseVisualStudioInstanceState(System.String,System.String)">
+            <summary>
+            解析 Visual Studio 实例 state.json（%ProgramData%\Microsoft\VisualStudio\Packages\_Instances\*）。
+            </summary>
+            <param name="json">state.json 内容。</param>
+            <param name="instanceId">实例目录名。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseWingetList(System.String)">
+            <summary>
+            解析 winget list 表格文本（固定列宽，含中文标题）。
+            </summary>
+            <param name="output">winget list 标准输出。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ClassifyBySignature(LeslieCleaner.Modules.Uninstaller.InstalledApp)">
+            <summary>
+            按名称/发布者把 Win32 记录重分类到 Adobe/Office/VS/DockerWsl/DevEnvironment/Store。
+            </summary>
+            <param name="app">原始记录。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.ParseInstallDate(System.String)">
+            <summary>解析 InstallDate（yyyyMMdd 或 yyyy/MM/dd）。</summary>
+            <param name="raw">原始值。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.AppParsers.LibraryPathRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>"path"\\s+"([^"]+)"</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match the string "\"path\"".<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match '"'.<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character other than '"' atomically at least once.<br/>
+            ○ Match '"'.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery">
+            <summary>
+            应用发现引擎。覆盖圣经第一节第 3 条全部来源：
+            Win32（HKLM 64/32 + HKCU Uninstall）、MSI（ProductCode/UpgradeCode + Installer Cache 探测）、
+            MSIX/Appx（Windows.Management.Deployment.PackageManager，失败优雅降级）、Winget（winget list，
+            不存在自动跳过）、Steam（libraryfolders.vdf + appmanifest_*.acf，含自定义库）、Epic（.item 清单）、
+            Battle.net/Adobe/Office/VS/Docker/Node/Python/Java（注册表签名重分类 + VS 实例 state.json）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery.#ctor(LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以日志服务创建发现引擎。</summary>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery.EnumerateAllAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            枚举全部已安装应用（按名称排序，跨来源按名称+版本去重）。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery.EnumerateRegistryApps(System.Threading.CancellationToken)">
+            <summary>
+            仅从注册表 Uninstall 键枚举（Stage 1 残留定位复用，&lt;100ms）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery.InstallerCacheHasPackage(System.String)">
+            <summary>
+            探测 Windows Installer Cache 中指定 ProductCode 的缓存包是否存在（只读）。
+            </summary>
+            <param name="productCode">MSI ProductCode（含花括号）。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor">
+            <summary>
+            批量卸载执行器。逐个调用 UninstallString / msiexec /x（MSI）/
+            winget uninstall / steam://uninstall 协议（提示用户交互），
+            监控退出码，超时熔断（默认 30 分钟，可配置）并终止进程树。
+            支持暂停（排队项暂停派发）与取消。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.TimeoutMinutesConfigKey">
+            <summary>单应用卸载超时配置键（分钟，默认 30）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.#ctor(LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Core.Abstractions.IConfigService,LeslieCleaner.Core.Abstractions.ISecurityOperationGate)">
+            <summary>以日志服务创建执行器。</summary>
+            <param name="logService">日志服务。</param>
+            <param name="configService">配置服务（超时），可为 <see langword="null"/>。</param>
+            <param name="securityOperationGate">Blocks uninstallation when startup integrity validation has failed.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.IsPaused">
+            <summary>当前是否暂停。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.Pause">
+            <summary>暂停派发（运行中的卸载进程不受影响）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.Resume">
+            <summary>继续派发。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.Cancel">
+            <summary>取消批量卸载（终止当前卸载进程树）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.RunBatchAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.InstalledApp},System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            顺序执行批量卸载，逐项报告结果。
+            </summary>
+            <param name="apps">待卸载应用。</param>
+            <param name="progress">进度回调（已完成/总数/当前应用），可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.UninstallOneAsync(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            卸载单个应用（公开供单卸载场景使用）。
+            </summary>
+            <param name="app">应用。</param>
+            <param name="timeout">超时。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Execution.UninstallExecutor.SplitCommandLine(System.String)">
+            <summary>
+            拆分卸载命令行为可执行文件与参数（处理引号）。
+            </summary>
+            <param name="commandLine">UninstallString 原文。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Residual.InnoUninstallLogParser">
+            <summary>
+            Inno Setup 卸载日志（unins*.dat）容错解析器。官方格式未完整公开，
+            按可解析部分提取：扫描二进制中的 UTF-16LE 绝对路径记录（X:\...），
+            去重后返回。损坏/未知版本返回空集合而非抛错（容错优先）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.InnoUninstallLogParser.ExtractPaths(System.Byte[])">
+            <summary>
+            从 unins*.dat 字节流提取全部 UTF-16LE 绝对路径。
+            </summary>
+            <param name="data">文件内容。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming">
+            <summary>分阶段耗时记录。</summary>
+            <param name="Stage">阶段。</param>
+            <param name="Duration">耗时。</param>
+            <param name="ItemCount">产出项数。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming.#ctor(LeslieCleaner.Core.Models.ResidualSourceStage,System.TimeSpan,System.Int32)">
+            <summary>分阶段耗时记录。</summary>
+            <param name="Stage">阶段。</param>
+            <param name="Duration">耗时。</param>
+            <param name="ItemCount">产出项数。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming.Stage">
+            <summary>阶段。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming.Duration">
+            <summary>耗时。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming.ItemCount">
+            <summary>产出项数。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScanReport">
+            <summary>残留扫描完整报告。</summary>
+            <param name="Items">合并去重后的残留项（按置信度降序）。</param>
+            <param name="StageTimings">各阶段耗时。</param>
+            <param name="TotalDuration">总耗时。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScanReport.#ctor(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.ResidualItem},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.Residual.ResidualStageTiming},System.TimeSpan)">
+            <summary>残留扫描完整报告。</summary>
+            <param name="Items">合并去重后的残留项（按置信度降序）。</param>
+            <param name="StageTimings">各阶段耗时。</param>
+            <param name="TotalDuration">总耗时。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScanReport.Items">
+            <summary>合并去重后的残留项（按置信度降序）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScanReport.StageTimings">
+            <summary>各阶段耗时。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScanReport.TotalDuration">
+            <summary>总耗时。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine">
+            <summary>
+            Multi-Stage Residual Pipeline 严格实现（圣经第二节）。
+            Stage 1 安装数据库（&lt;100ms）→ Stage 2 规则库（&lt;300ms）→ Stage 3 安装日志（&lt;500ms）
+            → Stage 4 Publisher 索引（&lt;1s）→ Stage 5 受限深扫（仅结果不足且允许时）。
+            合并去重按置信度分级（安装日志 &gt; 规则库 &gt; 索引 &gt; 深扫）。
+            清理复用 <see cref="T:LeslieCleaner.Core.Abstractions.ICleanEngine"/>：文件进隔离区，注册表先备份后删。
+            </summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine.DeepScanThreshold">
+            <summary>触发 Stage 5 深扫的结果数阈值。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine.#ctor(LeslieCleaner.Core.Abstractions.IDatabase,LeslieCleaner.Core.Abstractions.IFileIndexEngine,LeslieCleaner.Core.Abstractions.ICleanEngine,LeslieCleaner.Modules.Uninstaller.Discovery.InstalledAppDiscovery,LeslieCleaner.Core.Abstractions.ILogService)">
+            <summary>以数据库、索引引擎、清理引擎与日志服务创建残留扫描器。</summary>
+            <param name="database">数据库（residual_rules 表）。</param>
+            <param name="fileIndexEngine">文件索引引擎（Stage 4）。</param>
+            <param name="cleanEngine">清理引擎（残留清理复用）。</param>
+            <param name="discovery">应用发现（Stage 1）。</param>
+            <param name="logService">日志服务。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine.ScanAsync(LeslieCleaner.Core.Models.ResidualQuery,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine.ScanWithReportAsync(LeslieCleaner.Core.Models.ResidualQuery,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            执行五阶段管道并返回含各阶段耗时的完整报告。
+            </summary>
+            <param name="query">残留查询。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine.CleanResidualsAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.ResidualItem},System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            清理残留：文件/目录进隔离区，注册表键先备份后删（复用 CleanEngine 管线，可回滚）。
+            </summary>
+            <param name="items">残留项。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>清理结果（含回滚凭据 OperationId）。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Residual.RulePathExpander">
+            <summary>
+            规则路径模板展开器（纯函数）。支持 %ProgramFiles% / %ProgramFiles(x86)% /
+            %AppData% / %LocalAppData% / %ProgramData% / %UserProfile% / %Documents% / %Public%
+            占位，全部经环境变量与特殊文件夹解析。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.RulePathExpander.Expand(System.String)">
+            <summary>
+            展开模板为实际路径（不做存在性检查）。
+            </summary>
+            <param name="template">路径模板。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Residual.RulePathExpander.ExpandExisting(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            展开并过滤为实际存在的路径（文件或目录）。
+            </summary>
+            <param name="templates">模板集合。</param>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.AppSourceType">
+            <summary>应用来源类型。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Win32">
+            <summary>Win32 注册表卸载项。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Msi">
+            <summary>MSI（Windows Installer）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Appx">
+            <summary>MSIX/Appx/UWP。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Store">
+            <summary>Microsoft Store 应用。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Winget">
+            <summary>Winget。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Steam">
+            <summary>Steam 游戏。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Epic">
+            <summary>Epic 游戏。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.BattleNet">
+            <summary>Battle.net 游戏。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Adobe">
+            <summary>Adobe 套件。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.Office">
+            <summary>Office 套件。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.VisualStudio">
+            <summary>Visual Studio 组件。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.DockerWsl">
+            <summary>Docker/WSL 环境。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.AppSourceType.DevEnvironment">
+            <summary>开发环境（Node/Python/Java）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.InstalledApp">
+            <summary>一个已安装应用记录。</summary>
+            <param name="Id">稳定标识（来源+键名/appid）。</param>
+            <param name="Name">显示名。</param>
+            <param name="Version">版本，可为 <see langword="null"/>。</param>
+            <param name="Publisher">发布者，可为 <see langword="null"/>。</param>
+            <param name="SizeBytes">估算大小（字节）。</param>
+            <param name="InstallDate">安装日期，可为 <see langword="null"/>。</param>
+            <param name="InstallLocation">安装位置，可为 <see langword="null"/>。</param>
+            <param name="UninstallString">卸载命令，可为 <see langword="null"/>。</param>
+            <param name="Source">来源类型。</param>
+            <param name="ProductCode">MSI ProductCode，可为 <see langword="null"/>。</param>
+            <param name="UpgradeCode">MSI UpgradeCode，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.InstalledApp.#ctor(System.String,System.String,System.String,System.String,System.Int64,System.Nullable{System.DateOnly},System.String,System.String,LeslieCleaner.Modules.Uninstaller.AppSourceType,System.String,System.String)">
+            <summary>一个已安装应用记录。</summary>
+            <param name="Id">稳定标识（来源+键名/appid）。</param>
+            <param name="Name">显示名。</param>
+            <param name="Version">版本，可为 <see langword="null"/>。</param>
+            <param name="Publisher">发布者，可为 <see langword="null"/>。</param>
+            <param name="SizeBytes">估算大小（字节）。</param>
+            <param name="InstallDate">安装日期，可为 <see langword="null"/>。</param>
+            <param name="InstallLocation">安装位置，可为 <see langword="null"/>。</param>
+            <param name="UninstallString">卸载命令，可为 <see langword="null"/>。</param>
+            <param name="Source">来源类型。</param>
+            <param name="ProductCode">MSI ProductCode，可为 <see langword="null"/>。</param>
+            <param name="UpgradeCode">MSI UpgradeCode，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.Id">
+            <summary>稳定标识（来源+键名/appid）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.Name">
+            <summary>显示名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.Version">
+            <summary>版本，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.Publisher">
+            <summary>发布者，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.SizeBytes">
+            <summary>估算大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.InstallDate">
+            <summary>安装日期，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.InstallLocation">
+            <summary>安装位置，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.UninstallString">
+            <summary>卸载命令，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.Source">
+            <summary>来源类型。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.ProductCode">
+            <summary>MSI ProductCode，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.InstalledApp.UpgradeCode">
+            <summary>MSI UpgradeCode，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult">
+            <summary>单个卸载任务结果。</summary>
+            <param name="AppId">应用标识。</param>
+            <param name="AppName">应用名。</param>
+            <param name="Success">是否成功（进程退出码 0 / 协议已发起）。</param>
+            <param name="ExitCode">卸载进程退出码；协议方式/被跳过时为 <see langword="null"/>。</param>
+            <param name="Method">实际使用的卸载方式。</param>
+            <param name="TimedOut">是否超时被熔断。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.#ctor(System.String,System.String,System.Boolean,System.Nullable{System.Int32},System.String,System.Boolean,System.String)">
+            <summary>单个卸载任务结果。</summary>
+            <param name="AppId">应用标识。</param>
+            <param name="AppName">应用名。</param>
+            <param name="Success">是否成功（进程退出码 0 / 协议已发起）。</param>
+            <param name="ExitCode">卸载进程退出码；协议方式/被跳过时为 <see langword="null"/>。</param>
+            <param name="Method">实际使用的卸载方式。</param>
+            <param name="TimedOut">是否超时被熔断。</param>
+            <param name="Error">失败原因。</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.AppId">
+            <summary>应用标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.AppName">
+            <summary>应用名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.Success">
+            <summary>是否成功（进程退出码 0 / 协议已发起）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.ExitCode">
+            <summary>卸载进程退出码；协议方式/被跳过时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.Method">
+            <summary>实际使用的卸载方式。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.TimedOut">
+            <summary>是否超时被熔断。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallTaskResult.Error">
+            <summary>失败原因。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.UninstallerModule">
+            <summary>Smart Uninstaller 模块（圣经第一节功能清单第 3 条，核心模块）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.UninstallerModule.Info">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.UninstallerModule.InitializeAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.UninstallerModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Modules.Uninstaller 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.ServiceCollectionExtensions.AddLeslieCleanerUninstallerModule(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>注册 Smart Uninstaller 模块：应用发现、卸载执行器、残留扫描器。</summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore">
+            <summary>Creates and atomically persists minimal software fingerprints without full-disk scanning.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore.#ctor(System.String)">
+            <summary>Creates a store rooted at an absolute, non-reparse directory.</summary>
+            <param name="storeDirectory">Fingerprint directory.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore.Create(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry})">
+            <summary>Builds a fingerprint from trusted application metadata and optional platform evidence.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore.SaveAsync(LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint,System.Threading.CancellationToken)">
+            <summary>Atomically saves a fingerprint as JSON.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore.GetAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Reads a fingerprint by identifier.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.IApplicationResourceInventory">
+            <summary>Collects targeted service, startup, and scheduled-task ownership evidence for an installed application.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.IApplicationResourceInventory.CollectAsync(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.Threading.CancellationToken)">
+            <summary>Collects resources whose executable path is contained by the application's install directory.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.WindowsApplicationResourceInventory">
+            <summary>
+            Windows inventory that reads service ImagePath, registry Run values, and Task Scheduler XML.
+            It never deletes or disables resources and does not use name-only matching.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.WindowsApplicationResourceInventory.CollectAsync(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.WindowsApplicationResourceInventory.CommandBelongsToApplication(System.String,System.String)">
+            <summary>Returns true only when the executable from a command line is inside the install directory boundary.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.IUninstallRunner">
+            <summary>Testable abstraction over official uninstall command execution.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.IUninstallRunner.UninstallOneAsync(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>Runs the application's preferred official uninstall method.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.IResidualCleanupRunner">
+            <summary>Testable adapter over the residual scan and reversible cleanup pipeline.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.IResidualCleanupRunner.ScanAsync(LeslieCleaner.Core.Models.ResidualQuery,System.Threading.CancellationToken)">
+            <summary>Finds targeted residuals without default full-disk recursion.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.IResidualCleanupRunner.CleanAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.ResidualItem},System.Threading.CancellationToken)">
+            <summary>Cleans caller-approved residuals through the quarantine/backup engine.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.ResidualCleanupRunner">
+            <summary>Connects the safe uninstall workflow to the reversible residual engine.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ResidualCleanupRunner.#ctor(LeslieCleaner.Modules.Uninstaller.Residual.ResidualScannerEngine)">
+            <summary>Creates an adapter for the existing residual engine.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ResidualCleanupRunner.ScanAsync(LeslieCleaner.Core.Models.ResidualQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ResidualCleanupRunner.CleanAsync(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.ResidualItem},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAnalyzer">
+            <summary>Performs fail-safe preflight checks without terminating processes or changing the system.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAnalyzer.AnalyzeAsync(LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest,System.Threading.CancellationToken)">
+            <summary>Checks application existence, command availability, running processes, and force confirmation.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflow">
+            <summary>
+            Coordinates Analyze → Fingerprint → Backup → Official Uninstall → Residual Scan → optional reversible cleanup → Report.
+            It never terminates processes automatically and refuses forced cleanup without explicit confirmation.
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflow.#ctor(LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAnalyzer,LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprintStore,LeslieCleaner.Modules.Uninstaller.Workflow.IUninstallRunner,LeslieCleaner.Modules.Uninstaller.Workflow.IResidualCleanupRunner,LeslieCleaner.Core.Abstractions.IBackupService,LeslieCleaner.Core.Abstractions.ILogService,LeslieCleaner.Modules.Uninstaller.Workflow.IApplicationResourceInventory)">
+            <summary>Creates a safe uninstall workflow.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflow.ExecuteAsync(LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>Executes the guarded workflow and returns a complete, restorable report.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflow.RestoreAsync(LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport,System.Threading.CancellationToken)">
+            <summary>Explicitly restores every workflow backup in reverse creation order.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType">
+            <summary>Application-owned resource type stored in a software fingerprint.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.File">
+            <summary>A file.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Folder">
+            <summary>A directory.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Registry">
+            <summary>A registry key.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Service">
+            <summary>A Windows service.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Startup">
+            <summary>A startup entry.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Task">
+            <summary>A scheduled task.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType.Configuration">
+            <summary>A configuration file or directory.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry">
+            <summary>One evidence-backed resource belonging to an application.</summary>
+            <param name="Type">Resource type.</param>
+            <param name="Value">Normalized resource identifier.</param>
+            <param name="Confidence">Ownership confidence from 0 to 100.</param>
+            <param name="Evidence">Short explanation of the ownership evidence.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry.#ctor(LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintResourceType,System.String,System.Int32,System.String)">
+            <summary>One evidence-backed resource belonging to an application.</summary>
+            <param name="Type">Resource type.</param>
+            <param name="Value">Normalized resource identifier.</param>
+            <param name="Confidence">Ownership confidence from 0 to 100.</param>
+            <param name="Evidence">Short explanation of the ownership evidence.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry.Type">
+            <summary>Resource type.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry.Value">
+            <summary>Normalized resource identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry.Confidence">
+            <summary>Ownership confidence from 0 to 100.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry.Evidence">
+            <summary>Short explanation of the ownership evidence.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint">
+            <summary>Persistable software fingerprint used for targeted residual discovery and recovery.</summary>
+            <param name="Id">Stable fingerprint identifier.</param>
+            <param name="ApplicationId">Application identifier.</param>
+            <param name="ApplicationName">Application display name.</param>
+            <param name="Entries">Owned resources.</param>
+            <param name="CreatedUtc">UTC creation time.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.#ctor(System.Guid,System.String,System.String,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry},System.DateTimeOffset)">
+            <summary>Persistable software fingerprint used for targeted residual discovery and recovery.</summary>
+            <param name="Id">Stable fingerprint identifier.</param>
+            <param name="ApplicationId">Application identifier.</param>
+            <param name="ApplicationName">Application display name.</param>
+            <param name="Entries">Owned resources.</param>
+            <param name="CreatedUtc">UTC creation time.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.Id">
+            <summary>Stable fingerprint identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.ApplicationId">
+            <summary>Application identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.ApplicationName">
+            <summary>Application display name.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.Entries">
+            <summary>Owned resources.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.ApplicationFingerprint.CreatedUtc">
+            <summary>UTC creation time.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetySeverity">
+            <summary>Severity of a pre-uninstall safety finding.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetySeverity.Information">
+            <summary>Informational finding.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetySeverity.Warning">
+            <summary>User should review the finding.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetySeverity.Blocking">
+            <summary>Operation must not start.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding">
+            <summary>One pre-uninstall safety finding.</summary>
+            <param name="Code">Stable machine-readable code.</param>
+            <param name="Message">User-facing explanation.</param>
+            <param name="Severity">Finding severity.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding.#ctor(System.String,System.String,LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetySeverity)">
+            <summary>One pre-uninstall safety finding.</summary>
+            <param name="Code">Stable machine-readable code.</param>
+            <param name="Message">User-facing explanation.</param>
+            <param name="Severity">Finding severity.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding.Code">
+            <summary>Stable machine-readable code.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding.Message">
+            <summary>User-facing explanation.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding.Severity">
+            <summary>Finding severity.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAssessment">
+            <summary>Result of application existence, command, process, and backup-readiness checks.</summary>
+            <param name="CanProceed">Whether the workflow may start.</param>
+            <param name="RunningProcesses">Processes whose executable is inside the install directory.</param>
+            <param name="Findings">Safety findings.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAssessment.#ctor(System.Boolean,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyFinding})">
+            <summary>Result of application existence, command, process, and backup-readiness checks.</summary>
+            <param name="CanProceed">Whether the workflow may start.</param>
+            <param name="RunningProcesses">Processes whose executable is inside the install directory.</param>
+            <param name="Findings">Safety findings.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAssessment.CanProceed">
+            <summary>Whether the workflow may start.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAssessment.RunningProcesses">
+            <summary>Processes whose executable is inside the install directory.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallSafetyAssessment.Findings">
+            <summary>Safety findings.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest">
+            <summary>Request for the safe uninstall workflow.</summary>
+            <param name="Application">Application to uninstall.</param>
+            <param name="UserConfirmed">Explicit confirmation obtained by the caller.</param>
+            <param name="AllowForcedCleanup">Allow confirmed residual cleanup when no official uninstaller exists.</param>
+            <param name="AdditionalFingerprintEntries">Extra service/startup/task/configuration evidence collected by platform scanners.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest.#ctor(LeslieCleaner.Modules.Uninstaller.InstalledApp,System.Boolean,System.Boolean,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Modules.Uninstaller.Workflow.FingerprintEntry})">
+            <summary>Request for the safe uninstall workflow.</summary>
+            <param name="Application">Application to uninstall.</param>
+            <param name="UserConfirmed">Explicit confirmation obtained by the caller.</param>
+            <param name="AllowForcedCleanup">Allow confirmed residual cleanup when no official uninstaller exists.</param>
+            <param name="AdditionalFingerprintEntries">Extra service/startup/task/configuration evidence collected by platform scanners.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest.Application">
+            <summary>Application to uninstall.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest.UserConfirmed">
+            <summary>Explicit confirmation obtained by the caller.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest.AllowForcedCleanup">
+            <summary>Allow confirmed residual cleanup when no official uninstaller exists.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowRequest.AdditionalFingerprintEntries">
+            <summary>Extra service/startup/task/configuration evidence collected by platform scanners.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport">
+            <summary>Auditable uninstall result and recovery handles.</summary>
+            <param name="OperationId">Operation identifier.</param>
+            <param name="ApplicationId">Application identifier.</param>
+            <param name="ApplicationName">Application name.</param>
+            <param name="StartedUtc">UTC start time.</param>
+            <param name="FinishedUtc">UTC finish time.</param>
+            <param name="Method">Uninstall method.</param>
+            <param name="Success">Whether the requested workflow completed.</param>
+            <param name="ForcedCleanup">Whether forced residual cleanup was used.</param>
+            <param name="ResidualItemCount">Detected residual count.</param>
+            <param name="ResidualBytes">Detected residual bytes.</param>
+            <param name="BackupIds">Backups that can be restored.</param>
+            <param name="FingerprintId">Stored fingerprint identifier.</param>
+            <param name="RemainingItems">Items retained for safety or left after failure.</param>
+            <param name="Error">Failure explanation.</param>
+        </member>
+        <member name="M:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.#ctor(System.Guid,System.String,System.String,System.DateTimeOffset,System.DateTimeOffset,System.String,System.Boolean,System.Boolean,System.Int32,System.Int64,System.Collections.Generic.IReadOnlyList{System.Guid},System.Guid,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.ResidualItem},System.String)">
+            <summary>Auditable uninstall result and recovery handles.</summary>
+            <param name="OperationId">Operation identifier.</param>
+            <param name="ApplicationId">Application identifier.</param>
+            <param name="ApplicationName">Application name.</param>
+            <param name="StartedUtc">UTC start time.</param>
+            <param name="FinishedUtc">UTC finish time.</param>
+            <param name="Method">Uninstall method.</param>
+            <param name="Success">Whether the requested workflow completed.</param>
+            <param name="ForcedCleanup">Whether forced residual cleanup was used.</param>
+            <param name="ResidualItemCount">Detected residual count.</param>
+            <param name="ResidualBytes">Detected residual bytes.</param>
+            <param name="BackupIds">Backups that can be restored.</param>
+            <param name="FingerprintId">Stored fingerprint identifier.</param>
+            <param name="RemainingItems">Items retained for safety or left after failure.</param>
+            <param name="Error">Failure explanation.</param>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.OperationId">
+            <summary>Operation identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.ApplicationId">
+            <summary>Application identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.ApplicationName">
+            <summary>Application name.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.StartedUtc">
+            <summary>UTC start time.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.FinishedUtc">
+            <summary>UTC finish time.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.Method">
+            <summary>Uninstall method.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.Success">
+            <summary>Whether the requested workflow completed.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.ForcedCleanup">
+            <summary>Whether forced residual cleanup was used.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.ResidualItemCount">
+            <summary>Detected residual count.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.ResidualBytes">
+            <summary>Detected residual bytes.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.BackupIds">
+            <summary>Backups that can be restored.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.FingerprintId">
+            <summary>Stored fingerprint identifier.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.RemainingItems">
+            <summary>Items retained for safety or left after failure.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.Error">
+            <summary>Failure explanation.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Modules.Uninstaller.Workflow.UninstallWorkflowReport.RestoreAvailable">
+            <summary>Whether at least one verified backup is available for an explicit restore.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LibraryPathRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LibraryPathRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LibraryPathRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+    </members>
+</doc>

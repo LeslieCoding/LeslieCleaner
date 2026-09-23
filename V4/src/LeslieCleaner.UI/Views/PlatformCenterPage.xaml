@@ -1,0 +1,191 @@
+<UserControl x:Class="LeslieCleaner.UI.Views.PlatformCenterPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:LeslieCleaner.UI.ViewModels"
+             xmlns:loc="clr-namespace:LeslieCleaner.UI.Localization"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:PlatformCenterViewModel}"
+             AutomationProperties.Name="平台中心：AI、插件、更新和安全">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="980" HorizontalAlignment="Stretch">
+            <Border Style="{DynamicResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="{x:Static loc:UiText.PlatformCenterTitle}" Style="{DynamicResource PageTitle}" FontSize="22" />
+                    <TextBlock Text="{x:Static loc:UiText.PlatformCenterDescription}" Style="{DynamicResource SecondaryText}"
+                               TextWrapping="Wrap" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{DynamicResource Card}" Margin="0,0,0,16"
+                    Visibility="{Binding LastError, Converter={StaticResource NotNullToVisibility}}"
+                    BorderBrush="{DynamicResource DangerBrush}" BorderThickness="2"
+                    AutomationProperties.LiveSetting="Assertive">
+                <StackPanel>
+                    <TextBlock Text="操作没有完成" Style="{DynamicResource BodyText}" FontWeight="SemiBold"
+                               Foreground="{DynamicResource DangerBrush}" />
+                    <TextBlock Text="{Binding LastError}" Style="{DynamicResource SecondaryText}"
+                               TextWrapping="Wrap" Margin="0,6,0,0" />
+                    <TextBlock Text="请检查提示后重试；失败不会被当作成功，且不会自动执行危险操作。"
+                               Style="{DynamicResource SecondaryText}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{DynamicResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="{x:Static loc:UiText.AiAssistant}" Style="{DynamicResource SectionTitle}" />
+                        <Border HorizontalAlignment="Right" Style="{DynamicResource Badge}">
+                            <TextBlock Text="只建议 · 不执行" Foreground="{DynamicResource PrimaryBrush}" />
+                        </Border>
+                    </Grid>
+                    <TextBlock Text="问题内容在发送前会脱敏；默认使用离线规则。即时上下文只含匿名 CPU、内存、磁盘汇总，未加载的扫描计数按 0 处理。"
+                               Style="{DynamicResource SecondaryText}" TextWrapping="Wrap" Margin="0,8,0,12" />
+                    <TextBox Text="{Binding Question, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+                             MinHeight="72" MaxHeight="150" Padding="12" TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto" Style="{DynamicResource InputBox}"
+                             AutomationProperties.Name="向 AI 助手提问"
+                             AutomationProperties.HelpText="AI 只解释和推荐，不会执行系统修改" />
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Content="{x:Static loc:UiText.AskAi}" Command="{Binding AskAiCommand}"
+                                AutomationProperties.Name="分析 AI 问题">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers><DataTrigger Binding="{Binding IsAiBusy}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger></Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Content="{x:Static loc:UiText.Cancel}" Command="{Binding CancelAiCommand}"
+                                Style="{DynamicResource SecondaryButton}" Margin="12,4,0,4"
+                                Visibility="{Binding IsAiBusy, Converter={StaticResource BoolToVisibility}}"
+                                AutomationProperties.Name="取消 AI 分析" />
+                        <ProgressBar IsIndeterminate="True" Width="120" Margin="16,0,0,0"
+                                     Style="{DynamicResource FluentProgressBar}"
+                                     Visibility="{Binding IsAiBusy, Converter={StaticResource BoolToVisibility}}"
+                                     AutomationProperties.Name="AI 正在分析" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding AiStatus}" Style="{DynamicResource SecondaryText}"
+                               TextWrapping="Wrap" Margin="0,10,0,0" AutomationProperties.LiveSetting="Polite" />
+                    <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="12" Padding="16" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="分析结果" Style="{DynamicResource BodyText}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding AiAnswer}" Style="{DynamicResource BodyText}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding AiSafety}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{DynamicResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="{x:Static loc:UiText.PluginManager}" Style="{DynamicResource SectionTitle}" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <ProgressBar IsIndeterminate="True" Width="90" Margin="0,0,12,0"
+                                         Style="{DynamicResource FluentProgressBar}"
+                                         Visibility="{Binding IsPluginBusy, Converter={StaticResource BoolToVisibility}}" />
+                            <Button Content="{x:Static loc:UiText.RefreshAndVerify}" Command="{Binding RefreshPluginsCommand}"
+                                    Style="{DynamicResource ToolButton}" AutomationProperties.Name="刷新并校验插件" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding PluginStatus}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap"
+                               Margin="0,8,0,0" AutomationProperties.LiveSetting="Polite" />
+                    <TextBlock Text="没有插件。可通过受校验的插件包安装流程添加；新插件默认停用。"
+                               Style="{DynamicResource SecondaryText}" Margin="0,12,0,0"
+                               Visibility="{Binding Plugins.Count, Converter={StaticResource ZeroToVisibility}}" />
+                    <ListBox ItemsSource="{Binding Plugins}" Style="{DynamicResource FluentListBox}" Margin="0,8,0,0"
+                             MaxHeight="300" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                             AutomationProperties.Name="已安装插件列表">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,6">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Style="{DynamicResource BodyText}"><Run Text="{Binding Name}"/><Run Text="  "/><Run Text="{Binding Version}"/></TextBlock>
+                                        <TextBlock Style="{DynamicResource SecondaryText}" TextWrapping="Wrap"><Run Text="发布者："/><Run Text="{Binding Author}"/><Run Text="；状态："/><Run Text="{Binding TrustStatus}"/></TextBlock>
+                                        <TextBlock Text="{Binding Detail}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="{x:Static loc:UiText.EnableOrDisable}" Style="{DynamicResource SecondaryButton}"
+                                            Command="{Binding DataContext.TogglePluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Margin="16,0,0,0"
+                                            AutomationProperties.Name="启用或禁用插件" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Margin="0,0,0,16">
+                <Border Style="{DynamicResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="{x:Static loc:UiText.UpdateCenter}" Style="{DynamicResource SectionTitle}" />
+                            <Button HorizontalAlignment="Right" Content="{x:Static loc:UiText.CheckUpdates}"
+                                    Style="{DynamicResource ToolButton}" Command="{Binding CheckUpdatesCommand}"
+                                    AutomationProperties.Name="检查软件更新" />
+                        </Grid>
+                        <ProgressBar IsIndeterminate="True" Margin="0,10,0,0" Style="{DynamicResource FluentProgressBar}"
+                                     Visibility="{Binding IsUpdateBusy, Converter={StaticResource BoolToVisibility}}" />
+                        <TextBlock Text="{Binding UpdateStatus}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap"
+                                   Margin="0,10,0,0" AutomationProperties.LiveSetting="Polite" />
+                        <TextBlock Text="检查只读取签名清单；安装前仍会验证包、备份并保留回滚。"
+                                   Style="{DynamicResource SecondaryText}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border BorderThickness="2">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}" />
+                            <Style.Triggers><DataTrigger Binding="{Binding IsEmergencyReadOnly}" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" /></DataTrigger></Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="{x:Static loc:UiText.SecurityCenter}" Style="{DynamicResource SectionTitle}" />
+                            <Button HorizontalAlignment="Right" Content="{x:Static loc:UiText.Reassess}"
+                                    Style="{DynamicResource ToolButton}" Command="{Binding RefreshSecurityCommand}"
+                                    AutomationProperties.Name="重新评估安全状态" />
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding SecurityScore}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
+                            <TextBlock Text=" / 100" Style="{DynamicResource SecondaryText}" VerticalAlignment="Bottom" Margin="4,0,0,5" />
+                            <Border Style="{DynamicResource Badge}" Margin="12,2,0,2"
+                                    Visibility="{Binding IsEmergencyReadOnly, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="只读保护中" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="{Binding SecurityStatus}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap"
+                                   Margin="0,8,0,0" AutomationProperties.LiveSetting="Polite" />
+                        <Separator Margin="0,16,0,12" />
+                        <TextBlock Text="可信基线与恢复" Style="{DynamicResource BodyText}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding IntegrityStatus}" Style="{DynamicResource SecondaryText}" TextWrapping="Wrap"
+                                   Margin="0,8,0,0" AutomationProperties.LiveSetting="Assertive" />
+                        <ProgressBar IsIndeterminate="True" Margin="0,10,0,0" Style="{DynamicResource FluentProgressBar}"
+                                     Visibility="{Binding IsIntegrityBusy, Converter={StaticResource BoolToVisibility}}"
+                                     AutomationProperties.Name="完整性操作正在进行" />
+                        <Border Background="{DynamicResource PrimarySoftBrush}" CornerRadius="10" Padding="12" Margin="0,12,0,0">
+                            <TextBlock Text="建立/重建基线只适用于刚从可信安装包安装或已核验来源的文件；发现篡改时应优先从可信备份修复。系统绝不会自动把当前文件标记为可信。"
+                                       Foreground="{DynamicResource TextBrush}" TextWrapping="Wrap" />
+                        </Border>
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="核验后建立/重建基线" Command="{Binding EstablishTrustedBaselineCommand}"
+                                    Style="{DynamicResource SecondaryButton}" Height="40" Margin="0,0,12,8"
+                                    AutomationProperties.Name="明确建立或重建可信完整性基线"
+                                    AutomationProperties.HelpText="需要两次确认，覆盖主程序、核心库、配置、数据库组件和插件元数据" />
+                            <Button Content="从可信备份修复" Command="{Binding RepairFromTrustedBackupCommand}"
+                                    Style="{DynamicResource DangerButton}" Margin="0,0,12,8" Height="40"
+                                    AutomationProperties.Name="从可信备份修复完整性失败文件"
+                                    AutomationProperties.HelpText="修复后复扫，只有所有恢复条件通过才退出只读模式" />
+                            <Button Content="复核清单" Command="{Binding RefreshIntegrityCommand}"
+                                    Style="{DynamicResource ToolButton}" Margin="0,4,0,12"
+                                    AutomationProperties.Name="重新验证完整性清单" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,2511 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeslieCleaner.Core</name>
+    </assembly>
+    <members>
+        <member name="T:LeslieCleaner.Core.Abstractions.IBackupService">
+            <summary>Creates, indexes, verifies, restores, and retains reversible backups.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.BackupRegistryKeyAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Exports a registry key and all descendants.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.BackupRegistryValueAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Captures one typed registry value without including sibling values.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.BackupFileAsync(System.String,LeslieCleaner.Core.Models.BackupType,System.String,LeslieCleaner.Core.Models.BackupStorageMode,System.Threading.CancellationToken)">
+            <summary>Creates a typed file, configuration, or database backup.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.RestoreAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Restores a backup by its stable identifier, replacing an existing file target.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.RestoreAsync(System.Guid,LeslieCleaner.Core.Models.RestoreConflictPolicy,System.Threading.CancellationToken)">
+            <summary>Restores a backup with an explicit file conflict policy.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.GetBackupAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets one backup by its stable identifier.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.VerifyAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Verifies payload existence, size, readability, and SHA-256 integrity.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Deletes an unlocked backup and updates the unified index.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.SetLockedAsync(System.Guid,System.Boolean,System.Threading.CancellationToken)">
+            <summary>Protects or unprotects a backup from deletion.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.ApplyRetentionAsync(LeslieCleaner.Core.Models.BackupRetentionPolicy,System.Threading.CancellationToken)">
+            <summary>Applies age, count, and optional storage limits.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBackupService.ListBackupsAsync(System.Threading.CancellationToken)">
+            <summary>Lists every indexed backup in newest-first order.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IBrowserPrivacyCleaner">
+            <summary>
+            浏览器隐私数据清理契约。由 Modules.Browser 实现，
+            供 Privacy Guard 以接口方式复用（模块间不直接引用）。
+            登录状态保留约定与浏览器模块一致（Cookies 白名单、不动密码库）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IBrowserPrivacyCleaner.CleanPrivacyDataAsync(System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            清理浏览器隐私数据（Cookies（白名单保留）/历史/下载历史/表单数据）。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>已清理项数。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ICleanEngine">
+            <summary>
+            清理引擎契约。删除操作默认进入隔离区，任何清理都必须可回滚。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ICleanEngine.CleanAsync(LeslieCleaner.Core.Models.CleanRequest,System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            执行清理。文件类项目经 <see cref="T:LeslieCleaner.Core.Abstractions.IQuarantineService"/> 移入隔离区，
+            注册表类项目先经 <see cref="T:LeslieCleaner.Core.Abstractions.IBackupService"/> 备份；整体构成一次可回滚操作。
+            </summary>
+            <param name="request">清理请求，包含待清理项与选项。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>清理结果，含可用于回滚的操作标识。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ICleanEngine.RollbackAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            回滚一次清理操作：从隔离区还原文件、从备份恢复注册表。
+            </summary>
+            <param name="operationId"><see cref="P:LeslieCleaner.Core.Models.CleanResult.OperationId"/> 返回的操作标识。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>全部项目还原成功返回 <see langword="true"/>；存在失败项返回 <see langword="false"/>。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ICleanupTargetPolicy">
+            <summary>Validates a concrete file target immediately before a destructive cleanup operation.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ICleanupTargetPolicy.EvaluateFile(System.String)">
+            <summary>Returns an allow/block decision after canonical-path, reparse-point and Windows protection checks.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.CleanupTargetDecision">
+            <summary>A pre-execution cleanup target decision.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.CleanupTargetDecision.#ctor(System.Boolean,System.String,LeslieCleaner.Core.Models.OperationFailureKind,System.String)">
+            <summary>A pre-execution cleanup target decision.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IConfigService">
+            <summary>
+            配置服务契约。JSON 存储 + FileSystemWatcher 热更新 + 变更通知 + 线程安全读写 + 默认值自举。
+            配置目录：%LocalAppData%\LeslieCleaner\Config。
+            </summary>
+        </member>
+        <member name="E:LeslieCleaner.Core.Abstractions.IConfigService.Changed">
+            <summary>
+            配置文件外部变更（热更新生效）时触发。键不存在于变更集时表示整体重载。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IConfigService.GetValue``1(System.String,``0)">
+            <summary>
+            读取配置值；键不存在时写入并返回 <paramref name="defaultValue"/>（默认值自举）。
+            </summary>
+            <typeparam name="T">值类型，须可被 System.Text.Json 序列化。</typeparam>
+            <param name="key">分层键，使用 ':' 分隔，如 "quarantine:retentionDays"。</param>
+            <param name="defaultValue">默认值。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IConfigService.SetValueAsync``1(System.String,``0,System.Threading.CancellationToken)">
+            <summary>
+            写入配置值并异步持久化，随后触发 <see cref="E:LeslieCleaner.Core.Abstractions.IConfigService.Changed"/>。
+            </summary>
+            <typeparam name="T">值类型。</typeparam>
+            <param name="key">分层键。</param>
+            <param name="value">新值。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IConfigService.ReloadAsync(System.Threading.CancellationToken)">
+            <summary>
+            强制从磁盘重载配置（通常由文件监听自动触发，无需手动调用）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IDatabase">
+            <summary>
+            数据库访问契约。实现位于 LeslieCleaner.Data（Microsoft.Data.Sqlite），
+            使用 WAL 模式与连接池；所有方法异步化并支持取消。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IDatabase.DatabasePath">
+            <summary>数据库文件完整路径。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.InitializeAsync(System.Threading.CancellationToken)">
+            <summary>
+            初始化数据库：创建目录、应用 PRAGMA（WAL/外键/同步级别）、建表与索引、导入种子数据。
+            幂等，可重复调用。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.VerifyIntegrityAsync(System.Threading.CancellationToken)">
+            <summary>执行 SQLite 快速完整性检查；发现损坏或无法打开数据库时返回 <see langword="false"/>。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.CreateBackupAsync(System.String,System.Threading.CancellationToken)">
+            <summary>创建 SQLite 一致性快照，并在发布前执行完整性校验。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.VerifyBackupAsync(System.String,System.Threading.CancellationToken)">
+            <summary>校验指定 SQLite 备份是否可打开且通过完整性检查。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.RecoverFromBackupAsync(System.String,System.Threading.CancellationToken)">
+            <summary>从已校验的备份原子恢复数据库；恢复前保留当前数据库的回退副本。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <summary>
+            执行非查询 SQL。
+            </summary>
+            <param name="sql">参数化 SQL 文本。</param>
+            <param name="parameters">参数集合，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>受影响行数。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <summary>
+            执行标量查询。
+            </summary>
+            <typeparam name="T">返回值类型。</typeparam>
+            <param name="sql">参数化 SQL 文本。</param>
+            <param name="parameters">参数集合，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.QueryAsync``1(System.String,System.Func{Microsoft.Data.Sqlite.SqliteDataReader,``0},System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter},System.Threading.CancellationToken)">
+            <summary>
+            执行查询并按行映射。
+            </summary>
+            <typeparam name="T">行映射目标类型。</typeparam>
+            <param name="sql">参数化 SQL 文本。</param>
+            <param name="map">从当前行到 <typeparamref name="T"/> 的映射函数。</param>
+            <param name="parameters">参数集合，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.ExecuteBatchAsync(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.IReadOnlyList{Microsoft.Data.Sqlite.SqliteParameter}},System.Threading.CancellationToken)">
+            <summary>
+            在单一事务中执行批量写入（用于 10 万级索引行的高效导入）。
+            </summary>
+            <param name="sql">参数化 SQL 文本，同一事务内反复执行。</param>
+            <param name="batch">每次执行的参数集合序列。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>执行的总语句数。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDatabase.ExecuteInTransactionAsync``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,Microsoft.Data.Sqlite.SqliteTransaction,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
+            <summary>在单一 SQLite 事务中执行仓储工作单元；异常或取消时自动回滚。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.DatabaseBackupInfo">
+            <summary>数据库一致性备份的不可变元数据。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.DatabaseBackupInfo.#ctor(System.String,System.Int64,System.DateTimeOffset,System.Int32,System.Boolean)">
+            <summary>数据库一致性备份的不可变元数据。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IEmergencySecurityGate">
+            <summary>Observable emergency read-only capabilities of the sensitive-operation gate.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IEmergencySecurityGate.EmergencyState">
+            <summary>Current fail-safe mode, reason, and exact recovery conditions.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IEmergencySecurityGate.EnterEmergencyReadOnly(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>Immediately enters read-only mode independently of the assessment cycle.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IEncryptionService">
+            <summary>本地敏感数据加密和密钥轮换契约。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IEncryptionService.Encrypt(System.Byte[])">
+            <summary>使用当前 AES-256 密钥加密数据，并将密钥标识、随机 nonce 和认证标签写入密文。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IEncryptionService.Decrypt(System.Byte[])">
+            <summary>验证认证标签并解密数据；密文被篡改或密钥不可用时抛出加密异常。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IEncryptionService.RotateKeyAsync(System.Threading.CancellationToken)">
+            <summary>生成新的活动密钥；调用方应使用 <see cref="M:LeslieCleaner.Core.Abstractions.IEncryptionService.Decrypt(System.Byte[])"/> 和 <see cref="M:LeslieCleaner.Core.Abstractions.IEncryptionService.Encrypt(System.Byte[])"/> 重加密持久化数据后再淘汰旧密钥。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IEncryptionService.RetireKeyAsync(System.String,System.Threading.CancellationToken)">
+            <summary>淘汰非活动密钥；调用方必须先完成所有关联数据的重加密。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IStreamingFileScanner">
+            <summary>Public low-memory, cancellation-aware streaming file scanner.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IStreamingFileScanner.ScanAsync(System.String,LeslieCleaner.Core.Models.FileStreamScanOptions,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>Yields files as they are discovered without materializing the full tree.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ILazyFileTreeProvider">
+            <summary>Loads only the immediate children of an expanded directory.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ILazyFileTreeProvider.LoadChildrenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Returns one level of children; callers request deeper levels only when expanded.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IDriveStorageService">
+            <summary>Provides measured drive capacity and explicitly available/unavailable health evidence.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IDriveStorageService.GetDrivesAsync(System.Threading.CancellationToken)">
+            <summary>Returns every platform drive without inventing unavailable SMART data.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IFileIndexEngine">
+            <summary>
+            文件索引引擎契约（Stage 4：Publisher 索引定位的基础设施）。
+            维护 SQLite file_index 表之上的增量索引与秒级查询，实现位于后续阶段。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IFileIndexEngine.IndexAsync(System.Collections.Generic.IReadOnlyList{System.String},System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            对指定目录集合建立/增量更新文件索引。实现方必须使用异步 IO 与并行枚举，
+            并遵守受限范围（禁止 Windows/WinSxS/System32/DriverStore 等目录）。
+            </summary>
+            <param name="roots">索引根目录集合。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>本次索引新增/更新的记录数。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IFileIndexEngine.QueryByPublisherAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            按发布者查询索引记录（走 idx_publisher 索引）。
+            </summary>
+            <param name="publisher">发布者名称（大小写不敏感）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IFileIndexEngine.QueryByProductAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            按产品名查询索引记录（走 idx_product 索引）。
+            </summary>
+            <param name="productName">产品名（大小写不敏感）。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IFileIndexEngine.SearchAsync(LeslieCleaner.Core.Models.FileIndexSearchQuery,System.Threading.CancellationToken)">
+            <summary>Searches every indexed metadata field using parameterized filters and stable pagination.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IFileIndexEngine.StreamSearchAsync(LeslieCleaner.Core.Models.FileIndexSearchQuery,System.Threading.CancellationToken)">
+            <summary>Streams a stable search in bounded pages rather than materializing the complete result set.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IIntegrityRepairService">
+            <summary>Explicit trust, startup verification, trusted repair, and health scoring contract.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IIntegrityRepairService.EstablishTrustedBaselineAsync(LeslieCleaner.Core.Models.TrustedBaselineRequest,System.Threading.CancellationToken)">
+            <summary>Creates or explicitly replaces a trusted, sealed manifest and trusted backup.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IIntegrityRepairService.VerifyStartupAsync(System.Threading.CancellationToken)">
+            <summary>Verifies all startup targets without ever creating an implicit baseline.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IIntegrityRepairService.RepairAsync(LeslieCleaner.Core.Models.IntegrityRecoveryPrerequisites,System.Boolean,System.Threading.CancellationToken)">
+            <summary>Repairs failed files from the trusted backup, re-verifies them, and conditionally recovers the gate.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IIntegrityRepairService.GetRecordsAsync(System.Threading.CancellationToken)">
+            <summary>Reads the most recently persisted FileIntegrityRecords snapshot.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IIntegrityRepairService.CalculateHealthScore(LeslieCleaner.Core.Models.SecurityHealthFactors)">
+            <summary>Calculates the strict architecture-defined 30/20/20/15/15 health score.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IProtectedArtifactKeyRotationService">
+            <summary>Safely rotates encryption keys for an explicit set of protected local artifacts.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IProtectedArtifactKeyRotationService.RotateAsync(System.Collections.Generic.IReadOnlyList{System.String},System.Threading.CancellationToken)">
+            <summary>Decrypts every artifact first, rotates, atomically re-encrypts, then retires the old key.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ILoggingBootstrapper">
+            <summary>
+            Serilog 配置集中引导契约。由 Infrastructure 实现，
+            统一配置按天滚动文件 Sink 与异步写入，App 启动时调用一次。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ILoggingBootstrapper.Bootstrap">
+            <summary>
+            构建并返回配置完成的 Serilog 日志器（同时设为 <see cref="P:Serilog.Log.Logger"/>）。
+            </summary>
+            <returns>进程级根日志器。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ILogService">
+            <summary>
+            结构化日志服务契约。统一记录开发圣经第六节定义的九类事件，
+            由 Infrastructure 基于 Serilog 实现（按天滚动文件 + 异步 Sink）。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ILogService.LogEvent(LeslieCleaner.Core.Models.LogEventKind,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            写入一条结构化事件日志。
+            </summary>
+            <param name="kind">事件类别（ScanStart/DeleteFinish/Exception 等九类之一）。</param>
+            <param name="message">事件描述。</param>
+            <param name="properties">结构化属性，键名建议使用 PascalCase；可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ILogService.LogException(System.Exception,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            记录异常（事件类别固定为 <see cref="F:LeslieCleaner.Core.Models.LogEventKind.Exception"/>）。所有被捕获的异常必须经此方法留痕。
+            </summary>
+            <param name="exception">异常实例。</param>
+            <param name="context">异常发生的上下文描述（模块/操作）。</param>
+            <param name="properties">结构化属性，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IModule">
+            <summary>
+            功能模块统一契约。所有业务模块（Cleaner/Registry/Uninstaller/Browser/Privacy/Startup/Shredder/AI）
+            均通过该接口接入宿主，实现模块间解耦与插件化扩展。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IModule.Info">
+            <summary>获取模块元数据（标识、名称、版本、描述等）。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IModule.InitializeAsync(System.Threading.CancellationToken)">
+            <summary>
+            初始化模块。宿主在模块被使用前调用一次，实现方应在此完成惰性资源准备。
+            </summary>
+            <param name="cancellationToken">取消令牌，初始化必须可取消。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IModule.CheckHealthAsync(System.Threading.CancellationToken)">
+            <summary>
+            执行模块健康检查，供系统健康评分与自检使用。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>模块健康状态。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IPathService">
+            <summary>
+            路径服务契约。集中提供全部特殊文件夹路径，统一走
+            <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>，禁止硬编码路径。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.ProgramDataRoot">
+            <summary>应用数据根目录：%ProgramData%\LeslieCleaner。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.QuarantineDirectory">
+            <summary>隔离区目录：%ProgramData%\LeslieCleaner\Quarantine。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.BackupDirectory">
+            <summary>备份目录：%ProgramData%\LeslieCleaner\Backups。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.DataDirectory">
+            <summary>数据库目录：%ProgramData%\LeslieCleaner\Data。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.LogDirectory">
+            <summary>日志目录：%LocalAppData%\LeslieCleaner\Logs。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPathService.ConfigDirectory">
+            <summary>配置目录：%LocalAppData%\LeslieCleaner\Config。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPathService.EnsureDirectory(System.String)">
+            <summary>
+            确保指定目录存在（不存在则创建）。
+            </summary>
+            <param name="path">目录绝对路径。</param>
+            <returns>目录路径本身，便于链式使用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IPerformanceMonitor">
+            <summary>Collects bounded process-resource history and emits debounced alerts.</summary>
+        </member>
+        <member name="E:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.AlertRaised">
+            <summary>Raised after a threshold has remained exceeded for the configured duration.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.IsRunning">
+            <summary>Whether the background sampling loop is active.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.Mode">
+            <summary>Current sampling mode.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.StartAsync(LeslieCleaner.Core.Models.PerformanceSamplingMode,System.Threading.CancellationToken)">
+            <summary>Starts background sampling. Repeated calls are idempotent.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.SetMode(LeslieCleaner.Core.Models.PerformanceSamplingMode)">
+            <summary>Changes cadence without restarting the monitor.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.StopAsync(System.Threading.CancellationToken)">
+            <summary>Stops background sampling and waits for the loop to exit.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.CaptureAsync(System.Threading.CancellationToken)">
+            <summary>Captures one sample and stores it in the bounded history.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPerformanceMonitor.GetHistory">
+            <summary>Returns an immutable oldest-to-newest snapshot of retained history.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IPluginManager">
+            <summary>Manages validated plugin packages without executing third-party assemblies in the main process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.DiscoverAsync(System.Threading.CancellationToken)">
+            <summary>Discovers installed plugins and validates package integrity.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.InstallAsync(LeslieCleaner.Core.Models.PluginInstallRequest,System.Threading.CancellationToken)">
+            <summary>Validates and installs a package. New plugins remain disabled by default.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.UpdateAsync(LeslieCleaner.Core.Models.PluginInstallRequest,System.Threading.CancellationToken)">
+            <summary>Updates a plugin after backing up its current files and restores them if replacement fails.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.RemoveAsync(LeslieCleaner.Core.Models.PluginRemovalRequest,System.Threading.CancellationToken)">
+            <summary>Removes an installed plugin after checking reverse dependencies.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.SetEnabledAsync(System.String,System.Boolean,System.Threading.CancellationToken)">
+            <summary>Changes the persisted enabled state of an installed, validated plugin.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginManager.GetAuditAsync(System.Threading.CancellationToken)">
+            <summary>Returns persisted lifecycle audit records, newest first.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IPluginRuntime">
+            <summary>Executes enabled plugins exclusively in disposable child processes.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginRuntime.StartAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Starts and initializes a dedicated host process for one enabled plugin.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginRuntime.ExecuteAsync(System.String,LeslieCleaner.Core.Models.PluginRuntimeRequest,System.Threading.CancellationToken)">
+            <summary>Executes one operation and enforces its deadline and resource budget.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginRuntime.StopAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Stops and removes a plugin host process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginRuntime.GetTelemetryAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets the latest process telemetry without loading plugin code.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IPluginStateStore">
+            <summary>Persists plugin lifecycle state and immutable audit records.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginStateStore.GetAllAsync(System.Threading.CancellationToken)">
+            <summary>Returns all persisted plugin states.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginStateStore.UpsertAsync(LeslieCleaner.Core.Models.PluginStateRecord,System.Threading.CancellationToken)">
+            <summary>Creates or replaces a plugin state.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginStateStore.RemoveAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Removes a plugin state.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginStateStore.AppendAuditAsync(LeslieCleaner.Core.Models.PluginAuditRecord,System.Threading.CancellationToken)">
+            <summary>Appends an audit record.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IPluginStateStore.GetAuditAsync(System.Threading.CancellationToken)">
+            <summary>Returns audit records newest first.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IProtectedPathPolicy">
+            <summary>Canonicalizes file-system input and rejects protected boundaries and link traversal.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IProtectedPathPolicy.Evaluate(System.String)">
+            <summary>Checks a path without touching its contents.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IQuarantineService">
+            <summary>
+            隔离区服务契约。所有文件删除默认进入隔离区
+            （%ProgramData%\LeslieCleaner\Quarantine），默认保留 30 天，支持完整还原。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IQuarantineService.QuarantineFileAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            将单个文件移入隔离区，并写入 metadata.json（原始路径、大小、时间、原因、操作标识）。
+            </summary>
+            <param name="filePath">待隔离文件的绝对路径，必须存在。</param>
+            <param name="reason">隔离原因（模块/操作描述），写入元数据用于审计。</param>
+            <param name="operationId">关联的清理操作标识，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>隔离条目描述。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IQuarantineService.QuarantineFilesAsync(System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.IProgress{LeslieCleaner.Core.Models.CleanProgress},System.Threading.CancellationToken)">
+            <summary>
+            批量将文件移入隔离区。单个文件失败不中断整体，失败信息记录在返回条目的
+            <see cref="P:LeslieCleaner.Core.Models.QuarantineEntry.Error"/> 中（该条目不计入成功）。
+            </summary>
+            <param name="filePaths">待隔离文件绝对路径集合。</param>
+            <param name="reason">隔离原因。</param>
+            <param name="operationId">关联的清理操作标识，可为 <see langword="null"/>。</param>
+            <param name="progress">进度回调（已完成数/总数），可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>成功隔离的条目集合。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IQuarantineService.RestoreAsync(System.Guid,LeslieCleaner.Core.Models.RestoreConflictPolicy,System.Threading.CancellationToken)">
+            <summary>
+            将隔离条目还原到其原始路径。
+            </summary>
+            <param name="entryId">隔离条目标识。</param>
+            <param name="conflictPolicy">原始路径已存在同名文件时的处理策略，默认 <see cref="F:LeslieCleaner.Core.Models.RestoreConflictPolicy.Rename"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>还原后的实际文件路径。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IQuarantineService.ListEntriesAsync(System.Threading.CancellationToken)">
+            <summary>
+            列出隔离区全部条目（按隔离时间倒序）。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IQuarantineService.PurgeExpiredAsync(System.Threading.CancellationToken)">
+            <summary>
+            清理超过保留期（默认 30 天，可由配置覆盖）的隔离条目，永久删除。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>被永久删除的条目数。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IRegistryEngine">
+            <summary>
+            注册表引擎契约。提供带取消与日志的注册表读写；
+            任何删除/修改操作必须先经 <see cref="T:LeslieCleaner.Core.Abstractions.IBackupService"/> 备份方可执行。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.EnumerateSubKeysAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            枚举指定键的直接子键名。键不存在时返回空集合。
+            </summary>
+            <param name="keyPath">完整注册表路径，如 HKCU\Software\Microsoft。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.EnumerateValuesAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            枚举指定键的全部值名。键不存在时返回空集合。
+            </summary>
+            <param name="keyPath">完整注册表路径。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.ReadValueAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            读取值。键或值不存在时返回 <see langword="null"/>。
+            </summary>
+            <param name="keyPath">完整注册表路径。</param>
+            <param name="valueName">值名；默认值为空字符串。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.KeyExistsAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            判断键是否存在。
+            </summary>
+            <param name="keyPath">完整注册表路径。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.DeleteKeyAsync(System.String,System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            删除键（递归）。调用方必须已完成备份；本方法内部会再次校验备份记录存在，否则抛出异常。
+            </summary>
+            <param name="keyPath">完整注册表路径。</param>
+            <param name="backupId">删除前生成的备份记录标识。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.DeleteValueAsync(System.String,System.String,System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            删除单个值。与 <see cref="M:LeslieCleaner.Core.Abstractions.IRegistryEngine.DeleteKeyAsync(System.String,System.Guid,System.Threading.CancellationToken)"/> 一样强制校验备份记录存在。
+            </summary>
+            <param name="keyPath">完整注册表路径。</param>
+            <param name="valueName">待删除的值名。</param>
+            <param name="backupId">删除前生成的备份记录标识。</param>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IRegistryScanCacheStore">
+            <summary>注册表扫描的七天持久化快存储。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryScanCacheStore.TryReadAsync(System.String,System.DateTimeOffset,System.Threading.CancellationToken)">
+            <summary>读取指纹一致且未过期的快照。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryScanCacheStore.WriteAsync(LeslieCleaner.Core.Models.RegistryScanCacheSnapshot,System.Threading.CancellationToken)">
+            <summary>以原子替换方式保存快照。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryScanCacheStore.InvalidateAsync(System.Threading.CancellationToken)">
+            <summary>使快照失效。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IRegistryStateFingerprintProvider">
+            <summary>计算选定注册表位置与相关文件依赖的权威状态指纹。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryStateFingerprintProvider.ComputeAsync(System.Threading.CancellationToken)">
+            <summary>计算当前状态的 SHA-256 指纹。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IRegistryScanner">
+            <summary>
+            注册表扫描契约。按规则集（无效扩展名/COM/CLSID/字体/路径/卸载项）
+            扫描注册表并产出带风险评级的命中项；只读，不做任何修改。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IRegistryScanner.ScanAsync(System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            执行全量规则扫描。性能目标 &lt; 3s。
+            </summary>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>命中项集合（按风险评级升序：Safe 在前）。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IResidualScanner">
+            <summary>
+            卸载残留扫描契约。实现 Multi-Stage Residual Pipeline：
+            安装数据库定位 → 规则库定位 → 安装日志定位 → Publisher 索引定位 → 受限深度扫描。
+            目标秒级定位，禁止全盘递归扫描。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IResidualScanner.ScanAsync(LeslieCleaner.Core.Models.ResidualQuery,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            针对已卸载（或待卸载）的软件定位其残留文件与注册表项。
+            </summary>
+            <param name="query">残留查询条件（发布者、产品名、安装位置等）。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>。</param>
+            <param name="cancellationToken">取消令牌。</param>
+            <returns>命中的残留项集合。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IScanEngine">
+            <summary>
+            扫描引擎契约。所有扫描实现必须支持进度报告、暂停/继续/取消，
+            禁止阻塞调用线程，禁止以全盘递归扫描作为主要实现方案。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.IScanEngine.IsPaused">
+            <summary>获取当前是否处于暂停状态。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IScanEngine.ScanAsync(LeslieCleaner.Core.Models.ScanOptions,System.IProgress{LeslieCleaner.Core.Models.ScanProgress},System.Threading.CancellationToken)">
+            <summary>
+            执行扫描。
+            </summary>
+            <param name="options">扫描选项。</param>
+            <param name="progress">进度回调，可为 <see langword="null"/>；实现方应节流后按阶段上报。</param>
+            <param name="cancellationToken">取消令牌，与 <see cref="M:LeslieCleaner.Core.Abstractions.IScanEngine.Cancel"/> 等效。</param>
+            <returns>扫描结果聚合。</returns>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IScanEngine.Pause">
+            <summary>暂停扫描。已发出的 IO 请求会完成，随后扫描挂起直到 <see cref="M:LeslieCleaner.Core.Abstractions.IScanEngine.Resume"/>。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IScanEngine.Resume">
+            <summary>从暂停状态继续扫描。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IScanEngine.Cancel">
+            <summary>取消扫描，等价于取消传入的 <see cref="T:System.Threading.CancellationToken"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISecurityManager">
+            <summary>统一安全评估和本地审计完整性契约。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityManager.AssessAsync(System.Threading.CancellationToken)">
+            <summary>检查应用完整性基线、审计哈希链和插件信任状态。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityManager.VerifyAuditAsync(System.Threading.CancellationToken)">
+            <summary>验证本地安全审计哈希链。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISecurityManagerV4">
+            <summary>V4 permission and unified audit capabilities exposed by the security manager.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityManagerV4.RequestPermissionAsync(LeslieCleaner.Core.Models.SecurityPermissionRequest,System.Threading.CancellationToken)">
+            <summary>Evaluates and audits a file, registry, process, or network permission request.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityManagerV4.ReplacePermissionGrants(System.Collections.Generic.IEnumerable{LeslieCleaner.Core.Models.SecurityPermissionGrant})">
+            <summary>Atomically replaces explicit least-privilege grants. Empty means deny all.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityManagerV4.GetAuditEventsAsync(System.Threading.CancellationToken)">
+            <summary>Reads the unified tamper-evident security audit events.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISecurityOperationGate">
+            <summary>敏感操作的运行时安全闸门。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Abstractions.ISecurityOperationGate.IsSensitiveOperationAllowed">
+            <summary>当前是否允许删除、清理和粉碎等敏感操作。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityOperationGate.Apply(LeslieCleaner.Core.Models.SecurityAssessment)">
+            <summary>根据最新安全评估更新闸门状态。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityOperationGate.EnsureSensitiveOperationAllowed(System.String)">
+            <summary>若敏感操作被禁止则抛出具有原因的业务异常。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISecurityPermissionPolicy">
+            <summary>Default-deny, least-privilege policy for security permission requests.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityPermissionPolicy.Evaluate(LeslieCleaner.Core.Models.SecurityPermissionRequest)">
+            <summary>Returns an authorization decision without performing the requested operation.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISecurityPermissionPolicy.ReplaceGrants(System.Collections.Generic.IEnumerable{LeslieCleaner.Core.Models.SecurityPermissionGrant})">
+            <summary>Atomically replaces all explicit grants.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISystemRecycleBinService">
+            <summary>
+            Windows Shell 回收站服务。此服务只处理系统回收站，不直接操作 <c>$Recycle.Bin</c> 目录。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISystemRecycleBinService.GetSnapshotAsync(System.Threading.CancellationToken)">
+            <summary>读取所有本地驱动器回收站的权威系统快照。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISystemRecycleBinService.EmptyAsync(System.Threading.CancellationToken)">
+            <summary>
+            清空所有本地驱动器的回收站，并在返回前重新查询以验证实际结果。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.ISystemRestorePointService">
+            <summary>
+            系统还原点服务契约。危险操作（批量清理、注册表清理、驱动/服务变更）前自动创建还原点。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.ISystemRestorePointService.CreateRestorePointAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            通过 WMI SystemRestore 类创建系统还原点。
+            </summary>
+            <param name="description">还原点描述（建议包含操作名，如 "LeslieCleaner Registry Clean"）。</param>
+            <param name="cancellationToken">取消令牌（WMI 调用本身不可中断，取消在调用前与返回后生效）。</param>
+            <returns>创建成功返回 <see langword="true"/>；系统保护未启用或被组策略禁用时返回 <see langword="false"/>。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Abstractions.IUpdateManager">
+            <summary>受校验更新检查契约。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Abstractions.IUpdateManager.CheckAsync(System.Threading.CancellationToken)">
+            <summary>检查已配置更新源，并仅返回通过清单解析和版本比较的结果。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Diagnostics.LeslieCleanerException">
+            <summary>
+            LeslieCleaner 领域异常基类。
+            错误策略（docs/01-architecture.md 有完整说明）：领域错误一律抛出异常并记录日志，
+            不使用 Result&lt;T&gt; 双通道，避免错误被静默吞掉。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.LeslieCleanerException.#ctor(System.String)">
+            <summary>以描述信息创建异常。</summary>
+            <param name="message">错误描述。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.LeslieCleanerException.#ctor(System.String,System.Exception)">
+            <summary>以描述信息与内部异常创建异常。</summary>
+            <param name="message">错误描述。</param>
+            <param name="innerException">内部异常。</param>
+        </member>
+        <member name="T:LeslieCleaner.Core.Diagnostics.QuarantineException">
+            <summary>隔离区操作失败。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Diagnostics.QuarantineException.FailureKind">
+            <summary>Machine-readable reason for the failed quarantine transaction.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.QuarantineException.#ctor(System.String)">
+            <summary>以描述信息创建异常。</summary>
+            <param name="message">错误描述。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.QuarantineException.#ctor(System.String,LeslieCleaner.Core.Models.OperationFailureKind)">
+            <summary>Creates a quarantine failure with a stable classification.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.QuarantineException.#ctor(System.String,System.Exception)">
+            <summary>以描述信息与内部异常创建异常。</summary>
+            <param name="message">错误描述。</param>
+            <param name="innerException">内部异常。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.QuarantineException.#ctor(System.String,System.Exception,LeslieCleaner.Core.Models.OperationFailureKind)">
+            <summary>Creates a quarantine failure with an inner exception and stable classification.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Diagnostics.BackupException">
+            <summary>备份/恢复操作失败。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Diagnostics.BackupException.FailureKind">
+            <summary>Machine-readable reason for the failed backup or registry transaction.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.BackupException.#ctor(System.String)">
+            <summary>以描述信息创建异常。</summary>
+            <param name="message">错误描述。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.BackupException.#ctor(System.String,LeslieCleaner.Core.Models.OperationFailureKind)">
+            <summary>Creates a backup failure with a stable classification.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.BackupException.#ctor(System.String,System.Exception)">
+            <summary>以描述信息与内部异常创建异常。</summary>
+            <param name="message">错误描述。</param>
+            <param name="innerException">内部异常。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.BackupException.#ctor(System.String,System.Exception,LeslieCleaner.Core.Models.OperationFailureKind)">
+            <summary>Creates a backup failure with an inner exception and stable classification.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Diagnostics.ConfigurationException">
+            <summary>配置读写失败。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.ConfigurationException.#ctor(System.String)">
+            <summary>以描述信息创建异常。</summary>
+            <param name="message">错误描述。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.ConfigurationException.#ctor(System.String,System.Exception)">
+            <summary>以描述信息与内部异常创建异常。</summary>
+            <param name="message">错误描述。</param>
+            <param name="innerException">内部异常。</param>
+        </member>
+        <member name="T:LeslieCleaner.Core.Diagnostics.OperationFailureClassifier">
+            <summary>Maps platform exceptions to stable cleanup failure categories without parsing localized messages.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Diagnostics.OperationFailureClassifier.Classify(System.Exception)">
+            <summary>Classifies a cleanup exception for user guidance and retry policy.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupRecord">
+            <summary>Describes a durable backup and its restoration scope.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.BackupRecord.#ctor(System.Guid,System.String,System.String,System.String,System.DateTimeOffset,System.Int64,LeslieCleaner.Core.Models.RegistryBackupKind,System.String,LeslieCleaner.Core.Models.RegistryValueSnapshot)">
+            <summary>Describes a durable backup and its restoration scope.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Type">
+            <summary>Logical payload category. Legacy metadata defaults to registry.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Name">
+            <summary>Human-readable backup name.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Description">
+            <summary>Reason or operation description.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.OriginalPath">
+            <summary>Original path for file, configuration, and database backups.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Sha256">
+            <summary>SHA-256 of the payload, encoded as uppercase hexadecimal.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Status">
+            <summary>Durable lifecycle state.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.StorageMode">
+            <summary>Storage strategy used for file-like payloads.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.IsLocked">
+            <summary>Prevents automatic and manual deletion while set.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRecord.Version">
+            <summary>Metadata schema version.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupType">
+            <summary>Supported backup payload categories.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupType.Registry">
+            <summary>Windows registry data.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupType.File">
+            <summary>General file data.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupType.Configuration">
+            <summary>Application configuration.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupType.Database">
+            <summary>Application database.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupStatus">
+            <summary>Durable backup lifecycle state.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStatus.Creating">
+            <summary>Payload is being created.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStatus.Completed">
+            <summary>Payload and metadata were verified.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStatus.Corrupt">
+            <summary>Integrity verification failed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStatus.Restored">
+            <summary>At least one restore completed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStatus.Failed">
+            <summary>Creation or restore failed.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupStorageMode">
+            <summary>How a file-like payload is preserved.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStorageMode.MetadataOnly">
+            <summary>Only path, size, hash, and timestamps are stored; restoration is unavailable.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStorageMode.Move">
+            <summary>The source is moved into backup storage.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.BackupStorageMode.FullCopy">
+            <summary>The source is copied using streaming I/O.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryBackupKind">
+            <summary>Registry backup granularity.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryBackupKind.Key">
+            <summary>The complete key and its descendants.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryBackupKind.Value">
+            <summary>One value without affecting sibling values during restoration.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryValueSnapshot">
+            <summary>Typed, lossless snapshot of one registry value.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryValueSnapshot.#ctor(System.Boolean,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Nullable{System.Int32},System.Nullable{System.Int64})">
+            <summary>Typed, lossless snapshot of one registry value.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryValueSnapshot.OriginalValueName">
+            <summary>Value name as preserved by the registry, including its original casing.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupVerificationResult">
+            <summary>Integrity verification result for one backup.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.BackupVerificationResult.#ctor(System.Guid,System.Boolean,System.String,System.Int64,System.String)">
+            <summary>Integrity verification result for one backup.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupRetentionPolicy">
+            <summary>Automatic cleanup limits. Locked backups are always retained.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRetentionPolicy.MaxAgeDays">
+            <summary>Maximum age in days, or null to disable age cleanup.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRetentionPolicy.MaxCount">
+            <summary>Maximum retained count, or null to disable count cleanup.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BackupRetentionPolicy.MaxStorageBytes">
+            <summary>Optional aggregate payload ceiling.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BackupRetentionResult">
+            <summary>Summary returned after enforcing retention.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.BackupRetentionResult.#ctor(System.Int32,System.Int64,System.Collections.Generic.IReadOnlyList{System.Guid})">
+            <summary>Summary returned after enforcing retention.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.BenchmarkResult">
+            <summary>性能度量结果（日志事件类别 PerformanceMetrics 的载荷）。</summary>
+            <param name="Name">度量名称。</param>
+            <param name="Iterations">迭代次数。</param>
+            <param name="TotalDuration">总耗时。</param>
+            <param name="MeasuredUtc">度量时间（UTC）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.BenchmarkResult.#ctor(System.String,System.Int64,System.TimeSpan,System.DateTimeOffset)">
+            <summary>性能度量结果（日志事件类别 PerformanceMetrics 的载荷）。</summary>
+            <param name="Name">度量名称。</param>
+            <param name="Iterations">迭代次数。</param>
+            <param name="TotalDuration">总耗时。</param>
+            <param name="MeasuredUtc">度量时间（UTC）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BenchmarkResult.Name">
+            <summary>度量名称。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BenchmarkResult.Iterations">
+            <summary>迭代次数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BenchmarkResult.TotalDuration">
+            <summary>总耗时。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BenchmarkResult.MeasuredUtc">
+            <summary>度量时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.BenchmarkResult.AveragePerIteration">
+            <summary>单次迭代平均耗时。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.OperationFailureKind">
+            <summary>清理执行失败的稳定分类，供界面决定是否提示管理员重试或关闭占用程序。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.None">
+            <summary>没有失败。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.NotFound">
+            <summary>目标在执行前已不存在。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.InUse">
+            <summary>目标被其他进程独占或锁定。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.RequiresElevation">
+            <summary>当前令牌权限不足；可在用户确认后以管理员模式重试同一受限操作。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.ProtectedResource">
+            <summary>Windows 资源保护、应用核心边界或安全策略禁止操作。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.BackupFailed">
+            <summary>清理前备份或隔离准备失败。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.VerificationFailed">
+            <summary>执行后回读发现目标仍存在或隔离载荷不完整。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.InvalidTarget">
+            <summary>目标格式、边界或请求无效。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.SecurityGateBlocked">
+            <summary>完整性/紧急只读安全闸门阻止了破坏性操作。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.OperationFailureKind.Unknown">
+            <summary>未归入上述类别的 I/O 或平台错误。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RestoreConflictPolicy">
+            <summary>还原冲突处理策略（原始位置已存在同名文件时）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RestoreConflictPolicy.Fail">
+            <summary>放弃还原并抛出异常。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RestoreConflictPolicy.Overwrite">
+            <summary>覆盖现有文件。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RestoreConflictPolicy.Rename">
+            <summary>自动重命名还原文件（追加序号）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.CleanRequest">
+            <summary>清理请求。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanRequest.Items">
+            <summary>待清理项集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanRequest.Reason">
+            <summary>操作原因（写入隔离区元数据与日志）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanRequest.OperationId">
+            <summary>操作标识；为空时由引擎生成。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanRequest.CreateRestorePoint">
+            <summary>是否在清理前创建系统还原点，默认 <see langword="false"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanRequest.AllowIrreversibleRecycleBin">
+            <summary>
+            是否明确允许不可回滚地清空 Windows 回收站。默认 <see langword="false"/>，
+            防止把回收站误当作普通可隔离缓存处理。
+            </summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.CleanProgress">
+            <summary>清理进度快照。</summary>
+            <param name="ProcessedItems">已处理条目数。</param>
+            <param name="TotalItems">总条目数。</param>
+            <param name="CurrentPath">当前处理路径，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.CleanProgress.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>清理进度快照。</summary>
+            <param name="ProcessedItems">已处理条目数。</param>
+            <param name="TotalItems">总条目数。</param>
+            <param name="CurrentPath">当前处理路径，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanProgress.ProcessedItems">
+            <summary>已处理条目数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanProgress.TotalItems">
+            <summary>总条目数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanProgress.CurrentPath">
+            <summary>当前处理路径，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.CleanedItem">
+            <summary>单个已处理清理项的结果。</summary>
+            <param name="Item">原始扫描项。</param>
+            <param name="QuarantineEntryId">对应隔离条目标识；未隔离（如注册表项）时为 <see langword="null"/>。</param>
+            <param name="BackupId">对应备份记录标识；无备份时为 <see langword="null"/>。</param>
+            <param name="Success">是否成功。</param>
+            <param name="Error">失败原因；成功时为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.CleanedItem.#ctor(LeslieCleaner.Core.Models.ScannedItem,System.Nullable{System.Guid},System.Nullable{System.Guid},System.Boolean,System.String)">
+            <summary>单个已处理清理项的结果。</summary>
+            <param name="Item">原始扫描项。</param>
+            <param name="QuarantineEntryId">对应隔离条目标识；未隔离（如注册表项）时为 <see langword="null"/>。</param>
+            <param name="BackupId">对应备份记录标识；无备份时为 <see langword="null"/>。</param>
+            <param name="Success">是否成功。</param>
+            <param name="Error">失败原因；成功时为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.Item">
+            <summary>原始扫描项。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.QuarantineEntryId">
+            <summary>对应隔离条目标识；未隔离（如注册表项）时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.BackupId">
+            <summary>对应备份记录标识；无备份时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.Success">
+            <summary>是否成功。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.Error">
+            <summary>失败原因；成功时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.FailureKind">
+            <summary>稳定失败分类；成功项固定为 <see cref="F:LeslieCleaner.Core.Models.OperationFailureKind.None"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.RequiresElevation">
+            <summary>是否建议用户确认后以管理员模式重试同一操作。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanedItem.WasVerified">
+            <summary>是否通过了执行后的独立回读验证。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.CleanResult">
+            <summary>清理结果聚合。持有 <see cref="P:LeslieCleaner.Core.Models.CleanResult.OperationId"/> 可用于整体回滚。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanResult.OperationId">
+            <summary>本次清理操作标识（回滚凭据）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanResult.Items">
+            <summary>逐项结果。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanResult.FreedBytes">
+            <summary>实际释放字节数（成功项合计）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.CleanResult.WasCancelled">
+            <summary>清理是否被取消。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ConfigChangedEventArgs">
+            <summary>配置变更事件参数。</summary>
+            <param name="changedKeys">发生变更的配置键集合。</param>
+            <param name="isFullReload">是否为整体重载（无法精确 diff 时为 <see langword="true"/>）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ConfigChangedEventArgs.#ctor(System.Collections.Generic.IReadOnlyList{System.String},System.Boolean)">
+            <summary>配置变更事件参数。</summary>
+            <param name="changedKeys">发生变更的配置键集合。</param>
+            <param name="isFullReload">是否为整体重载（无法精确 diff 时为 <see langword="true"/>）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ConfigChangedEventArgs.ChangedKeys">
+            <summary>发生变更的配置键集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ConfigChangedEventArgs.IsFullReload">
+            <summary>是否为整体重载。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.KeyRotationResult">
+            <summary>密钥轮换结果。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.KeyRotationResult.#ctor(System.String,System.String,System.DateTimeOffset)">
+            <summary>密钥轮换结果。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIndexSortField">
+            <summary>Whitelisted stable sort fields for indexed file search.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.Path">
+            <summary>Full canonical path.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.Name">
+            <summary>File name.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.Size">
+            <summary>Logical file length.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.Modified">
+            <summary>Last modification time.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.Publisher">
+            <summary>Publisher metadata.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIndexSortField.ProductName">
+            <summary>Product metadata.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIndexSearchQuery">
+            <summary>Complete, parameterized search conditions over the lightweight file index.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.Text">
+            <summary>Text matched against name, path, publisher, and product name.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.Name">
+            <summary>File-name substring.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.Extension">
+            <summary>Extension filter, with or without a leading period.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.MinimumSizeBytes">
+            <summary>Inclusive minimum logical size.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.MaximumSizeBytes">
+            <summary>Inclusive maximum logical size.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.ModifiedFromUtc">
+            <summary>Inclusive earliest modification time.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.ModifiedToUtc">
+            <summary>Inclusive latest modification time.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.LocationRoot">
+            <summary>Canonical location prefix.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.Publisher">
+            <summary>Publisher substring.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.ProductName">
+            <summary>Product-name substring.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.SortBy">
+            <summary>Stable primary sort field.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.Descending">
+            <summary>Sort descending when true.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.PageNumber">
+            <summary>One-based page number.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchQuery.PageSize">
+            <summary>Rows per page, from 1 through 500.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIndexSearchPage">
+            <summary>A stable page of indexed files and the matching total.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.FileIndexSearchPage.#ctor(System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.FileIndexRecord},System.Int64,System.Int32,System.Int32)">
+            <summary>A stable page of indexed files and the matching total.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexSearchPage.HasNextPage">
+            <summary>Whether another page exists.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.AnalyzedFileCategory">
+            <summary>High-level category inferred locally from path and extension.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.AnalyzedFileCategory.System">
+            <summary>Windows or operating-system content.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.AnalyzedFileCategory.Application">
+            <summary>Installed application or game content.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.AnalyzedFileCategory.UserData">
+            <summary>User documents, media, archives, or projects.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.AnalyzedFileCategory.Temporary">
+            <summary>Cache, log, dump, or temporary content.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.AnalyzedFileCategory.Unknown">
+            <summary>No confident local classification.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.AnalyzedFileEntry">
+            <summary>One file yielded by the low-memory streaming scanner.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.AnalyzedFileEntry.#ctor(System.String,System.String,System.String,System.Int64,System.Nullable{System.Int64},System.DateTimeOffset,System.DateTimeOffset,System.DateTimeOffset,LeslieCleaner.Core.Models.AnalyzedFileCategory)">
+            <summary>One file yielded by the low-memory streaming scanner.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileStreamScanOptions">
+            <summary>Options for the public streaming file scan.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileStreamScanOptions.MinimumSizeBytes">
+            <summary>Minimum logical size to yield.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileStreamScanOptions.Extension">
+            <summary>Optional extension filter, with or without a leading period.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileStreamScanOptions.FollowReparsePoints">
+            <summary>Reparse traversal is default-denied and must remain false for protected scans.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.LazyFileTreeEntry">
+            <summary>One immediate child returned by lazy directory-tree expansion.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.LazyFileTreeEntry.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.Int64,System.Nullable{System.Int64},System.DateTimeOffset,System.Boolean)">
+            <summary>One immediate child returned by lazy directory-tree expansion.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.DriveMetricAvailability">
+            <summary>Availability of a drive metric that the platform may not expose.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.DriveMetricAvailability.Available">
+            <summary>The value was measured from the operating system.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.DriveMetricAvailability.Unavailable">
+            <summary>The current account or device did not expose the value.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.DriveMetricAvailability.NotSupported">
+            <summary>The drive type or platform does not support the metric.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.DriveStorageSnapshot">
+            <summary>Honest capacity, filesystem, and health evidence for one drive.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.DriveStorageSnapshot.#ctor(System.String,System.String,System.IO.DriveType,System.Boolean,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64},LeslieCleaner.Core.Models.DriveMetricAvailability,System.String,LeslieCleaner.Core.Models.DriveMetricAvailability,System.String,System.String)">
+            <summary>Honest capacity, filesystem, and health evidence for one drive.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIndexRecord">
+            <summary>file_index 表行模型（Stage 4 Publisher 索引定位的数据载体）。</summary>
+            <param name="Path">文件完整路径。</param>
+            <param name="Name">文件名。</param>
+            <param name="Publisher">发布者（来自版本信息/目录推断），可为 <see langword="null"/>。</param>
+            <param name="ProductName">产品名，可为 <see langword="null"/>。</param>
+            <param name="SizeBytes">文件大小（字节）。</param>
+            <param name="ModifiedUtc">最后修改时间（UTC）。</param>
+            <param name="Hash">内容哈希，可为 <see langword="null"/>（按需计算）。</param>
+            <param name="IndexedAtUtc">索引写入时间（UTC）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.FileIndexRecord.#ctor(System.String,System.String,System.String,System.String,System.Int64,System.DateTimeOffset,System.String,System.DateTimeOffset)">
+            <summary>file_index 表行模型（Stage 4 Publisher 索引定位的数据载体）。</summary>
+            <param name="Path">文件完整路径。</param>
+            <param name="Name">文件名。</param>
+            <param name="Publisher">发布者（来自版本信息/目录推断），可为 <see langword="null"/>。</param>
+            <param name="ProductName">产品名，可为 <see langword="null"/>。</param>
+            <param name="SizeBytes">文件大小（字节）。</param>
+            <param name="ModifiedUtc">最后修改时间（UTC）。</param>
+            <param name="Hash">内容哈希，可为 <see langword="null"/>（按需计算）。</param>
+            <param name="IndexedAtUtc">索引写入时间（UTC）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.Path">
+            <summary>文件完整路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.Name">
+            <summary>文件名。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.Publisher">
+            <summary>发布者（来自版本信息/目录推断），可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.ProductName">
+            <summary>产品名，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.SizeBytes">
+            <summary>文件大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.ModifiedUtc">
+            <summary>最后修改时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.Hash">
+            <summary>内容哈希，可为 <see langword="null"/>（按需计算）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.FileIndexRecord.IndexedAtUtc">
+            <summary>索引写入时间（UTC）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.IntegrityArtifactKind">
+            <summary>Kind of protected artifact covered by the startup integrity manifest.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.IntegrityArtifactKind.Executable">
+            <summary>Main executable or another executable shipped with the application.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.IntegrityArtifactKind.CoreLibrary">
+            <summary>Core application library.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.IntegrityArtifactKind.Configuration">
+            <summary>Application configuration.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.IntegrityArtifactKind.Database">
+            <summary>Application database.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.IntegrityArtifactKind.PluginMetadata">
+            <summary>Plugin manifest or other plugin metadata.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIntegrityStatus">
+            <summary>Verification state persisted for one protected file.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.Valid">
+            <summary>The file matches its trusted baseline.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.Missing">
+            <summary>The file does not exist.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.Modified">
+            <summary>The file size or SHA-256 hash differs from the trusted baseline.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.SignatureInvalid">
+            <summary>The optional trusted signature is invalid.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.VerificationFailed">
+            <summary>The file could not be read or hashed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.FileIntegrityStatus.UnsafePath">
+            <summary>The manifest path failed boundary or reparse-point validation.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.TrustedIntegrityTarget">
+            <summary>A file selected by an installer or explicitly authorized user for a trusted baseline.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.TrustedIntegrityTarget.#ctor(System.String,LeslieCleaner.Core.Models.IntegrityArtifactKind,System.String)">
+            <summary>A file selected by an installer or explicitly authorized user for a trusted baseline.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.TrustedBaselineRequest">
+            <summary>Explicit request to establish or replace the trusted integrity baseline.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.TrustedBaselineRequest.#ctor(System.String,System.String,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.TrustedIntegrityTarget},System.Boolean,System.String,System.Boolean)">
+            <summary>Explicit request to establish or replace the trusted integrity baseline.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.TrustedBaselineResult">
+            <summary>Result of an explicit baseline operation.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.TrustedBaselineResult.#ctor(System.Boolean,System.String,System.Int32,System.DateTimeOffset)">
+            <summary>Result of an explicit baseline operation.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.FileIntegrityRecord">
+            <summary>Persisted evidence corresponding to the FileIntegrityRecords architecture table.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.FileIntegrityRecord.#ctor(System.Guid,System.String,LeslieCleaner.Core.Models.IntegrityArtifactKind,System.String,System.String,System.Int64,System.Nullable{System.Int64},LeslieCleaner.Core.Models.FileIntegrityStatus,LeslieCleaner.Core.Models.SecurityRiskLevel,System.DateTimeOffset,System.String)">
+            <summary>Persisted evidence corresponding to the FileIntegrityRecords architecture table.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.StartupIntegrityReport">
+            <summary>Complete startup integrity verification result.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.StartupIntegrityReport.#ctor(System.Boolean,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.FileIntegrityRecord},System.Int32,System.Int32,System.DateTimeOffset)">
+            <summary>Complete startup integrity verification result.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.StartupIntegrityReport.IsValid">
+            <summary>Whether every protected file passed verification.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.IntegrityRecoveryPrerequisites">
+            <summary>Non-integrity conditions that must also pass before emergency read-only mode can be cleared.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.IntegrityRecoveryPrerequisites.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>Non-integrity conditions that must also pass before emergency read-only mode can be cleared.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.IntegrityRecoveryPrerequisites.AllSatisfied">
+            <summary>Whether all independent recovery conditions are satisfied.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.IntegrityRepairResult">
+            <summary>Result of restoring failed artifacts from the trusted backup.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.IntegrityRepairResult.#ctor(System.Boolean,System.Boolean,System.Int32,LeslieCleaner.Core.Models.StartupIntegrityReport,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset)">
+            <summary>Result of restoring failed artifacts from the trusted backup.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityHealthFactors">
+            <summary>Inputs for the strictly weighted security health score.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityHealthFactors.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>Inputs for the strictly weighted security health score.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityHealthScore">
+            <summary>Strict 30/20/20/15/15 security health score and contribution breakdown.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityHealthScore.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,LeslieCleaner.Core.Models.SecurityRiskLevel)">
+            <summary>Strict 30/20/20/15/15 security health score and contribution breakdown.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ProtectedArtifactRotationResult">
+            <summary>Result of safely rotating the key for encrypted local artifacts.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ProtectedArtifactRotationResult.#ctor(System.Boolean,System.String,System.String,System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset)">
+            <summary>Result of safely rotating the key for encrypted local artifacts.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.LogEventKind">
+            <summary>日志事件类别（开发圣经第六节规定的九类必记事件）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.ScanStart">
+            <summary>扫描开始。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.ScanFinish">
+            <summary>扫描完成。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.DeleteStart">
+            <summary>删除开始。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.DeleteFinish">
+            <summary>删除完成。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.RestoreStart">
+            <summary>还原开始。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.RestoreFinish">
+            <summary>还原完成。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.Exception">
+            <summary>异常。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.PerformanceMetrics">
+            <summary>性能指标。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.LogEventKind.UserAction">
+            <summary>用户操作。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ModuleInfo">
+            <summary>功能模块元数据。</summary>
+            <param name="Id">模块唯一标识（建议反向域名风格，如 "lesliecleaner.cleaner"）。</param>
+            <param name="Name">模块显示名称。</param>
+            <param name="Version">模块版本。</param>
+            <param name="Description">模块功能描述。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ModuleInfo.#ctor(System.String,System.String,System.Version,System.String)">
+            <summary>功能模块元数据。</summary>
+            <param name="Id">模块唯一标识（建议反向域名风格，如 "lesliecleaner.cleaner"）。</param>
+            <param name="Name">模块显示名称。</param>
+            <param name="Version">模块版本。</param>
+            <param name="Description">模块功能描述。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleInfo.Id">
+            <summary>模块唯一标识（建议反向域名风格，如 "lesliecleaner.cleaner"）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleInfo.Name">
+            <summary>模块显示名称。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleInfo.Version">
+            <summary>模块版本。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleInfo.Description">
+            <summary>模块功能描述。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ModuleStatus">
+            <summary>模块健康状态。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ModuleStatus.Healthy">
+            <summary>健康。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ModuleStatus.Degraded">
+            <summary>降级（可用但部分能力受损）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ModuleStatus.Unhealthy">
+            <summary>不可用。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ModuleHealth">
+            <summary>模块健康检查结果。</summary>
+            <param name="ModuleId">模块标识。</param>
+            <param name="Status">健康状态。</param>
+            <param name="Message">附加说明，可为 <see langword="null"/>。</param>
+            <param name="CheckedUtc">检查时间（UTC）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ModuleHealth.#ctor(System.String,LeslieCleaner.Core.Models.ModuleStatus,System.String,System.DateTimeOffset)">
+            <summary>模块健康检查结果。</summary>
+            <param name="ModuleId">模块标识。</param>
+            <param name="Status">健康状态。</param>
+            <param name="Message">附加说明，可为 <see langword="null"/>。</param>
+            <param name="CheckedUtc">检查时间（UTC）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleHealth.ModuleId">
+            <summary>模块标识。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleHealth.Status">
+            <summary>健康状态。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleHealth.Message">
+            <summary>附加说明，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ModuleHealth.CheckedUtc">
+            <summary>检查时间（UTC）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.HealthScore">
+            <summary>系统健康评分（AI Optimizer 输出，0-100）。</summary>
+            <param name="Value">分值，0 最差，100 最佳。</param>
+            <param name="Summary">评分摘要说明。</param>
+            <param name="Factors">扣分因素列表。</param>
+            <param name="EvaluatedUtc">评估时间（UTC）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.HealthScore.#ctor(System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset)">
+            <summary>系统健康评分（AI Optimizer 输出，0-100）。</summary>
+            <param name="Value">分值，0 最差，100 最佳。</param>
+            <param name="Summary">评分摘要说明。</param>
+            <param name="Factors">扣分因素列表。</param>
+            <param name="EvaluatedUtc">评估时间（UTC）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.HealthScore.Value">
+            <summary>分值，0 最差，100 最佳。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.HealthScore.Summary">
+            <summary>评分摘要说明。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.HealthScore.Factors">
+            <summary>扣分因素列表。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.HealthScore.EvaluatedUtc">
+            <summary>评估时间（UTC）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceSamplingMode">
+            <summary>Sampling cadence for process performance monitoring.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceSamplingMode.Active">
+            <summary>One-second cadence while an operation is active.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceSamplingMode.Normal">
+            <summary>Five-second normal cadence.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceSamplingMode.Idle">
+            <summary>Thirty-second cadence while idle.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceMetric">
+            <summary>A metric value that explicitly describes collection availability.</summary>
+            <param name="Value">Measured value, or <see langword="null"/> when unavailable.</param>
+            <param name="IsAvailable">Whether the platform supplied a reliable value.</param>
+            <param name="UnavailableReason">Reason collection was unavailable.</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceMetric.#ctor(System.Nullable{System.Double},System.Boolean,System.String)">
+            <summary>A metric value that explicitly describes collection availability.</summary>
+            <param name="Value">Measured value, or <see langword="null"/> when unavailable.</param>
+            <param name="IsAvailable">Whether the platform supplied a reliable value.</param>
+            <param name="UnavailableReason">Reason collection was unavailable.</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMetric.Value">
+            <summary>Measured value, or <see langword="null"/> when unavailable.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMetric.IsAvailable">
+            <summary>Whether the platform supplied a reliable value.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMetric.UnavailableReason">
+            <summary>Reason collection was unavailable.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceMetric.Available(System.Double)">
+            <summary>Creates an available value.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceMetric.Unavailable(System.String)">
+            <summary>Creates an explicitly unavailable value.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceSnapshot">
+            <summary>One bounded process-resource snapshot.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceSnapshot.#ctor(System.DateTimeOffset,System.Int32,LeslieCleaner.Core.Models.PerformanceMetric,System.Int64,System.Int64,LeslieCleaner.Core.Models.PerformanceMetric,LeslieCleaner.Core.Models.PerformanceMetric,LeslieCleaner.Core.Models.PerformanceMetric,LeslieCleaner.Core.Models.PerformanceMetric)">
+            <summary>One bounded process-resource snapshot.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceAlertLevel">
+            <summary>Performance alert severity.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceAlertLevel.Notice">
+            <summary>Small deviation.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceAlertLevel.Warning">
+            <summary>Potential performance issue.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PerformanceAlertLevel.Critical">
+            <summary>Application stability risk.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceAlert">
+            <summary>A threshold alert emitted by the performance monitor.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceAlert.#ctor(System.DateTimeOffset,System.String,LeslieCleaner.Core.Models.PerformanceAlertLevel,System.Double,System.Double,System.String)">
+            <summary>A threshold alert emitted by the performance monitor.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PerformanceMonitorOptions">
+            <summary>Validated performance-monitor configuration.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMonitorOptions.HistoryCapacity">
+            <summary>Maximum number of snapshots retained in memory.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMonitorOptions.CpuWarningPercent">
+            <summary>CPU threshold in percent.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMonitorOptions.PrivateMemoryWarningBytes">
+            <summary>Private-memory threshold in bytes.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMonitorOptions.ConsecutiveSamplesBeforeAlert">
+            <summary>Consecutive samples required before an alert.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PerformanceMonitorOptions.AlertDebounce">
+            <summary>Minimum time between alerts for the same rule.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceMonitorOptions.IntervalFor(LeslieCleaner.Core.Models.PerformanceSamplingMode)">
+            <summary>Returns the mandated cadence for a sampling mode.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PerformanceMonitorOptions.Validate">
+            <summary>Validates configuration values.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginTrustStatus">
+            <summary>Validation and lifecycle status of a plugin package.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.Ready">
+            <summary>Package validated and enabled.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.Disabled">
+            <summary>Package validated but disabled.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.InvalidManifest">
+            <summary>Manifest is missing or invalid.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.MissingAssembly">
+            <summary>Declared entry assembly is missing.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.HashMismatch">
+            <summary>Assembly hash does not match the manifest.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.UnsafePath">
+            <summary>Package contains an unsafe or escaping path.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.IncompatibleApi">
+            <summary>Plugin API major version is incompatible.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.MissingDependency">
+            <summary>A required plugin dependency is missing.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.PluginTrustStatus.PermissionDenied">
+            <summary>A requested permission is invalid or unapproved.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginDescriptor">
+            <summary>Validated plugin metadata presented to callers.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginDescriptor.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,LeslieCleaner.Core.Models.PluginTrustStatus,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.PluginDependency})">
+            <summary>Validated plugin metadata presented to callers.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginDependency">
+            <summary>A dependency on another installed plugin.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginDependency.#ctor(System.String,System.String)">
+            <summary>A dependency on another installed plugin.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginInstallRequest">
+            <summary>Request to install or update a directory or ZIP package.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginInstallRequest.#ctor(System.String,System.Collections.Generic.IReadOnlyCollection{System.String},System.Boolean)">
+            <summary>Request to install or update a directory or ZIP package.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginRemovalRequest">
+            <summary>Request to remove a plugin and optionally its private data.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginRemovalRequest.#ctor(System.String,System.Boolean)">
+            <summary>Request to remove a plugin and optionally its private data.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginOperationResult">
+            <summary>Result of a plugin lifecycle operation.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginOperationResult.#ctor(System.Boolean,System.String,System.String,System.String,LeslieCleaner.Core.Models.PluginDescriptor,System.String,System.Boolean)">
+            <summary>Result of a plugin lifecycle operation.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginStateRecord">
+            <summary>Persisted plugin lifecycle state.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginStateRecord.#ctor(System.String,System.String,System.String,System.Boolean,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>Persisted plugin lifecycle state.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginAuditRecord">
+            <summary>Persisted plugin lifecycle audit entry.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginAuditRecord.#ctor(System.Guid,System.String,System.String,System.Boolean,System.String,System.DateTimeOffset,System.String,System.Boolean)">
+            <summary>Persisted plugin lifecycle audit entry.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginRuntimeRequest">
+            <summary>One operation submitted to an isolated plugin host.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginRuntimeRequest.#ctor(System.String,System.String,System.Nullable{System.TimeSpan})">
+            <summary>One operation submitted to an isolated plugin host.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginRuntimeResult">
+            <summary>Outcome of an isolated lifecycle or execution command.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginRuntimeResult.#ctor(System.Boolean,System.String,System.String,System.String,System.String,LeslieCleaner.Core.Models.PluginRuntimeTelemetry)">
+            <summary>Outcome of an isolated lifecycle or execution command.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginRuntimeTelemetry">
+            <summary>Process-level resource data captured by the main process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginRuntimeTelemetry.#ctor(System.Int32,System.Boolean,System.Int64,System.TimeSpan,System.Int32,System.TimeSpan,System.Int32,System.DateTimeOffset,System.String)">
+            <summary>Process-level resource data captured by the main process.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PluginRuntimeLimits">
+            <summary>Hard runtime budgets enforced by terminating the isolated process.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PluginRuntimeLimits.#ctor(System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Int64,System.TimeSpan,System.Int32,System.TimeSpan)">
+            <summary>Hard runtime budgets enforced by terminating the isolated process.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.PluginRuntimeLimits.Default">
+            <summary>Conservative production defaults.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.QuarantineEntry">
+            <summary>隔离区条目（与 metadata.json 一一对应）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.Id">
+            <summary>条目标识（亦为隔离目录名）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.OriginalPath">
+            <summary>文件原始绝对路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.QuarantinedPath">
+            <summary>隔离区内载荷文件路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.MetadataPath">
+            <summary>metadata.json 路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.SizeBytes">
+            <summary>文件大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.QuarantinedUtc">
+            <summary>隔离时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.ExpiresUtc">
+            <summary>过期时间（UTC），超过后由 <c>PurgeExpiredAsync</c> 永久删除。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.Reason">
+            <summary>隔离原因。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.OperationId">
+            <summary>关联的清理操作标识，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.QuarantineEntry.Error">
+            <summary>隔离过程中的错误描述；成功时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RecycleBinMeasurementSource">
+            <summary>回收站容量测量来源。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RecycleBinMeasurementSource.WindowsShell">
+            <summary>仅包含 Windows Shell 的权威逻辑项目统计。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RecycleBinMeasurementSource.WindowsShellAndFileSystem">
+            <summary>Windows Shell 逻辑统计与 NTFS 实际分配空间均已测量。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RecycleBinSnapshot">
+            <summary>
+            Windows 回收站的系统级统计快照。<see cref="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.SizeBytes"/> 与资源管理器的
+            “大小”口径一致；<see cref="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.AllocatedSizeBytes"/> 包括载荷和 <c>$I</c>
+            元数据实际占用，用于显示真正可释放的磁盘空间。
+            </summary>
+            <param name="ItemCount">Shell 报告的逻辑项目数量。</param>
+            <param name="SizeBytes">Shell 报告的载荷逻辑总字节数。</param>
+            <param name="AllocatedSizeBytes">回收站载荷与元数据在磁盘上的实际分配字节数；未测得时为 0。</param>
+            <param name="MetadataSizeBytes"><c>$I</c> 元数据的逻辑字节数。</param>
+            <param name="EnumeratedPayloadSizeBytes">文件系统枚举得到的 <c>$R</c> 载荷逻辑字节数。</param>
+            <param name="InaccessibleLocationCount">枚举时无法访问的位置数；大于 0 表示磁盘占用不是完整统计。</param>
+            <param name="Source">统计来源。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RecycleBinSnapshot.#ctor(System.Int64,System.Int64,System.Int64,System.Int64,System.Int64,System.Int32,LeslieCleaner.Core.Models.RecycleBinMeasurementSource)">
+            <summary>
+            Windows 回收站的系统级统计快照。<see cref="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.SizeBytes"/> 与资源管理器的
+            “大小”口径一致；<see cref="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.AllocatedSizeBytes"/> 包括载荷和 <c>$I</c>
+            元数据实际占用，用于显示真正可释放的磁盘空间。
+            </summary>
+            <param name="ItemCount">Shell 报告的逻辑项目数量。</param>
+            <param name="SizeBytes">Shell 报告的载荷逻辑总字节数。</param>
+            <param name="AllocatedSizeBytes">回收站载荷与元数据在磁盘上的实际分配字节数；未测得时为 0。</param>
+            <param name="MetadataSizeBytes"><c>$I</c> 元数据的逻辑字节数。</param>
+            <param name="EnumeratedPayloadSizeBytes">文件系统枚举得到的 <c>$R</c> 载荷逻辑字节数。</param>
+            <param name="InaccessibleLocationCount">枚举时无法访问的位置数；大于 0 表示磁盘占用不是完整统计。</param>
+            <param name="Source">统计来源。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.ItemCount">
+            <summary>Shell 报告的逻辑项目数量。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.SizeBytes">
+            <summary>Shell 报告的载荷逻辑总字节数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.AllocatedSizeBytes">
+            <summary>回收站载荷与元数据在磁盘上的实际分配字节数；未测得时为 0。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.MetadataSizeBytes">
+            <summary><c>$I</c> 元数据的逻辑字节数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.EnumeratedPayloadSizeBytes">
+            <summary>文件系统枚举得到的 <c>$R</c> 载荷逻辑字节数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.InaccessibleLocationCount">
+            <summary>枚举时无法访问的位置数；大于 0 表示磁盘占用不是完整统计。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.Source">
+            <summary>统计来源。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.ReclaimableSizeBytes">
+            <summary>用于“预计释放”的磁盘占用；文件系统统计不可用时回退到 Shell 逻辑字节。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.HasCompleteAllocationMeasurement">
+            <summary>磁盘占用统计是否完整且无不可访问位置。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.ShellToFileSystemLogicalDifferenceBytes">
+            <summary>文件系统枚举载荷与 Shell 权威逻辑字节的差值；非零时应显示口径差异诊断。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinSnapshot.HasLogicalDiscrepancy">
+            <summary>是否检测到 Shell 与文件系统载荷逻辑字节不一致。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RecycleBinEmptyResult">
+            <summary>清空回收站后的已验证结果。</summary>
+            <param name="Before">清空前的 Shell 快照。</param>
+            <param name="After">清空后的 Shell 快照。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RecycleBinEmptyResult.#ctor(LeslieCleaner.Core.Models.RecycleBinSnapshot,LeslieCleaner.Core.Models.RecycleBinSnapshot)">
+            <summary>清空回收站后的已验证结果。</summary>
+            <param name="Before">清空前的 Shell 快照。</param>
+            <param name="After">清空后的 Shell 快照。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinEmptyResult.Before">
+            <summary>清空前的 Shell 快照。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinEmptyResult.After">
+            <summary>清空后的 Shell 快照。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RecycleBinEmptyResult.IsEmpty">
+            <summary>仅当清空后项目数和字节数均为零时为真。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryIssueKind">
+            <summary>注册表无效项类别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryIssueKind.InvalidUninstallEntry">
+            <summary>无效卸载项（DisplayIcon/InstallLocation 指向不存在路径）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryIssueKind.InvalidFileExtension">
+            <summary>无效扩展名（指向不存在的 ProgID）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryIssueKind.InvalidComServer">
+            <summary>无效 COM/CLSID（InprocServer32 指向不存在文件）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryIssueKind.InvalidFontReference">
+            <summary>失效字体引用（字体文件不存在）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryIssueKind.InvalidPathValue">
+            <summary>失效路径值（值内容指向不存在路径）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryRiskLevel">
+            <summary>注册表项五级风险评级。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Safe">
+            <summary>明确的低影响残留，可提供一键修复。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Low">
+            <summary>低风险，修复前需要标准确认。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Medium">
+            <summary>中等风险，需展示详细原因后确认。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Moderate">
+            <summary>中等风险的旧名，仅保留源代码兼容。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.High">
+            <summary>高风险，默认禁用，仅高级确认后可修复。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Risky">
+            <summary>高风险的旧名，仅保留源代码兼容。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryRiskLevel.Critical">
+            <summary>系统关键或受保护目标，禁止修复。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryConfirmationRequirement">
+            <summary>注册表修复前的最低用户确认级别。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryConfirmationRequirement.None">
+            <summary>允许一键修复。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryConfirmationRequirement.Standard">
+            <summary>标准确认。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryConfirmationRequirement.Detailed">
+            <summary>展示风险详情后确认。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryConfirmationRequirement.Advanced">
+            <summary>高级确认，不得默认选中。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.RegistryConfirmationRequirement.Forbidden">
+            <summary>禁止修复。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryDetectionEvidence">
+            <summary>支持误报控制的多源证据。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryDetectionEvidence.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String)">
+            <summary>支持误报控制的多源证据。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryDetectionEvidence.RequiresRetention">
+            <summary>任一关联证据表明应保留该项。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryFinding">
+            <summary>一条注册表扫描命中项。</summary>
+            <param name="KeyPath">完整注册表键路径。</param>
+            <param name="ValueName">相关值名；键级问题为 <see langword="null"/>。</param>
+            <param name="Issue">问题类别。</param>
+            <param name="Risk">风险评级。</param>
+            <param name="Description">人类可读描述。</param>
+            <param name="BrokenTarget">失效目标（缺失的文件/ProgID），可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryFinding.#ctor(System.String,System.String,LeslieCleaner.Core.Models.RegistryIssueKind,LeslieCleaner.Core.Models.RegistryRiskLevel,System.String,System.String)">
+            <summary>一条注册表扫描命中项。</summary>
+            <param name="KeyPath">完整注册表键路径。</param>
+            <param name="ValueName">相关值名；键级问题为 <see langword="null"/>。</param>
+            <param name="Issue">问题类别。</param>
+            <param name="Risk">风险评级。</param>
+            <param name="Description">人类可读描述。</param>
+            <param name="BrokenTarget">失效目标（缺失的文件/ProgID），可为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.KeyPath">
+            <summary>完整注册表键路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.ValueName">
+            <summary>相关值名；键级问题为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.Issue">
+            <summary>问题类别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.Risk">
+            <summary>风险评级。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.Description">
+            <summary>人类可读描述。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.BrokenTarget">
+            <summary>失效目标（缺失的文件/ProgID），可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.RiskScore">
+            <summary>0–100 数值风险分，分数越高风险越高。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.RiskExplanation">
+            <summary>风险分的可读解释。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.Recommendation">
+            <summary>建议操作。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.Evidence">
+            <summary>多源确认与误报控制证据。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.IsSystemProtected">
+            <summary>是否命中 WRP/TrustedInstaller 或显式系统保护区。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.CanRepair">
+            <summary>系统保护区和 Critical 项恒不可修复。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.CanRepairAutomatically">
+            <summary>仅 Safe 项允许一键修复。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryFinding.ConfirmationRequirement">
+            <summary>强制确认契约。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryRepairAuthorization">
+            <summary>用户对一次注册表修复的明确授权。</summary>
+            <param name="StandardConfirmed">已确认低风险项。</param>
+            <param name="DetailedConfirmed">已阅读并确认中等风险详情。</param>
+            <param name="AdvancedConfirmed">已在高级模式单独确认高风险项。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryRepairAuthorization.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>用户对一次注册表修复的明确授权。</summary>
+            <param name="StandardConfirmed">已确认低风险项。</param>
+            <param name="DetailedConfirmed">已阅读并确认中等风险详情。</param>
+            <param name="AdvancedConfirmed">已在高级模式单独确认高风险项。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairAuthorization.StandardConfirmed">
+            <summary>已确认低风险项。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairAuthorization.DetailedConfirmed">
+            <summary>已阅读并确认中等风险详情。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairAuthorization.AdvancedConfirmed">
+            <summary>已在高级模式单独确认高风险项。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryRepairDecision">
+            <summary>注册表修复授权检查结果。</summary>
+            <param name="Allowed">是否允许进入备份/执行阶段。</param>
+            <param name="RequiredConfirmation">最低确认级别。</param>
+            <param name="Reason">可直接呈现给用户的原因。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryRepairDecision.#ctor(System.Boolean,LeslieCleaner.Core.Models.RegistryConfirmationRequirement,System.String)">
+            <summary>注册表修复授权检查结果。</summary>
+            <param name="Allowed">是否允许进入备份/执行阶段。</param>
+            <param name="RequiredConfirmation">最低确认级别。</param>
+            <param name="Reason">可直接呈现给用户的原因。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairDecision.Allowed">
+            <summary>是否允许进入备份/执行阶段。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairDecision.RequiredConfirmation">
+            <summary>最低确认级别。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryRepairDecision.Reason">
+            <summary>可直接呈现给用户的原因。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryRepairPolicy">
+            <summary>
+            强制风险分级确认。该门禁必须在任何备份或删除之前运行，
+            不允许调用方用“批量修复”绕过逐项检查。
+            </summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryRepairPolicy.Authorize(LeslieCleaner.Core.Models.RegistryFinding,LeslieCleaner.Core.Models.RegistryRepairAuthorization)">
+            <summary>检查单项修复授权。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryRepairPolicy.AuthorizeBatch(System.Collections.Generic.IEnumerable{LeslieCleaner.Core.Models.RegistryFinding},LeslieCleaner.Core.Models.RegistryRepairAuthorization)">
+            <summary>逐项检查批量修复，保留原输入顺序。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot">
+            <summary>持久化的注册表扫描快照。</summary>
+            <param name="Fingerprint">目标注册表值及外部路径依赖的 SHA-256 指纹。</param>
+            <param name="CreatedUtc">产生时间（UTC）。</param>
+            <param name="ExpiresUtc">过期时间（UTC），默认七天。</param>
+            <param name="Findings">已完成风险分析的结果。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.#ctor(System.String,System.DateTimeOffset,System.DateTimeOffset,System.Collections.Generic.IReadOnlyList{LeslieCleaner.Core.Models.RegistryFinding})">
+            <summary>持久化的注册表扫描快照。</summary>
+            <param name="Fingerprint">目标注册表值及外部路径依赖的 SHA-256 指纹。</param>
+            <param name="CreatedUtc">产生时间（UTC）。</param>
+            <param name="ExpiresUtc">过期时间（UTC），默认七天。</param>
+            <param name="Findings">已完成风险分析的结果。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.Fingerprint">
+            <summary>目标注册表值及外部路径依赖的 SHA-256 指纹。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.CreatedUtc">
+            <summary>产生时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.ExpiresUtc">
+            <summary>过期时间（UTC），默认七天。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.Findings">
+            <summary>已完成风险分析的结果。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.RegistryScanCacheSnapshot.IsUsable(System.String,System.DateTimeOffset)">
+            <summary>在指定时刻是否可用。指纹必须完全一致且未过期。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ResidualKind">
+            <summary>残留命中类型。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualKind.File">
+            <summary>文件。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualKind.Directory">
+            <summary>目录。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualKind.RegistryKey">
+            <summary>注册表键。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ResidualSourceStage">
+            <summary>残留来源阶段（Multi-Stage Residual Pipeline）。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualSourceStage.InstallDatabase">
+            <summary>Stage 1：安装数据库定位。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualSourceStage.KnownRules">
+            <summary>Stage 2：已知规则库定位。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualSourceStage.InstallLogs">
+            <summary>Stage 3：安装日志定位。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualSourceStage.PublisherIndex">
+            <summary>Stage 4：Publisher 索引定位。</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.ResidualSourceStage.DeepScan">
+            <summary>Stage 5：受限深度扫描。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ResidualQuery">
+            <summary>卸载残留查询条件。</summary>
+            <param name="Publisher">发布者名称，可为 <see langword="null"/>。</param>
+            <param name="ProductName">产品名，可为 <see langword="null"/>。</param>
+            <param name="InstallLocation">原安装位置，可为 <see langword="null"/>。</param>
+            <param name="AllowDeepScan">是否允许 Stage 5 受限深度扫描（仅在前面阶段无结果时应启用）。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ResidualQuery.#ctor(System.String,System.String,System.String,System.Boolean)">
+            <summary>卸载残留查询条件。</summary>
+            <param name="Publisher">发布者名称，可为 <see langword="null"/>。</param>
+            <param name="ProductName">产品名，可为 <see langword="null"/>。</param>
+            <param name="InstallLocation">原安装位置，可为 <see langword="null"/>。</param>
+            <param name="AllowDeepScan">是否允许 Stage 5 受限深度扫描（仅在前面阶段无结果时应启用）。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualQuery.Publisher">
+            <summary>发布者名称，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualQuery.ProductName">
+            <summary>产品名，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualQuery.InstallLocation">
+            <summary>原安装位置，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualQuery.AllowDeepScan">
+            <summary>是否允许 Stage 5 受限深度扫描（仅在前面阶段无结果时应启用）。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ResidualItem">
+            <summary>单个残留命中项。</summary>
+            <param name="Path">残留路径。</param>
+            <param name="Kind">命中类型。</param>
+            <param name="SizeBytes">占用字节数（注册表键为 0）。</param>
+            <param name="Source">命中来源阶段。</param>
+            <param name="Confidence">置信度 0.0-1.0。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ResidualItem.#ctor(System.String,LeslieCleaner.Core.Models.ResidualKind,System.Int64,LeslieCleaner.Core.Models.ResidualSourceStage,System.Double)">
+            <summary>单个残留命中项。</summary>
+            <param name="Path">残留路径。</param>
+            <param name="Kind">命中类型。</param>
+            <param name="SizeBytes">占用字节数（注册表键为 0）。</param>
+            <param name="Source">命中来源阶段。</param>
+            <param name="Confidence">置信度 0.0-1.0。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualItem.Path">
+            <summary>残留路径。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualItem.Kind">
+            <summary>命中类型。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualItem.SizeBytes">
+            <summary>占用字节数（注册表键为 0）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualItem.Source">
+            <summary>命中来源阶段。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualItem.Confidence">
+            <summary>置信度 0.0-1.0。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ResidualRule">
+            <summary>残留定位规则（residual_rules 表 / 种子 JSON 的模型）。</summary>
+            <param name="Publisher">发布者名称（与 Product 共同主键）。</param>
+            <param name="Product">产品名；发布者级通用规则为 <see langword="null"/>。</param>
+            <param name="Paths">候选文件/目录路径模板，支持 %AppData% 等环境变量占位。</param>
+            <param name="RegistryKeys">候选注册表键路径。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ResidualRule.#ctor(System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>残留定位规则（residual_rules 表 / 种子 JSON 的模型）。</summary>
+            <param name="Publisher">发布者名称（与 Product 共同主键）。</param>
+            <param name="Product">产品名；发布者级通用规则为 <see langword="null"/>。</param>
+            <param name="Paths">候选文件/目录路径模板，支持 %AppData% 等环境变量占位。</param>
+            <param name="RegistryKeys">候选注册表键路径。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualRule.Publisher">
+            <summary>发布者名称（与 Product 共同主键）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualRule.Product">
+            <summary>产品名；发布者级通用规则为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualRule.Paths">
+            <summary>候选文件/目录路径模板，支持 %AppData% 等环境变量占位。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ResidualRule.RegistryKeys">
+            <summary>候选注册表键路径。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ScanOptions">
+            <summary>扫描选项。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanOptions.Targets">
+            <summary>扫描目标目录/路径集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanOptions.MaxDegreeOfParallelism">
+            <summary>最大并行度；小于等于 0 时取 CPU 核心数 * 2（圣经线程架构）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanOptions.FollowReparsePoints">
+            <summary>是否跟随符号链接/重解析点，默认 <see langword="false"/> 以避免循环与越界。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanOptions.Timeout">
+            <summary>单次扫描超时；为 <see langword="null"/> 表示不限制。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ScanProgress">
+            <summary>扫描进度快照。</summary>
+            <param name="Phase">当前阶段描述（如 "规则库定位"）。</param>
+            <param name="ProcessedItems">已处理条目数。</param>
+            <param name="TotalItems">预计总条目数；未知时为 <see langword="null"/>。</param>
+            <param name="CurrentPath">当前处理路径，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ScanProgress.#ctor(System.String,System.Int64,System.Nullable{System.Int64},System.String)">
+            <summary>扫描进度快照。</summary>
+            <param name="Phase">当前阶段描述（如 "规则库定位"）。</param>
+            <param name="ProcessedItems">已处理条目数。</param>
+            <param name="TotalItems">预计总条目数；未知时为 <see langword="null"/>。</param>
+            <param name="CurrentPath">当前处理路径，可为 <see langword="null"/>。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanProgress.Phase">
+            <summary>当前阶段描述（如 "规则库定位"）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanProgress.ProcessedItems">
+            <summary>已处理条目数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanProgress.TotalItems">
+            <summary>预计总条目数；未知时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanProgress.CurrentPath">
+            <summary>当前处理路径，可为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanProgress.PercentComplete">
+            <summary>完成百分比（0-100）；总量未知时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ScannedItem">
+            <summary>单个扫描命中项。</summary>
+            <param name="Path">命中路径（文件或注册表键）。</param>
+            <param name="SizeBytes">可释放字节数。</param>
+            <param name="Category">分类（如 "TempFiles"、"BrowserCache"）。</param>
+            <param name="LastModifiedUtc">最后修改时间（UTC）。</param>
+            <param name="ItemCount">此记录代表的逻辑项目数；普通文件固定为 1。</param>
+            <param name="LogicalSizeBytes">权威逻辑字节；仅在与 <paramref name="SizeBytes"/> 的可释放口径不同时设置。</param>
+            <param name="AllocatedSizeBytes">磁盘实际分配字节；未测量时为 <see langword="null"/>。</param>
+            <param name="MetadataSizeBytes">伴随元数据字节，例如回收站 <c>$I</c> 记录。</param>
+            <param name="InaccessibleItemCount">无法访问或无法精确枚举的位置数。</param>
+            <param name="MeasurementSource">统计来源说明。</param>
+            <param name="MeasurementDiscrepancyBytes">权威来源与辅助测量的字节差；非零时必须向用户解释。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.ScannedItem.#ctor(System.String,System.Int64,System.String,System.DateTimeOffset,System.Int64,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Int64,System.Int32,System.String,System.Int64)">
+            <summary>单个扫描命中项。</summary>
+            <param name="Path">命中路径（文件或注册表键）。</param>
+            <param name="SizeBytes">可释放字节数。</param>
+            <param name="Category">分类（如 "TempFiles"、"BrowserCache"）。</param>
+            <param name="LastModifiedUtc">最后修改时间（UTC）。</param>
+            <param name="ItemCount">此记录代表的逻辑项目数；普通文件固定为 1。</param>
+            <param name="LogicalSizeBytes">权威逻辑字节；仅在与 <paramref name="SizeBytes"/> 的可释放口径不同时设置。</param>
+            <param name="AllocatedSizeBytes">磁盘实际分配字节；未测量时为 <see langword="null"/>。</param>
+            <param name="MetadataSizeBytes">伴随元数据字节，例如回收站 <c>$I</c> 记录。</param>
+            <param name="InaccessibleItemCount">无法访问或无法精确枚举的位置数。</param>
+            <param name="MeasurementSource">统计来源说明。</param>
+            <param name="MeasurementDiscrepancyBytes">权威来源与辅助测量的字节差；非零时必须向用户解释。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.Path">
+            <summary>命中路径（文件或注册表键）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.SizeBytes">
+            <summary>可释放字节数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.Category">
+            <summary>分类（如 "TempFiles"、"BrowserCache"）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.LastModifiedUtc">
+            <summary>最后修改时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.ItemCount">
+            <summary>此记录代表的逻辑项目数；普通文件固定为 1。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.LogicalSizeBytes">
+            <summary>权威逻辑字节；仅在与 <paramref name="SizeBytes"/> 的可释放口径不同时设置。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.AllocatedSizeBytes">
+            <summary>磁盘实际分配字节；未测量时为 <see langword="null"/>。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.MetadataSizeBytes">
+            <summary>伴随元数据字节，例如回收站 <c>$I</c> 记录。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.InaccessibleItemCount">
+            <summary>无法访问或无法精确枚举的位置数。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.MeasurementSource">
+            <summary>统计来源说明。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScannedItem.MeasurementDiscrepancyBytes">
+            <summary>权威来源与辅助测量的字节差；非零时必须向用户解释。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.ScanResult">
+            <summary>扫描结果聚合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.StartedUtc">
+            <summary>扫描开始时间（UTC）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.Duration">
+            <summary>扫描耗时。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.Items">
+            <summary>命中项集合。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.TotalSizeBytes">
+            <summary>命中项逻辑总大小（字节）。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.TotalAllocatedSizeBytes">
+            <summary>
+            命中项预计实际释放的磁盘分配字节。无法测量的项以逻辑大小作为保守回退，
+            具体项可通过 <see cref="P:LeslieCleaner.Core.Models.ScannedItem.AllocatedSizeBytes"/> 判断口径是否完整。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.WasCancelled">
+            <summary>扫描是否被取消。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.ScanResult.ErrorCount">
+            <summary>扫描过程中记录的非致命错误数。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityAssessment">
+            <summary>应用与插件安全评估结果。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityAssessment.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Int32,System.Int32,System.Int32,System.String,System.DateTimeOffset)">
+            <summary>应用与插件安全评估结果。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityAssessmentExtensions">
+            <summary>Derived risk and recommendation helpers for a security assessment.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityAssessmentExtensions.GetRiskLevel(LeslieCleaner.Core.Models.SecurityAssessment)">
+            <summary>Maps assessment evidence to the highest applicable risk level.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityAssessmentExtensions.GetRecommendations(LeslieCleaner.Core.Models.SecurityAssessment)">
+            <summary>Returns actionable recovery guidance derived from failed checks.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityRiskLevel">
+            <summary>Security risk communicated to the user and written to the security audit trail.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityRiskLevel.Safe">
+            <summary>No actionable security risk was detected.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityRiskLevel.Notice">
+            <summary>A low-risk condition should be reviewed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityRiskLevel.Warning">
+            <summary>A significant risk requires user attention.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityRiskLevel.Critical">
+            <summary>A critical risk requires fail-safe protection.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityAuditLevel">
+            <summary>Severity of a security audit event.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditLevel.Information">
+            <summary>Informational security activity.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditLevel.Warning">
+            <summary>A security condition requiring review.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditLevel.Critical">
+            <summary>A critical security event.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityAuditEventType">
+            <summary>Well-known security event types used by all security components.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.PermissionRequest">
+            <summary>A component requested permission.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.PermissionDenied">
+            <summary>A permission request was denied.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.PermissionGranted">
+            <summary>A permission request was granted.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.IntegrityFailure">
+            <summary>An integrity verification failed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.IntegrityBaselineEstablished">
+            <summary>An explicitly authorized trusted integrity baseline was established.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.IntegrityRepairSucceeded">
+            <summary>A trusted integrity repair completed and passed re-verification.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.IntegrityRepairFailed">
+            <summary>A trusted integrity repair failed or recovery conditions remained unsatisfied.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.EncryptionError">
+            <summary>An encryption operation failed.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.ProtectedPathBlocked">
+            <summary>An operation targeting a protected path was blocked.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.EmergencyModeEntered">
+            <summary>The application entered emergency read-only mode.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.EmergencyModeRecovered">
+            <summary>The application recovered from emergency mode.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityAuditEventType.SecurityAssessment">
+            <summary>A complete security assessment was recorded.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityPermissionCategory">
+            <summary>Resource family controlled by the least-privilege permission policy.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionCategory.File">
+            <summary>File-system resources.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionCategory.Registry">
+            <summary>Windows Registry resources.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionCategory.Process">
+            <summary>Operating-system processes.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionCategory.Network">
+            <summary>Network endpoints.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityPermissionAction">
+            <summary>Actions supported by the security permission model.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Read">
+            <summary>Read an existing resource.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Write">
+            <summary>Write resource data.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Delete">
+            <summary>Delete a resource.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Modify">
+            <summary>Modify resource metadata or state.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Start">
+            <summary>Start a process or operation.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Stop">
+            <summary>Stop a process or operation.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Monitor">
+            <summary>Monitor a resource.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Connect">
+            <summary>Connect to a network endpoint.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Upload">
+            <summary>Upload data to a network endpoint.</summary>
+        </member>
+        <member name="F:LeslieCleaner.Core.Models.SecurityPermissionAction.Download">
+            <summary>Download data from a network endpoint.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityPermissionRequest">
+            <summary>A single permission request. Requests are denied unless an active matching grant exists.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityPermissionRequest.#ctor(System.String,LeslieCleaner.Core.Models.SecurityPermissionCategory,LeslieCleaner.Core.Models.SecurityPermissionAction,System.String,System.String)">
+            <summary>A single permission request. Requests are denied unless an active matching grant exists.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityPermissionGrant">
+            <summary>An explicit, narrowly scoped permission grant.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityPermissionGrant.#ctor(System.String,LeslieCleaner.Core.Models.SecurityPermissionCategory,LeslieCleaner.Core.Models.SecurityPermissionAction,System.String,System.Boolean,System.Nullable{System.DateTimeOffset})">
+            <summary>An explicit, narrowly scoped permission grant.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityPermissionDecision">
+            <summary>Result of evaluating a permission request.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityPermissionDecision.#ctor(System.Boolean,System.String,System.String,LeslieCleaner.Core.Models.SecurityRiskLevel,System.String,System.DateTimeOffset)">
+            <summary>Result of evaluating a permission request.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.PathSecurityDecision">
+            <summary>Result of canonicalizing and checking a file-system path.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.PathSecurityDecision.#ctor(System.Boolean,System.String,System.String,LeslieCleaner.Core.Models.SecurityRiskLevel,System.String)">
+            <summary>Result of canonicalizing and checking a file-system path.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.EmergencySecurityState">
+            <summary>Explicit state of the fail-safe emergency operating mode.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.EmergencySecurityState.#ctor(System.Boolean,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.DateTimeOffset)">
+            <summary>Explicit state of the fail-safe emergency operating mode.</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Models.EmergencySecurityState.AwaitingAssessment">
+            <summary>The initial fail-safe state used until the first successful assessment.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.SecurityAuditEvent">
+            <summary>Public representation of an entry in the tamper-evident security audit trail.</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.SecurityAuditEvent.#ctor(System.DateTimeOffset,LeslieCleaner.Core.Models.SecurityAuditEventType,LeslieCleaner.Core.Models.SecurityAuditLevel,System.String,System.String,System.String,System.String)">
+            <summary>Public representation of an entry in the tamper-evident security audit trail.</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Models.UpdateStatus">
+            <summary>面向界面的更新检查结果。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Models.UpdateStatus.#ctor(System.String,System.String,System.Int32,System.String,System.DateTimeOffset)">
+            <summary>面向界面的更新检查结果。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.ServiceCollectionExtensions">
+            <summary>LeslieCleaner.Core 服务注册扩展。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.ServiceCollectionExtensions.AddLeslieCleanerCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册 Core 层基础服务（线程原语等）。接口契约本身无需注册，
+            实现由 Infrastructure / Data 的 Add 扩展提供。
+            </summary>
+            <param name="services">服务集合。</param>
+            <returns>服务集合，便于链式调用。</returns>
+        </member>
+        <member name="T:LeslieCleaner.Core.Threading.PauseTokenSource">
+            <summary>
+            暂停/继续原语。与 <see cref="T:System.Threading.CancellationTokenSource"/> 配对使用，
+            为扫描/清理循环提供 Pause/Resume 能力（圣经线程架构要求）。
+            线程安全，可重复使用。
+            </summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Threading.PauseTokenSource.IsPaused">
+            <summary>获取当前是否处于暂停状态。</summary>
+        </member>
+        <member name="P:LeslieCleaner.Core.Threading.PauseTokenSource.Token">
+            <summary>获取与当前状态对应的令牌。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Threading.PauseTokenSource.Pause">
+            <summary>进入暂停状态；已在执行的迭代完成后挂起。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Threading.PauseTokenSource.Resume">
+            <summary>解除暂停，放行所有等待者。</summary>
+        </member>
+        <member name="T:LeslieCleaner.Core.Threading.PauseToken">
+            <summary><see cref="T:LeslieCleaner.Core.Threading.PauseTokenSource"/> 的轻量令牌快照。</summary>
+            <param name="source">来源；为 <see langword="null"/> 表示永不暂停。</param>
+        </member>
+        <member name="M:LeslieCleaner.Core.Threading.PauseToken.#ctor(LeslieCleaner.Core.Threading.PauseTokenSource)">
+            <summary><see cref="T:LeslieCleaner.Core.Threading.PauseTokenSource"/> 的轻量令牌快照。</summary>
+            <param name="source">来源；为 <see langword="null"/> 表示永不暂停。</param>
+        </member>
+        <member name="P:LeslieCleaner.Core.Threading.PauseToken.None">
+            <summary>永不暂停的默认令牌。</summary>
+        </member>
+        <member name="M:LeslieCleaner.Core.Threading.PauseToken.WaitWhilePausedAsync(System.Threading.CancellationToken)">
+            <summary>
+            若处于暂停状态则异步等待直至继续；同时响应取消令牌。
+            应在每个工作迭代开始时调用。
+            </summary>
+            <param name="cancellationToken">取消令牌。</param>
+        </member>
+    </members>
+</doc>
