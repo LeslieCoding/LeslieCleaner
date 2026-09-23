@@ -11,7 +11,7 @@ $results = Join-Path $v4Root 'artifacts\test-results'
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 
 if (-not (Test-Path -LiteralPath $dotnet -PathType Leaf)) {
-    throw "Portable .NET SDK was not found: $dotnet"
+    $dotnet = (Get-Command dotnet -ErrorAction Stop).Source
 }
 
 $userProfile = [Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile)
